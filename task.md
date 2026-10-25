@@ -10,7 +10,7 @@ Build a Pebble Time 2 watch face based on the first green LCD render. At each mi
 - Execution script: `execution/build.py`.
 - Output artifact: `dist/t9-watch.pbw`.
 - Safety: generated files stay outside Git.
-- Safety: do not publish or push this project.
+- Initial build safety: do not publish or push before release authorization. The later Pebble app store release milestone superseded this for publication.
 
 ## Validation Contract
 
@@ -142,3 +142,35 @@ Build a Pebble Time 2 watch face based on the first green LCD render. At each mi
 - [x] Submit the Pebble app store listing.
 - [x] Verify the public listing.
 - [x] Record the release handoff.
+
+## Animated store lead — 2026-10-25
+
+### Contract
+
+- Target: first screenshot on the existing Pebble app store listing.
+- Capture tool: Pebble SDK rollover GIF capture.
+- Source artifact: `screenshots/t9-time-01-typing-green.gif`.
+- Safety: preserve the shared emery emulator state.
+- Safety: keep the existing published PBW unchanged.
+
+### Validation Contract
+
+- The GIF has 200×228 frames.
+- The GIF is smaller than 4.4 MB.
+- The GIF visibly shows the time being typed.
+- The GIF visibly shows the underscore cursor.
+- The GIF visibly shows an active T9 key.
+- The store listing shows the GIF first.
+- The store listing retains the three alternate-color screenshots.
+- The store still serves the 0.1.0 PBW.
+- The shared emulator state is restored after capture.
+- A fresh verifier reviews the final GIF and listing.
+
+### Checklist
+
+- [x] Back up the shared emery emulator state.
+- [x] Capture and inspect the animated GIF.
+- [x] Restore the shared emery emulator state.
+- [x] Replace the first store image.
+- [x] Verify the public listing.
+- [x] Record the listing update.

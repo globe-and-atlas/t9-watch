@@ -14,3 +14,7 @@ timestamp: "2026-10-25T16:06:55-05:00"
 7. Open the public listing, check the screenshot count and version, and compare the downloaded store PBW with the local release build.
 
 The first release was published on 2026-10-25 at https://apps.repebble.com/6641551debac4064ab47acba. Store submission is immediately public; there was no review queue in this release flow.
+
+## Screenshot-only listing edits
+
+Use the developer dashboard's **Edit Listing** action to change screenshots without creating a new PBW release. For T9 Time, the emery gallery is a 200×228 looping GIF followed by three 200×228 PNGs. The upload input accepts multiple files and appends a new selection to files already queued, so remove duplicates before saving. Existing screenshots have no reorder control in this editor: remove the old gallery, then queue the full set in display order and save once. Reopen the editor to verify the saved order. The public app store page may continue to show cached screenshots for several minutes.

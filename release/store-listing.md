@@ -19,7 +19,7 @@ First release: animated T9 time, 12-hour and 24-hour display, and independent ba
 
 ## Screenshot order
 
-1. `screenshots/t9-time-01-typing-green.png` — typing moment in the default palette.
+1. `screenshots/t9-time-01-typing-green.gif` — looping hour and minute typing in the default palette.
 2. `screenshots/t9-time-02-black-white.png` — high-contrast monochrome palette.
 3. `screenshots/t9-time-03-midnight-yellow.png` — midnight and yellow palette.
 4. `screenshots/t9-time-04-cream-burgundy.png` — cream and burgundy palette.

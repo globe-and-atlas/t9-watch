@@ -6,9 +6,9 @@ The face has a 12-hour or 24-hour setting and independent Pebble color pickers f
 
 ## Screenshots
 
-The first frame catches the minute while it is being typed, with an underscore cursor and active T9 key visible. The other frames show alternate color choices on the native 200×228 emery display.
+The first image loops through the hour and minute being typed, with an underscore cursor and active T9 keys. The other images show alternate color choices on the native 200×228 emery display.
 
-![Green T9 Time typing the minute](screenshots/t9-time-01-typing-green.png)
+![Animated green T9 Time typing the hour and minute](screenshots/t9-time-01-typing-green.gif)
 ![Black background with white T9 text](screenshots/t9-time-02-black-white.png)
 ![Midnight blue background with yellow T9 text](screenshots/t9-time-03-midnight-yellow.png)
 ![Cream background with burgundy T9 text](screenshots/t9-time-04-cream-burgundy.png)
