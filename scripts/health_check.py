@@ -96,7 +96,7 @@ def check_required_files(profile: str) -> None:
 
 # ── Environment ───────────────────────────────────────────────────────────────
 
-def check_env(profile: str) -> None:
+def check_env(profile: str, runtime: str) -> None:
     section("Environment")
 
     env_path = ROOT / ".env"
@@ -124,7 +124,7 @@ def check_env(profile: str) -> None:
             else:
                 check(".env has all keys from .env.example", True)
 
-    if profile in ("workflow-python", "hybrid-geospatial"):
+    if profile in ("workflow-python", "hybrid-geospatial") and runtime != "pebble-sdk":
         venv = ROOT / ".venv"
         check(".venv exists", venv.exists(),
               "run: python3 -m venv .venv" if not venv.exists() else "", warning=True)
@@ -206,7 +206,8 @@ def check_knowledge() -> None:
     if index.exists():
         index_content = index.read_text()
         has_entries = any(
-            line.strip().startswith("- [") and "gitkeep" not in line
+            (line.strip().startswith("- [") or line.strip().startswith("| ["))
+            and "gitkeep" not in line
             for line in index_content.splitlines()
         )
         check("knowledge/INDEX.md has entries", has_entries,
@@ -222,7 +223,7 @@ def check_tasks() -> None:
         check("task.md exists", False)
         return
     content = task_md.read_text()
-    is_template = "t9-watch" in content or "[Objective Name]" in content
+    is_template = "Define the first real milestone" in content or "[Objective Name]" in content
     check("task.md has been updated from template", not is_template,
           "still using placeholder text" if is_template else "", warning=True)
 
@@ -250,9 +251,9 @@ def check_execution(profile: str) -> None:
 
     for script in real_scripts:
         content = script.read_text()
-        has_dry_run = "--dry-run" in content
-        check(f"{script.name} has --dry-run flag", has_dry_run,
-              "add: parser.add_argument('--dry-run')" if not has_dry_run else "", warning=True)
+        has_safe_check = "--dry-run" in content or (script.name == "build.py" and "--host-only" in content)
+        check(f"{script.name} has a safe check mode", has_safe_check,
+              "add a check-only mode" if not has_safe_check else "", warning=True)
 
     # Check coupling: scripts referenced in directives
     directives_dir = ROOT / "directives"
@@ -270,12 +271,23 @@ def check_execution(profile: str) -> None:
 
 # ── Tests ─────────────────────────────────────────────────────────────────────
 
-def check_tests(profile: str) -> None:
+def check_tests(profile: str, runtime: str) -> None:
     tests_dir = ROOT / "tests"
     if not tests_dir.exists():
         return
 
     section("Tests")
+    if runtime == "pebble-sdk":
+        host_test = tests_dir / "host" / "test_t9_model.c"
+        check("Host C test exists", host_test.exists())
+        if host_test.exists():
+            result = subprocess.run(
+                ["python3", "execution/build.py", "--host-only"],
+                cwd=ROOT, capture_output=True, text=True, timeout=60,
+            )
+            check("Host C test passes", result.returncode == 0,
+                  result.stderr.strip() if result.returncode else "")
+        return
     test_files = [
         f for f in tests_dir.iterdir()
         if f.suffix == ".py" and f.name != "_template_test.py" and f.name != "__init__.py"
@@ -321,12 +333,13 @@ def main() -> None:
     print(f"{'='*52}")
 
     check_required_files(profile)
-    check_env(profile)
+    runtime = profile_data.get("runtime", "")
+    check_env(profile, runtime)
     check_secrets()
     check_knowledge()
     check_tasks()
     check_execution(profile)
-    check_tests(profile)
+    check_tests(profile, runtime)
 
     print(f"\n{'─'*52}")
     total = failures_count + warnings_count

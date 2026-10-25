@@ -1,31 +1,144 @@
-# Task: t9-watch
+# Task: T9 watch face
 
 ## Objective
 
-Define the first real milestone for this `workflow-python` project.
+Build a Pebble Time 2 watch face based on the first green LCD render. At each minute change, it types the hour and minute words using the matching T9 keys.
 
-## Context
+## Contract
 
-- Deploy target: `local-only`
-- Runtime: `python`
-- Loop mode: `data`
-- Knowledge level: `heavy`
+- Target directive: `directives/build_watchface.md`.
+- Execution script: `execution/build.py`.
+- Output artifact: `dist/t9-watch.pbw`.
+- Safety: generated files stay outside Git.
+- Safety: do not publish or push this project.
 
-## Acceptance Criteria
+## Validation Contract
 
-- [ ] Objective is rewritten from template language into project language
-- [ ] First implementation step is clear
-- [ ] Relevant directive exists in `directives/`
-- [ ] Health check passes for this profile
+- The face shows the correct numeric time immediately after a minute change.
+- The face types the hour words at each minute change.
+- The face types the minute words after the hour words.
+- Each typed letter highlights its T9 key.
+- A completed word with a configured collision briefly displays its alternate candidate.
+- The final hour words match the selected time format.
+- The final minute words represent values from 00 through 59.
+- The settings page offers 12-hour display.
+- The settings page offers 24-hour display.
+- The watch face contains no date display.
+- The settings page contains no date option.
+- Host tests pass for time words and T9 mappings.
+- The emery PBW builds successfully.
+- An emulator screenshot shows legible settled text.
+- A fresh verifier reviews the finished feature.
 
-## Steps
+## Checklist
 
-- [ ] Populate README and context
-- [ ] Draft the first workflow directive
-- [ ] Implement the first thin slice
+- [x] Create project from the workspace template.
+- [x] Implement the word and T9 model.
+- [x] Implement the native watch face and animation.
+- [x] Implement the time-format setting.
+- [x] Run host tests, build, and emulator inspection.
+- [x] Record the final handoff.
 
-## Progress Log
+## Color settings milestone — 2026-10-25
 
-### YYYY-MM-DD HH:MM — Bootstrap
-- Project scaffold created from `project-template`
-- Next: replace placeholders and define the first real milestone
+### Validation Contract
+
+- The settings page offers a background color picker.
+- The settings page offers a text color picker.
+- The default background matches the current green face.
+- The default text color matches the current dark face.
+- A saved background choice changes the rendered background.
+- A saved text choice changes the rendered digits.
+- A saved text choice changes the rendered words.
+- A saved text choice changes the keypad outlines.
+- The watch restores both color choices after relaunch.
+- The 12/24-hour setting still works.
+- The settings page contains no date option.
+- The emery PBW builds successfully.
+- Emulator screenshots verify a non-default color pair.
+- A fresh verifier reviews the final color behavior.
+
+### Checklist
+
+- [x] Add independent Clay color pickers.
+- [x] Persist both colors on the watch.
+- [x] Build and inspect an alternate palette.
+- [x] Record the verified handoff.
+
+## Screenshot set — 2026-10-25
+
+### Contract
+
+- Target directive: `directives/build_watchface.md`.
+- Capture path: Pebble emery CLI.
+- Output artifact: `screenshots/` PNG set.
+- Safety: capture only the T9 Time emulator face.
+
+### Validation Contract
+
+- A green screenshot shows a word partially typed.
+- The typing screenshot shows an active T9 key.
+- A second screenshot shows a complete time in a different palette.
+- A third screenshot shows a complete time in another different palette.
+- Each screenshot is a native 200×228 emery image.
+- The emulator settings are restored to green and black after capture.
+- A reviewer inspects the final screenshot set.
+
+### Checklist
+
+- [x] Capture an in-progress typing frame.
+- [x] Capture two other color options.
+- [x] Inspect the exported PNGs.
+- [x] Restore the default emulator palette.
+
+## Typing cursor — 2026-10-25
+
+### Validation Contract
+
+- The in-progress cursor is a horizontal underscore.
+- The cursor follows the current word fragment.
+- The cursor does not overlap the next line of text.
+- The green hero screenshot shows a partial minute word with the underscore.
+- The green hero screenshot shows an active T9 key.
+- The emery PBW builds successfully.
+- A fresh verifier inspects the final cursor and screenshot.
+
+### Checklist
+
+- [x] Replace the vertical cursor.
+- [x] Rebuild and capture a typing frame.
+- [x] Review the exported screenshot.
+- [x] Complete independent verification.
+
+## Pebble app store release — 2026-10-25
+
+### Contract
+
+- Target: Pebble app store watchface listing.
+- Build artifact: `dist/t9-watch.pbw`.
+- Listing copy: `release/store-listing.md`.
+- Screenshots: four emery PNGs from `screenshots/`.
+- Safety: never upload secrets or temporary files.
+
+### Validation Contract
+
+- The PBW targets emery.
+- The PBW identifies as a watchface.
+- The PBW version is valid for a first release.
+- The lead store screenshot shows partial T9 typing.
+- Four submitted screenshots have 200×228 dimensions.
+- The store description matches implemented behavior.
+- The production PBW builds successfully.
+- Host tests pass.
+- A fresh verifier reviews the release package.
+- The app store returns a public listing URL.
+- The submitted release is published.
+- The repository records the listing URL.
+
+### Checklist
+
+- [x] Prepare listing text and screenshot upload files.
+- [x] Run release verification.
+- [x] Submit the Pebble app store listing.
+- [x] Verify the public listing.
+- [x] Record the release handoff.

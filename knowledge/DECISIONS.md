@@ -1,7 +1,17 @@
 # Decisions
 
-## Initial Decision
+## 2026-10-25 — Native watch face with a host-tested text model
 
-- Template profile: `workflow-python`
-- Deploy target: `local-only`
-- Runtime: `python`
+The project uses a Pebble C watch app for drawing and timing. `t9_model.c` owns hour/minute phrasing and key mappings so its full input range can be tested on the host. The Python build script orchestrates host checks and the Pebble SDK. This retains the scaffold's `workflow-python` profile while the user-facing runtime is native Pebble.
+
+## 2026-10-25 — Time format and date scope
+
+The default is 12-hour time. Clay offers 12-hour and 24-hour choices, persisted on the watch. The face omits date text and date settings, as requested. Alternatives considered: inheriting the phone's format without an explicit option, and including the date formats used by other watch faces. An explicit time-format choice meets this face's narrower brief.
+
+## 2026-10-25 — T9 collision behavior
+
+The app retypes the full hour/minute message every minute. Hour collisions appear on launch or when the hour changes so a repeated hour does not produce the same wrong guess every minute. Minute collisions appear when their word occurs. The numeric time is always visible during typing.
+
+## 2026-10-25 — Independent foreground and background colors
+
+Clay offers two Pebble palette pickers. The background choice fills the screen and unlit keypad keys; the foreground choice colors digits, words, outlines, and the active key. Both 24-bit RGB choices are saved separately on the watch. The existing green and dark palette remains the default. A small contrast reminder appears in settings because very similar choices can make the face unreadable.
