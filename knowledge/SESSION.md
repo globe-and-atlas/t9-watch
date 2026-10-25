@@ -19,3 +19,7 @@
 
 S.D.G.: Makes the finished T9 typing watchface available to Pebble Time 2 wearers with a listing that shows its defining moment.
 Feynman gap: Store delivery and emulator behavior were verified; physical-watch settings and readability remain unverified.
+
+## Checkpoint Log
+
+- 2026-10-25 16:07 — commit: Release T9 Time 0.1.0 to Pebble app store | DEPLOY.md,Makefile,README.md,directives/bootstrap_project.md,directives/build_watchface.md
