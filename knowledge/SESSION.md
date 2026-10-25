@@ -39,3 +39,4 @@ Feynman gap: The public GIF and binary were verified; physical-watch settings, r
 ## Checkpoint Log
 
 - 2026-10-25 16:07 — commit: Release T9 Time 0.1.0 to Pebble app store | DEPLOY.md,Makefile,README.md,directives/bootstrap_project.md,directives/build_watchface.md
+- 2026-10-25 16:21 — commit: Add animated T9 store screenshot | DEPLOY.md,README.md,knowledge/INDEX.md,knowledge/REFLECTIONS.jsonl,knowledge/SESSION.md
