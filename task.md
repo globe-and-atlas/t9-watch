@@ -174,3 +174,22 @@ Build a Pebble Time 2 watch face based on the first green LCD render. At each mi
 - [x] Replace the first store image.
 - [x] Verify the public listing.
 - [x] Record the listing update.
+
+## Animated loop correction — 2026-10-25
+
+### Validation Contract
+
+- The GIF's numeric time reads 09:13 in every frame.
+- The GIF begins with the 09:13 typing sequence.
+- The GIF ends with the settled word THIRTEEN.
+- The GIF loops continuously.
+- The public listing shows the corrected GIF first.
+- The three alternate-color screenshots remain on the public listing.
+- The published PBW remains version 0.1.0.
+
+### Checklist
+
+- [x] Remove the 09:12 lead frames.
+- [x] Inspect the corrected loop.
+- [x] Replace the store GIF.
+- [x] Verify the public listing.
