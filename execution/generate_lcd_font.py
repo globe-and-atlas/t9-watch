@@ -18,13 +18,15 @@ def render_header() -> str:
     font = ImageFont.truetype(str(SOURCE), PIXEL_SIZE)
     glyphs = []
     height = 0
+    baseline_top = min(font.getmask2(char)[1][1] for char in CHARS)
     for char in CHARS:
-        mask = font.getmask(char)
+        mask, offset = font.getmask2(char)
         width, rows = mask.size
-        height = max(height, rows)
+        top_padding = offset[1] - baseline_top
+        height = max(height, top_padding + rows)
         if width > 16:
             raise ValueError(f"Glyph {char!r} exceeds 16 columns")
-        bitmap = [
+        bitmap = [0] * top_padding + [
             sum(1 << (width - 1 - x) for x in range(width)
                 if mask.getpixel((x, y)) >= THRESHOLD)
             for y in range(rows)

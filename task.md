@@ -1,5 +1,37 @@
 # Task: T9 watch face
 
+## 0.2.1 clock header correction — 2026-10-26
+
+### Validation Contract
+
+- The Nokia numeric colon aligns vertically with its digits.
+- The Nokia keypad uses individual oval-shaped keys.
+- The Nokia outer key columns have mirrored angles.
+- The Nokia keypad legends fit inside their keys.
+- The T9 digit line retains the v1 gap above the keypad.
+- The watchface shows no signal bars.
+- The watchface shows no disconnected-signal mark.
+- The battery icon appears at the upper left when enabled.
+- The battery icon is absent when disabled.
+- The battery icon fill reflects Pebble battery percentage.
+- The RAZR numeric clock remains legible.
+- The emery PBW builds successfully.
+- Host T9 tests pass.
+- A native 200×228 screenshot shows the corrected Nokia header.
+- The published 0.2.1 gallery shows the corrected header.
+- The published 0.2.1 PBW matches the release artifact.
+- A fresh verifier reviews the update.
+
+### Checklist
+
+- [x] Preserve the font colon's vertical offset.
+- [x] Restore v1 spacing for the T9 digit line.
+- [x] Shape the 3310-inspired keypad.
+- [x] Remove the connection indicator.
+- [x] Rebuild and inspect both themes.
+- [x] Update the store media.
+- [x] Publish and verify 0.2.1.
+
 ## Nokia 3310 visual update — 2026-10-26
 
 The requested update now includes a selectable RAZR V3 treatment and a battery-icon option.

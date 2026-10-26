@@ -19,3 +19,7 @@ The first 0.2.0 rollover capture showed the previous black/white RAZR setting ev
 ## 2026-10-26 — Clean rebuild changed the PBW bytes
 
 After 0.2.0 publication, a clean `execution/build.py` run produced a different PBW SHA-256 despite unchanged source. Zip entry comparison showed identical appinfo, JavaScript, and resources, but different native `pebble-app.bin` and manifest bytes. The publish-time download matched the original local PBW byte for byte. Restored that verified public PBW to ignored `dist/t9-watch.pbw` as the release artifact. Future rebuilds need functional verification rather than an expectation of identical package bytes. Graduated to: `knowledge/procedural/publish_appstore.md`.
+
+## 2026-10-26 — Nokia colon and T9 key line lost their v1 alignment
+
+The first Nokja bitmap generator used `getmask`, which omits a glyph's vertical bearing. The colon's natural top offset is three pixels lower than the digits, so top-aligning all glyph masks placed it too high. Switched to `getmask2` and kept that offset in the generated rows. The same font was too tall for the small T9 digit line above the keypad; rendering utility text with the original compact font restored the v1 gap. Graduated to: `execution/generate_lcd_font.py` and `watchface/src/c/main.c`.

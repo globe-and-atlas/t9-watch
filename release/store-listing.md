@@ -21,6 +21,10 @@ First release: animated T9 time, 12-hour and 24-hour display, and independent ba
 
 Adds selectable 3310 and RAZR V3-inspired displays and keypads, model color palettes, and an optional watch-battery icon. Existing T9 typing, 12/24-hour time, and custom colors remain available.
 
+## 0.2.1 release notes
+
+Aligns the 3310 clock colon with the digits, removes the connection bars, and gives the 3310 keypad individually shaped oval keys. Restores the original spacing between the T9 digit line and keypad while keeping the optional watch-battery icon.
+
 ## Screenshot order
 
 1. `screenshots/t9-time-01-typing-nokia.gif` — looping typing in the 3310 palette.
@@ -32,11 +36,11 @@ Adds selectable 3310 and RAZR V3-inspired displays and keypads, model color pale
 
 - Platform: emery (Pebble Time 2).
 - Type: watchface.
-- Version: 0.2.0.
+- Version: 0.2.1.
 - Date display: none.
 
 ## Published release
 
 - Date: 2026-10-26.
 - URL: https://apps.repebble.com/6641551debac4064ab47acba
-- State: 0.2.0 published and publicly downloadable; the uploaded PBW matches `dist/t9-watch.pbw` byte for byte.
+- State: 0.2.1 published and publicly downloadable; the uploaded PBW matches `dist/t9-watch.pbw` byte for byte.

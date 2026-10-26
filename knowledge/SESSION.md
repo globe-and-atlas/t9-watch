@@ -2,6 +2,35 @@
 
 ## Current Session
 
+**Goal:** Correct the Nokia header and refine its keypad for T9 Time 0.2.1.
+**Agent:** OpenAI Codex
+**Handoff-from:** OpenAI Codex
+**Handoff-type:** continuation
+**Status:** Complete; 0.2.1 published with the corrected gallery.
+
+### 2026-10-26 — 0.2.1 correction checkpoint
+
+- Preserved the Nokja colon's vertical bearing in the generated bitmap, lowering it to align with numeric digits.
+- Removed connection bars and the disconnected mark. The optional upper-left battery icon still reads watch charge.
+- Restored the v1 compact alphabet for utility labels, keypad legends, and the T9 digit line so it clears the keypad.
+- Drew individual tapered oval Nokia keys with mirrored outer-column angles at the v1 row positions.
+- Native emery captures showed the corrected header and keypad, RAZR without signal bars, battery off, and battery fill at 20% versus 100% after callback settling.
+- Captured a current-minute 200×228 typing GIF and three new theme/color stills; backed up and hash-restored the shared emery emulator state.
+- A fresh read-only verifier passed the final font, spacing, keypad geometry, optional battery, GIF, host checks, and PBW metadata.
+- Published 0.2.1. The public Pebble Time 2 listing shows the corrected GIF first and the updated description. The public GIF matches the local file byte for byte, the PNGs are pixel-identical, and the public PBW matches the publish build and `dist/t9-watch.pbw` byte for byte.
+
+### Current handoff — 2026-10-26
+
+- **Candidate:** 0.2.1 PBW at `dist/t9-watch.pbw`.
+- **Media:** `screenshots/t9-time-01-typing-nokia.gif` plus three current PNGs.
+- **Next:** Check the physical Pebble Time 2 settings flow and on-wrist contrast.
+- **Open verification:** Physical Pebble Time 2 settings, on-wrist contrast, and animation battery impact remain unmeasured.
+
+S.D.G.: Keeps a familiar handset keypad readable while making the clock header accurate at a glance.
+Feynman gap: The public release and native captures were verified; physical-watch behavior remains unmeasured.
+
+## Previous Session — 0.2.0
+
 **Goal:** Release selectable Nokia 3310 and RAZR V3 treatments for T9 Time.
 **Agent:** OpenAI Codex
 **Handoff-from:** OpenAI Codex

@@ -47,11 +47,13 @@ static int razr_index(char c) {
   return -1;
 }
 
+static int compact_text_width(const char *text, int scale) {
+  int count = (int)strlen(text);
+  return count ? (count * 6 - 1) * scale : 0;
+}
+
 static int text_width(const char *text, int scale) {
-  if (s_razr) {
-    int count = (int)strlen(text);
-    return count ? (count * 6 - 1) * scale : 0;
-  }
+  if (s_razr) return compact_text_width(text, scale);
   int width = 0;
   for (; *text; text++) {
     const LcdGlyph *glyph = lcd_glyph(*text);
@@ -60,31 +62,37 @@ static int text_width(const char *text, int scale) {
   return width * scale;
 }
 
-static void draw_text(GContext *ctx, const char *text, int x, int y, int scale,
-                      GColor color) {
+static void draw_compact_text(GContext *ctx, const char *text, int x, int y,
+                              int scale, GColor color) {
   graphics_context_set_fill_color(ctx, color);
-  if (s_razr) {
-    for (; *text; text++, x += 6 * scale) {
-      if (*text == ':' || *text == '\'') {
-        graphics_fill_rect(ctx, GRect(x + 2 * scale, y + 2 * scale,
-                                      scale, scale), 0, GCornerNone);
-        if (*text == ':') graphics_fill_rect(ctx, GRect(x + 2 * scale,
-                                      y + 5 * scale, scale, scale), 0, GCornerNone);
-        continue;
-      }
-      int index = razr_index(*text);
-      if (index < 0) continue;
-      for (int row = 0; row < 7; row++) {
-        for (int column = 0; column < 5; column++) {
-          if (RAZR_GLYPHS[index][row] & (1 << (4 - column))) {
-            graphics_fill_rect(ctx, GRect(x + column * scale, y + row * scale,
-                                          scale, scale), 0, GCornerNone);
-          }
+  for (; *text; text++, x += 6 * scale) {
+    if (*text == ':' || *text == '\'') {
+      graphics_fill_rect(ctx, GRect(x + 2 * scale, y + 2 * scale,
+                                    scale, scale), 0, GCornerNone);
+      if (*text == ':') graphics_fill_rect(ctx, GRect(x + 2 * scale,
+                                    y + 5 * scale, scale, scale), 0, GCornerNone);
+      continue;
+    }
+    int index = razr_index(*text);
+    if (index < 0) continue;
+    for (int row = 0; row < 7; row++) {
+      for (int column = 0; column < 5; column++) {
+        if (RAZR_GLYPHS[index][row] & (1 << (4 - column))) {
+          graphics_fill_rect(ctx, GRect(x + column * scale, y + row * scale,
+                                        scale, scale), 0, GCornerNone);
         }
       }
     }
+  }
+}
+
+static void draw_text(GContext *ctx, const char *text, int x, int y, int scale,
+                      GColor color) {
+  if (s_razr) {
+    draw_compact_text(ctx, text, x, y, scale, color);
     return;
   }
+  graphics_context_set_fill_color(ctx, color);
   for (; *text; text++) {
     const LcdGlyph *glyph = lcd_glyph(*text);
     if (!glyph) {
@@ -100,6 +108,32 @@ static void draw_text(GContext *ctx, const char *text, int x, int y, int scale,
       }
     }
     x += glyph->advance * scale;
+  }
+}
+
+static void draw_nokia_key(GContext *ctx, int x, int y, int tilt,
+                           bool active, GColor ink, GColor paper) {
+  const int width = 56;
+  const int height = 13;
+  int starts[height];
+  int ends[height];
+  for (int row = 0; row < height; row++) {
+    int edge = row < height / 2 ? row : height - 1 - row;
+    int taper = edge == 0 ? 5 : edge == 1 ? 3 : edge == 2 ? 2 : edge == 3 ? 1 : 0;
+    int skew = tilt * (row - height / 2) / (height / 2);
+    starts[row] = x + taper + skew;
+    ends[row] = x + width - 1 - taper + skew;
+    graphics_context_set_fill_color(ctx, active ? ink : paper);
+    graphics_fill_rect(ctx, GRect(starts[row], y + row,
+                                  ends[row] - starts[row] + 1, 1), 0, GCornerNone);
+  }
+  graphics_context_set_stroke_color(ctx, ink);
+  graphics_draw_line(ctx, GPoint(starts[0], y), GPoint(ends[0], y));
+  graphics_draw_line(ctx, GPoint(starts[height - 1], y + height - 1),
+                     GPoint(ends[height - 1], y + height - 1));
+  for (int row = 1; row < height - 1; row++) {
+    graphics_draw_pixel(ctx, GPoint(starts[row], y + row));
+    graphics_draw_pixel(ctx, GPoint(ends[row], y + row));
   }
 }
 
@@ -133,16 +167,15 @@ static void draw_keypad(GContext *ctx, GColor ink, GColor paper) {
     return;
   }
   for (int key = 0; key < 12; key++) {
-    int x = 9 + (key % 3) * 62;
+    int column = key % 3;
+    int x = 10 + column * 62;
     int y = 168 + (key / 3) * 15;
+    int tilt = column == 0 ? 2 : column == 2 ? -2 : 0;
     bool active = key < 9 && s_highlight_key == key + 1;
-    GRect box = GRect(x, y, 58, 13);
-    graphics_context_set_fill_color(ctx, active ? ink : paper);
-    graphics_fill_rect(ctx, box, 6, GCornersAll);
-    graphics_context_set_stroke_color(ctx, ink);
-    graphics_draw_round_rect(ctx, box, 6);
-    int width = text_width(LABELS[key], 1);
-    draw_text(ctx, LABELS[key], x + (58 - width) / 2, y + 1, 1, active ? paper : ink);
+    draw_nokia_key(ctx, x, y, tilt, active, ink, paper);
+    int width = compact_text_width(LABELS[key], 1);
+    draw_compact_text(ctx, LABELS[key], x + (56 - width) / 2, y + 3, 1,
+                      active ? paper : ink);
   }
 }
 
@@ -243,29 +276,21 @@ static void draw_face(Layer *layer, GContext *ctx) {
     graphics_draw_round_rect(ctx, GRect(5, 4, 190, 159), 4);
   }
 
-  /* Compact handset-style indicators reflect real watch state. */
+  /* Show actual watch charge without implying a signal-strength measurement. */
   graphics_context_set_fill_color(ctx, ink);
-  if (connection_service_peek_pebble_app_connection()) {
-    for (int bar = 0; bar < 4; bar++) {
-      graphics_fill_rect(ctx, GRect(9 + bar * 4, 23 - bar * 4, 3, 4 + bar * 4), 0, GCornerNone);
-    }
-  } else {
-    graphics_draw_line(ctx, GPoint(9, 9), GPoint(23, 23));
-    graphics_draw_line(ctx, GPoint(23, 9), GPoint(9, 23));
-  }
   if (s_show_battery) {
-    graphics_draw_rect(ctx, GRect(31, 8, 16, 18));
-    graphics_fill_rect(ctx, GRect(47, 13, 2, 8), 0, GCornerNone);
+    graphics_draw_rect(ctx, GRect(9, 8, 16, 18));
+    graphics_fill_rect(ctx, GRect(25, 13, 2, 8), 0, GCornerNone);
     int battery_height = battery_state_service_peek().charge_percent * 12 / 100;
     if (battery_height) {
-      graphics_fill_rect(ctx, GRect(34, 23 - battery_height, 10, battery_height), 0, GCornerNone);
+      graphics_fill_rect(ctx, GRect(12, 23 - battery_height, 10, battery_height), 0, GCornerNone);
     }
   }
   draw_text(ctx, s_time.numeric, 200 - 9 - text_width(s_time.numeric, 3),
             s_razr ? 6 : 3, 3, ink);
   graphics_context_set_stroke_color(ctx, ink);
   graphics_draw_line(ctx, GPoint(9, 33), GPoint(190, 33));
-  draw_text(ctx, "HOUR", 9, 39, 1, ink);
+  draw_compact_text(ctx, "HOUR", 9, 39, 1, ink);
 
   char hour_line[40];
   combine_hour(hour_line, sizeof(hour_line));
@@ -305,7 +330,7 @@ static void draw_face(Layer *layer, GContext *ctx) {
     graphics_context_set_fill_color(ctx, ink);
     graphics_fill_rect(ctx, GRect(cursor_x, cursor_y, cursor_width, 3), 0, GCornerNone);
   }
-  draw_text(ctx, "MINUTE", 9, 142, 1, ink);
+  draw_compact_text(ctx, "MINUTE", 9, 142, 1, ink);
 
   char keys[36] = "";
   char fragment[20];
@@ -314,7 +339,8 @@ static void draw_face(Layer *layer, GContext *ctx) {
     if (index) strncat(keys, " ", sizeof(keys) - strlen(keys) - 1);
     strncat(keys, fragment, sizeof(keys) - strlen(keys) - 1);
   }
-  draw_text(ctx, keys, 9, 151, text_width(keys, 2) <= 182 ? 2 : 1, ink);
+  draw_compact_text(ctx, keys, 9, 151,
+                    compact_text_width(keys, 2) <= 182 ? 2 : 1, ink);
   draw_keypad(ctx, ink, paper);
 }
 
@@ -350,18 +376,9 @@ static void on_tick(struct tm *tick, TimeUnits units) {
   update_time(true, tick->tm_min == 0, tick);
 }
 
-static void on_status_change(void) {
-  layer_mark_dirty(s_face);
-}
-
-static void on_connection(bool connected) {
-  (void)connected;
-  on_status_change();
-}
-
 static void on_battery(BatteryChargeState charge) {
   (void)charge;
-  on_status_change();
+  layer_mark_dirty(s_face);
 }
 
 static bool read_color(Tuple *item, uint32_t *color, int storage_key) {
@@ -439,9 +456,6 @@ static void init(void) {
   window_stack_push(s_window, true);
   app_message_register_inbox_received(on_message);
   app_message_open(128, 64);
-  connection_service_subscribe((ConnectionHandlers) {
-    .pebble_app_connection_handler = on_connection
-  });
   battery_state_service_subscribe(on_battery);
   tick_timer_service_subscribe(MINUTE_UNIT, on_tick);
   update_time(true, true, NULL);
@@ -449,7 +463,6 @@ static void init(void) {
 
 static void deinit(void) {
   tick_timer_service_unsubscribe();
-  connection_service_unsubscribe();
   battery_state_service_unsubscribe();
   if (s_timer) app_timer_cancel(s_timer);
   app_message_deregister_callbacks();

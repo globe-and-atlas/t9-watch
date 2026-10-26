@@ -18,4 +18,8 @@ Clay offers two Pebble palette pickers. The background choice fills the screen a
 
 ## 2026-10-26 — Selectable phone treatments
 
-Nokia 3310 is the default visual treatment, with a licensed bitmap-font recreation and rounded keys. RAZR V3 uses the earlier compact alphabet, a thin divided keypad plate, and a blue default palette. A model-colors switch selects each treatment's default colors; turning it off applies the existing independent color pickers. Existing non-default saved colors migrate to custom-color mode. The upper-left battery indicator is optional and reads the watch's actual battery percentage. The connection indicator reads Pebble app connection state.
+Nokia 3310 is the default visual treatment, with a licensed bitmap-font recreation and rounded keys. RAZR V3 uses the earlier compact alphabet, a thin divided keypad plate, and a blue default palette. A model-colors switch selects each treatment's default colors; turning it off applies the existing independent color pickers. Existing non-default saved colors migrate to custom-color mode. The upper-left battery indicator is optional and reads the watch's actual battery percentage. Version 0.2.0's connection indicator read Pebble app connection state; version 0.2.1 removes it.
+
+## 2026-10-26 — Header and keypad refinement
+
+The connection bars were removed because the prior display represented only a connected/disconnected Pebble app state, not Wi-Fi signal strength. The battery icon remains optional and moves to the upper-left corner. The Nokia style uses individual tapered oval key outlines with mirrored outer-column angles; its utility labels and T9 digit line retain the original compact 5×7 alphabet so the pre-keypad spacing matches v1.
