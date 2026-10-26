@@ -1,5 +1,51 @@
 # Task: T9 watch face
 
+## Nokia 3310 visual update — 2026-10-26
+
+The requested update now includes a selectable RAZR V3 treatment and a battery-icon option.
+
+### Validation Contract
+
+- The hour words use the new LCD bitmap lettering.
+- The minute words use the new LCD bitmap lettering.
+- The numeric time uses the new LCD bitmap lettering.
+- The keypad has twelve rounded keys.
+- The settings page offers Nokia 3310.
+- The settings page offers Motorola RAZR V3.
+- The RAZR selection changes the display lettering.
+- The RAZR selection changes the keypad geometry.
+- The RAZR selection uses a blue default palette.
+- The Nokia selection uses a green default palette.
+- The settings page offers a battery-icon switch.
+- The battery-icon switch hides the icon when disabled.
+- The battery-icon switch shows the icon when enabled.
+- A phone-model choice persists after relaunch.
+- A battery-icon choice persists after relaunch.
+- Existing custom colors remain usable.
+- An active T9 key remains visibly distinct.
+- The 12-hour setting still displays the correct hour words.
+- The 24-hour setting still displays the correct hour words.
+- The face contains no date display.
+- The settings contain no date option.
+- The emery PBW builds successfully.
+- Host time and T9 tests pass.
+- A native 200×228 screenshot shows legible settled time.
+- A native 200×228 screenshot shows legible typing.
+- A fresh verifier reviews the final watchface.
+- The public Pebble listing offers version 0.2.0.
+- The public Pebble listing shows the new 3310 GIF first.
+- The public PBW matches the local release build.
+
+### Checklist
+
+- [x] Add the licensed bitmap lettering source and generation path.
+- [x] Draw the rounded 3310-style keypad.
+- [x] Draw the etched RAZR-style keypad.
+- [x] Add phone-model and battery settings.
+- [x] Build and inspect the native face.
+- [x] Complete independent verification.
+- [x] Publish the store update.
+
 ## Objective
 
 Build a Pebble Time 2 watch face based on the first green LCD render. At each minute change, it types the hour and minute words using the matching T9 keys.

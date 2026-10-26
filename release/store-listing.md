@@ -11,28 +11,32 @@ T9 Time
 
 ## Description
 
-T9 Time turns each minute into a tiny predictive-text moment. The numeric clock updates immediately, then the hour and minute type themselves while the matching T9 keys light up. When two words share a key sequence, the face briefly shows another candidate before settling on the time. Choose 12-hour or 24-hour display, plus separate background and text colors. Made for Pebble Time 2.
+T9 Time turns each minute into a tiny predictive-text moment. The numeric clock updates immediately, then the hour and minute type themselves while the matching T9 keys light up. When two words share a key sequence, the face briefly shows another candidate before settling on the time. Choose a Nokia 3310 or Motorola RAZR V3-inspired style, show or hide the battery icon, select 12-hour or 24-hour time, and use model colors or your own background and text colors. Made for Pebble Time 2.
 
 ## Initial release notes
 
 First release: animated T9 time, 12-hour and 24-hour display, and independent background and text colors.
 
+## 0.2.0 release notes
+
+Adds selectable 3310 and RAZR V3-inspired displays and keypads, model color palettes, and an optional watch-battery icon. Existing T9 typing, 12/24-hour time, and custom colors remain available.
+
 ## Screenshot order
 
-1. `screenshots/t9-time-01-typing-green.gif` — looping hour and minute typing in the default palette.
-2. `screenshots/t9-time-02-black-white.png` — high-contrast monochrome palette.
-3. `screenshots/t9-time-03-midnight-yellow.png` — midnight and yellow palette.
-4. `screenshots/t9-time-04-cream-burgundy.png` — cream and burgundy palette.
+1. `screenshots/t9-time-01-typing-nokia.gif` — looping typing in the 3310 palette.
+2. `screenshots/t9-time-02-razr-blue.png` — RAZR style and model blue.
+3. `screenshots/t9-time-03-nokia-cream.png` — 3310 style with custom colors.
+4. `screenshots/t9-time-04-razr-monochrome.png` — RAZR style with custom colors.
 
 ## Scope
 
 - Platform: emery (Pebble Time 2).
 - Type: watchface.
-- Version: 0.1.0.
+- Version: 0.2.0.
 - Date display: none.
 
 ## Published release
 
-- Date: 2026-10-25.
+- Date: 2026-10-26.
 - URL: https://apps.repebble.com/6641551debac4064ab47acba
-- State: published and publicly downloadable.
+- State: 0.2.0 published and publicly downloadable; the uploaded PBW matches `dist/t9-watch.pbw` byte for byte.

@@ -2,6 +2,39 @@
 
 ## Current Session
 
+**Goal:** Release selectable Nokia 3310 and RAZR V3 treatments for T9 Time.
+**Agent:** OpenAI Codex
+**Handoff-from:** OpenAI Codex
+**Handoff-type:** continuation
+**Status:** Complete; 0.2.0 published with the new gallery.
+
+### 2026-10-26 — Theme implementation checkpoint
+
+- Added a licensed 3310 bitmap-font source and reproducible C-header generator.
+- Added rounded 3310 keys and a separate blue RAZR treatment with a thin keypad grid.
+- Added Clay settings for phone model, battery icon, and model versus custom colors; previous non-default color choices migrate to custom mode.
+- The battery indicator reads watch charge and can be hidden. The connection bars read the Pebble app connection state.
+- Host C tests and the emery PBW build passed. Native captures showed 3310 and RAZR settled text, RAZR 24-hour words, battery-off state, custom colors, and settings persistence after reinstall.
+- Generated an 18-frame 200×228 3310 store GIF with one numeric minute in every frame, plus three new theme/color stills.
+- Strict project health check and font/GIF dry-run checks passed. Shared emery persist state was restored from a matching 32-file backup.
+- First GIF capture inherited in-memory RAZR settings from running QEMU; a clean second capture produced the intended default 3310 palette.
+- A fresh read-only verifier checked both native themes, word fit across 12/24-hour values, the one-minute GIF loop, host checks, and settings persistence evidence.
+- The developer dashboard accepted 0.2.0 as Published. The public Pebble Time 2 page shows version 0.2.0, the 3310 GIF first, and the RAZR gallery. The public PBW SHA-256 matches the local build; the GIF is byte-identical and the three PNGs are pixel-identical to local media.
+- The dashboard saved the updated description. The public page still served the older description immediately afterward, consistent with listing cache delay.
+- A post-release clean build produced different native bin/manifest bytes with unchanged source. Restored the byte-verified public PBW to ignored `dist/t9-watch.pbw` as the release artifact.
+
+### Current handoff — 2026-10-26
+
+- **Candidate:** 0.2.0 PBW at `dist/t9-watch.pbw`.
+- **Media:** `screenshots/t9-time-01-typing-nokia.gif` plus the three current 0.2.0 PNGs.
+- **Next:** Check the physical Pebble Time 2 settings flow and on-wrist contrast; recheck public description after the listing cache refreshes.
+- **Open verification:** Physical Pebble Time 2 behavior, on-wrist contrast, and animation battery impact remain unmeasured.
+
+S.D.G.: Gives Pebble Time 2 wearers a familiar phone design they can choose without losing a readable time or their color choices.
+Feynman gap: The public binary and gallery were verified; physical-watch settings and the timing of public description cache refresh remain unverified.
+
+## Previous Session
+
 **Goal:** Remove the 09:12 flash from the looping store GIF.
 **Agent:** OpenAI Codex
 **Handoff-from:** OpenAI Codex

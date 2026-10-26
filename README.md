@@ -2,20 +2,20 @@
 
 A Pebble Time 2 watch face that types the current time as T9 text. At each minute change, the numeric clock updates immediately. The keypad then highlights the keys for the hour followed by the minute words. Known collisions briefly show a wrong candidate before the correct word settles.
 
-The face has a 12-hour or 24-hour setting and independent Pebble color pickers for the background and for the digits, words, and keypad. Green with dark ink remains the default. It has no date display or date setting.
+The face offers 12-hour or 24-hour time, Nokia 3310 and Motorola RAZR V3-inspired styles, and an optional watch-battery icon. Each style has a default palette; turn off **Use model colors** to use the independent background and text color pickers. It has no date display or date setting.
 
 ## Screenshots
 
-The first image loops through the hour and minute being typed, with an underscore cursor and active T9 keys. The other images show alternate color choices on the native 200×228 emery display.
+The first image loops through the hour and minute being typed, with an underscore cursor and active T9 keys. The other images show both phone styles and custom colors on the native 200×228 emery display.
 
-![Animated green T9 Time typing the hour and minute](screenshots/t9-time-01-typing-green.gif)
-![Black background with white T9 text](screenshots/t9-time-02-black-white.png)
-![Midnight blue background with yellow T9 text](screenshots/t9-time-03-midnight-yellow.png)
-![Cream background with burgundy T9 text](screenshots/t9-time-04-cream-burgundy.png)
+![Animated 3310-style T9 Time typing the hour and minute](screenshots/t9-time-01-typing-nokia.gif)
+![Blue RAZR-style display](screenshots/t9-time-02-razr-blue.png)
+![3310-style display with custom light and burgundy colors](screenshots/t9-time-03-nokia-cream.png)
+![RAZR-style display with custom black and white colors](screenshots/t9-time-04-razr-monochrome.png)
 
 ## Build
 
-Requirements: Pebble SDK with emery support, Node.js, and a C compiler for host checks.
+Requirements: Pebble SDK with emery support, Node.js, and a C compiler for host checks. Pillow 12.3.0 is needed only to regenerate the LCD font header or store GIF.
 
 ```bash
 npm install --prefix watchface
@@ -31,4 +31,4 @@ pebble install --emulator emery dist/t9-watch.pbw
 pebble screenshot --emulator emery --no-open --no-correction .tmp/emery.png
 ```
 
-The final layout uses a custom 5×7 pixel alphabet drawn in C. The green LCD concept render guided the composition; the native emery palette and physical watch need separate readability checks.
+The 3310 style uses a bitmap generated from the MIT-licensed [Nokja Original Small Bold](https://webdraft.hu/fonts/nokja-original/) font recreation. The RAZR treatment uses a separate compact pixel alphabet and a thin etched keypad grid. The native emery palette and physical watch need separate readability checks.

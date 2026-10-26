@@ -1,12 +1,12 @@
 # Release
 
-T9 Time 0.1.0 was published to the Pebble app store on 2026-10-25.
+T9 Time 0.2.0 was published to the Pebble app store on 2026-10-26.
 
 - Public listing: https://apps.repebble.com/6641551debac4064ab47acba
 - Platform: emery (Pebble Time 2).
 - Release PBW: `dist/t9-watch.pbw`.
-- PBW SHA-256: `66f4472815508fd9026f0ca14d8999d6e64c88d419e5146a065a622f7e7edf44`.
-- Store assets: one corrected animated GIF followed by three alternate-color PNGs in `screenshots/`. The GIF stays at 09:13 throughout its loop; the original green PNG remains as a static fallback.
-- Verification: the public listing shows the corrected GIF first and the three PNGs after it. The release version remains 0.1.0, and the downloaded PBW remains byte-identical to the local release build.
+- PBW SHA-256: `1640b8617fa7580d56e6029bb9698d10f3693b25173f8f1724b74ae07140b2b1`.
+- Store assets: one 3310 typing GIF followed by a blue RAZR still, custom-color 3310 still, and monochrome RAZR still in `screenshots/`. The GIF stays at 06:38 throughout its loop.
+- Verification: the public listing shows version 0.2.0 and the updated gallery. The downloaded PBW is byte-identical to `dist/t9-watch.pbw`. The dashboard retains the updated description and lists the release as published.
 
 Physical-watch Clay Save, on-wrist contrast, and animation battery impact remain unverified. The project has no Git remote, so its source has not been pushed to GitHub.

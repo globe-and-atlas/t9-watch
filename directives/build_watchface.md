@@ -19,8 +19,12 @@ Produce an emery PBW that types the hour and minute words on each minute change.
 
 1. Install JavaScript dependencies with `npm install --prefix watchface` when missing.
 2. Run `python3 execution/build.py` from the project root.
+   If the bundled LCD font changes, run `python3 execution/generate_lcd_font.py` first;
+   `python3 execution/generate_lcd_font.py --dry-run` checks that the header is current.
 3. Inspect `.tmp/runlog.md` for errors when the build fails.
 4. Install `dist/t9-watch.pbw` in the emery emulator for visual inspection.
+5. For a store GIF, capture the emery rollover and run `python3 execution/prepare_store_gif.py <source.gif> <output.gif>`.
+   Its `--dry-run` mode reports the frame trim without writing a file.
 
 ## Output
 

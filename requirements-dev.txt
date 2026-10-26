@@ -1,1 +1,2 @@
 # Host checks use the system C compiler.
+Pillow==12.3.0  # Rasterize the licensed LCD font and prepare store GIFs.

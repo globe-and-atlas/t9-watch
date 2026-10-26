@@ -15,3 +15,7 @@ The app retypes the full hour/minute message every minute. Hour collisions appea
 ## 2026-10-25 — Independent foreground and background colors
 
 Clay offers two Pebble palette pickers. The background choice fills the screen and unlit keypad keys; the foreground choice colors digits, words, outlines, and the active key. Both 24-bit RGB choices are saved separately on the watch. The existing green and dark palette remains the default. A small contrast reminder appears in settings because very similar choices can make the face unreadable.
+
+## 2026-10-26 — Selectable phone treatments
+
+Nokia 3310 is the default visual treatment, with a licensed bitmap-font recreation and rounded keys. RAZR V3 uses the earlier compact alphabet, a thin divided keypad plate, and a blue default palette. A model-colors switch selects each treatment's default colors; turning it off applies the existing independent color pickers. Existing non-default saved colors migrate to custom-color mode. The upper-left battery indicator is optional and reads the watch's actual battery percentage. The connection indicator reads Pebble app connection state.

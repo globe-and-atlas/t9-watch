@@ -11,3 +11,11 @@ During a rapid sequence of emulator screenshots, `pebble ping` timed out and the
 ## 2026-10-25 — Store GIF flashed the previous minute at the loop seam
 
 The GIF began with five 09:12 frames captured before the 09:13 rollover. On each loop, those frames appeared after THIRTEEN and made the face seem to jump back to 12. Removed the lead frames, leaving only 09:13 frames in the loop. Inspect the first and last frames together and compare the clock region across every frame before uploading a looping time animation. Graduated to: `knowledge/procedural/publish_appstore.md`.
+
+## 2026-10-26 — GIF capture inherited an in-memory emulator theme
+
+The first 0.2.0 rollover capture showed the previous black/white RAZR setting even though the SDK had removed its persist directory. QEMU was already running and retained the watch settings in memory. The capture command stopped QEMU on completion; the next capture booted fresh and showed the default green 3310 treatment. Stop the shared emulator cleanly before a default-theme rollover capture, and inspect the resulting frames before using them. Graduated to: `knowledge/procedural/publish_appstore.md`.
+
+## 2026-10-26 — Clean rebuild changed the PBW bytes
+
+After 0.2.0 publication, a clean `execution/build.py` run produced a different PBW SHA-256 despite unchanged source. Zip entry comparison showed identical appinfo, JavaScript, and resources, but different native `pebble-app.bin` and manifest bytes. The publish-time download matched the original local PBW byte for byte. Restored that verified public PBW to ignored `dist/t9-watch.pbw` as the release artifact. Future rebuilds need functional verification rather than an expectation of identical package bytes. Graduated to: `knowledge/procedural/publish_appstore.md`.
