@@ -1,5 +1,38 @@
 # Session Log
 
+## Current Session — 0.2.3 candidate
+
+**Goal:** Give RAZR its sweeping keypad and restore the first-release Original look as the default style.
+**Agent:** OpenAI Codex
+**Handoff-from:** OpenAI Codex
+**Handoff-type:** continuation
+**Status:** Complete; 0.2.3 published.
+
+### 2026-10-26 — Design checkpoint
+
+- The user supplied a RAZR keypad reference with four sweeping row lines. A native preview shows the new wave geometry without vertical grid dividers.
+- Inspected first-release commit `57d1b53`: the Original face used the compact 5×7 font, square 58×13 keys, no RAZR frame, hour y51, numeric y7, and two-line minute scale 4.
+- Preserve existing persisted model values 0=Nokia and 1=RAZR; assign Original value 2 and use it only when no model choice is stored.
+- Integrated Original with model value 2. New installs start with the compact v1 font, square keys, green palette, and battery off; persisted 0/1 values still select Nokia/RAZR.
+- Native 200×228 screenshots cover fresh Original, Nokia, RAZR blue, RAZR black, and a highlighted RAZR key. RAZR and Original stayed selected after reinstall; a reinstalled Nokia capture still showed its oval keypad.
+- Reused the corrected first-release Original GIF with a single 09:13 numeric clock across all frames. Replaced the two RAZR gallery stills and archived the 0.2.2 media.
+- `make build`, host tests, strict health check, LCD font dry-run, and `git diff --check` pass. The candidate PBW reports 0.2.3, emery, and watchface type.
+- Restored all 32 shared emery persist files from the pre-test backup with matching hashes.
+- A fresh read-only verifier passed the three-style mapping, first-release Original fidelity, RAZR wave geometry, active highlight, native captures, host checks, and PBW metadata.
+- Published 0.2.3. The public Pebble Time 2 page shows version 0.2.3 and four current gallery assets. The public PBW matches the publish build and `dist/t9-watch.pbw` byte for byte, the GIF is byte-identical, and all three PNGs are pixel-identical.
+- The developer dashboard saved the updated three-style description. The public description still showed cached older copy immediately after publication.
+
+### Current handoff — 2026-10-26
+
+- **Published:** 0.2.3 at https://apps.repebble.com/6641551debac4064ab47acba.
+- **Release artifact:** `dist/t9-watch.pbw` with SHA-256 `259a082f66a524cc47deda51bd3ebeef8fdd7f6bbc674efbeaedf2d32be5ccd7`.
+- **Media:** Original GIF plus Nokia cream, RAZR blue, and RAZR monochrome stills in `screenshots/`.
+- **Next:** Check the physical Pebble Time 2 settings page, on-wrist contrast, and public description after cache refresh.
+- **Open verification:** Physical-watch behavior and on-wrist contrast remain unmeasured.
+
+S.D.G.: Gives wearers the first T9 face alongside two recognisable handset treatments without changing their saved style.
+Feynman gap: Native captures and public assets are verified; the physical watch is untested.
+
 ## Current Session — 0.2.2
 
 **Goal:** Offer O'CLOCK or OH ZERO at minute 00 and clear the crowded RAZR minute layout.

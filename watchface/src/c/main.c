@@ -26,6 +26,7 @@ static T9Time s_time;
 static bool s_use_24h;
 static bool s_use_oh_zero;
 static bool s_razr;
+static bool s_original;
 static bool s_show_battery;
 static bool s_use_model_colors;
 static uint32_t s_background_color;
@@ -55,7 +56,7 @@ static int compact_text_width(const char *text, int scale) {
 }
 
 static int text_width(const char *text, int scale) {
-  if (s_razr) return compact_text_width(text, scale);
+  if (s_razr || s_original) return compact_text_width(text, scale);
   int width = 0;
   for (; *text; text++) {
     const LcdGlyph *glyph = lcd_glyph(*text);
@@ -69,6 +70,11 @@ static void draw_compact_text(GContext *ctx, const char *text, int x, int y,
   graphics_context_set_fill_color(ctx, color);
   for (; *text; text++, x += 6 * scale) {
     if (*text == ':' || *text == '\'') {
+      if (*text == '\'' && s_original) {
+        graphics_fill_rect(ctx, GRect(x + 2 * scale, y,
+                                      scale, 2 * scale), 0, GCornerNone);
+        continue;
+      }
       graphics_fill_rect(ctx, GRect(x + 2 * scale, y + 2 * scale,
                                     scale, scale), 0, GCornerNone);
       if (*text == ':') graphics_fill_rect(ctx, GRect(x + 2 * scale,
@@ -90,7 +96,7 @@ static void draw_compact_text(GContext *ctx, const char *text, int x, int y,
 
 static void draw_text(GContext *ctx, const char *text, int x, int y, int scale,
                       GColor color) {
-  if (s_razr) {
+  if (s_razr || s_original) {
     draw_compact_text(ctx, text, x, y, scale, color);
     return;
   }
@@ -139,33 +145,88 @@ static void draw_nokia_key(GContext *ctx, int x, int y, int tilt,
   }
 }
 
+static int razr_wave_y(int x, int row) {
+  static const int8_t offsets[11] = {1, 0, -2, -3, -1, 2, 3, 2, -1, -2, 0};
+  int distance = x - 10;
+  int segment = distance / 18;
+  if (segment >= 10) return 168 + row * 15 + offsets[10];
+  int fraction = distance % 18;
+  int bend = offsets[segment] +
+    (offsets[segment + 1] - offsets[segment]) * fraction / 18;
+  return 168 + row * 15 + bend;
+}
+
+static void draw_razr_keypad(GContext *ctx, const char *const labels[12],
+                              GColor ink, GColor paper) {
+  for (int key = 0; key < 12; key++) {
+    int row = key / 3;
+    int column = key % 3;
+    bool active = key < 9 && s_highlight_key == key + 1;
+    if (active) {
+      graphics_context_set_fill_color(ctx, ink);
+      int left = 12 + column * 60;
+      int right = left + 54;
+      for (int x = left; x <= right; x++) {
+        int top = razr_wave_y(x, row) + 3;
+        int bottom = row < 3 ? razr_wave_y(x, row + 1) - 2 : 224;
+        graphics_fill_rect(ctx, GRect(x, top, 1, bottom - top + 1),
+                           0, GCornerNone);
+      }
+    }
+  }
+
+  graphics_context_set_stroke_color(ctx, ink);
+  for (int row = 0; row < 4; row++) {
+    int previous = razr_wave_y(10, row);
+    for (int x = 11; x <= 190; x++) {
+      int current = razr_wave_y(x, row);
+      graphics_draw_line(ctx, GPoint(x - 1, previous), GPoint(x, current));
+      previous = current;
+    }
+  }
+  graphics_draw_line(ctx, GPoint(10, 169), GPoint(13, 225));
+  graphics_draw_line(ctx, GPoint(190, 168), GPoint(187, 225));
+  graphics_draw_line(ctx, GPoint(13, 225), GPoint(187, 225));
+
+  for (int key = 0; key < 12; key++) {
+    int column = key % 3;
+    int x = 10 + column * 61;
+    int y = 168 + (key / 3) * 15;
+    bool active = key < 9 && s_highlight_key == key + 1;
+    int width = text_width(labels[key], 1);
+    draw_text(ctx, labels[key], x + (59 - width) / 2, y + 5, 1,
+              active ? paper : ink);
+  }
+}
+
+static void draw_original_keypad(GContext *ctx, const char *const labels[12],
+                                  GColor ink, GColor paper) {
+  for (int key = 0; key < 12; key++) {
+    int x = 9 + (key % 3) * 62;
+    int y = 168 + (key / 3) * 15;
+    bool active = key < 9 && s_highlight_key == key + 1;
+    GRect box = GRect(x, y, 58, 13);
+    graphics_context_set_fill_color(ctx, active ? ink : paper);
+    graphics_fill_rect(ctx, box, 0, GCornerNone);
+    graphics_context_set_stroke_color(ctx, ink);
+    graphics_draw_rect(ctx, box);
+    int width = compact_text_width(labels[key], 1);
+    draw_compact_text(ctx, labels[key], x + (58 - width) / 2, y + 3,
+                      1, active ? paper : ink);
+  }
+}
+
 static void draw_keypad(GContext *ctx, GColor ink, GColor paper) {
   static const char *const LABELS[12] = {
     "1", "2 ABC", "3 DEF", "4 GHI", "5 JKL", "6 MNO",
     "7 PQRS", "8 TUV", "9 WXYZ", "*", "0", "#"
   };
   if (s_razr) {
-    GRect plate = GRect(9, 167, 182, 59);
-    graphics_context_set_stroke_color(ctx, ink);
-    graphics_draw_round_rect(ctx, plate, 3);
-    graphics_draw_line(ctx, GPoint(69, 168), GPoint(69, 225));
-    graphics_draw_line(ctx, GPoint(130, 168), GPoint(130, 225));
-    for (int row = 1; row < 4; row++) {
-      int y = 167 + row * 15;
-      graphics_draw_line(ctx, GPoint(10, y), GPoint(190, y));
-    }
-    for (int key = 0; key < 12; key++) {
-      int x = 10 + (key % 3) * 61;
-      int y = 168 + (key / 3) * 15;
-      bool active = key < 9 && s_highlight_key == key + 1;
-      if (active) {
-        graphics_context_set_fill_color(ctx, ink);
-        graphics_fill_rect(ctx, GRect(x + 1, y + 1, 58, 12), 0, GCornerNone);
-      }
-      int width = text_width(LABELS[key], 1);
-      draw_text(ctx, LABELS[key], x + (59 - width) / 2, y + 3, 1,
-                active ? paper : ink);
-    }
+    draw_razr_keypad(ctx, LABELS, ink, paper);
+    return;
+  }
+  if (s_original) {
+    draw_original_keypad(ctx, LABELS, ink, paper);
     return;
   }
   for (int key = 0; key < 12; key++) {
@@ -289,7 +350,7 @@ static void draw_face(Layer *layer, GContext *ctx) {
     }
   }
   draw_text(ctx, s_time.numeric, 200 - 9 - text_width(s_time.numeric, 3),
-            s_razr ? 6 : 3, 3, ink);
+            s_original ? 7 : s_razr ? 6 : 3, 3, ink);
   graphics_context_set_stroke_color(ctx, ink);
   graphics_draw_line(ctx, GPoint(9, 33), GPoint(190, 33));
   draw_compact_text(ctx, "HOUR", 9, 39, 1, ink);
@@ -297,19 +358,19 @@ static void draw_face(Layer *layer, GContext *ctx) {
   char hour_line[40];
   combine_hour(hour_line, sizeof(hour_line));
   int hour_scale = text_width(hour_line, 3) <= 182 ? 3 : 2;
-  int hour_y = s_razr ? 51 : 48;
+  int hour_y = s_razr || s_original ? 51 : 48;
   draw_text(ctx, hour_line, 9, hour_y, hour_scale, ink);
 
   const char *first = s_minute_display[0];
   const char *second = s_minute_display[1];
-  int minute_max_scale = s_razr && s_time.minute_count == 1 ? 4 : 3;
+  int minute_max_scale = s_original || (s_razr && s_time.minute_count == 1) ? 4 : 3;
   int first_scale = text_width(first, minute_max_scale) <= 182 ? minute_max_scale : minute_max_scale - 1;
   int second_scale = text_width(second, minute_max_scale) <= 182 ? minute_max_scale : minute_max_scale - 1;
   if (s_time.minute_count == 1) {
     draw_text(ctx, first, 9, 91, first_scale, ink);
   } else {
-    draw_text(ctx, first, 9, s_razr ? 80 : 79, first_scale, ink);
-    draw_text(ctx, second, 9, s_razr ? 111 : 110, second_scale, ink);
+    draw_text(ctx, first, 9, s_razr || s_original ? 80 : 79, first_scale, ink);
+    draw_text(ctx, second, 9, s_razr || s_original ? 111 : 110, second_scale, ink);
   }
   if (s_timer && s_token < s_time.hour_count + s_time.minute_count) {
     int cursor_x;
@@ -317,7 +378,7 @@ static void draw_face(Layer *layer, GContext *ctx) {
     int cursor_width;
     if (s_token < s_time.hour_count) {
       cursor_x = 9 + text_width(hour_line, hour_scale);
-      cursor_y = hour_y + (s_razr ? 7 : 9) * hour_scale - 3;
+      cursor_y = hour_y + (s_razr || s_original ? 7 : 9) * hour_scale - 3;
       cursor_width = 5 * hour_scale;
     } else {
       int minute_index = s_token - s_time.hour_count;
@@ -325,8 +386,9 @@ static void draw_face(Layer *layer, GContext *ctx) {
       int scale = minute_index == 0 ? first_scale : second_scale;
       cursor_x = 9 + text_width(shown, scale);
       cursor_y = (s_time.minute_count == 1 ? 91 :
-                  (minute_index == 0 ? (s_razr ? 80 : 79) : (s_razr ? 111 : 110))) +
-                 (s_razr ? 7 : 9) * scale - 3;
+                  (minute_index == 0 ? (s_razr || s_original ? 80 : 79) :
+                   (s_razr || s_original ? 111 : 110))) +
+                 (s_razr || s_original ? 7 : 9) * scale - 3;
       cursor_width = 5 * scale;
     }
     graphics_context_set_fill_color(ctx, ink);
@@ -342,7 +404,7 @@ static void draw_face(Layer *layer, GContext *ctx) {
     strncat(keys, fragment, sizeof(keys) - strlen(keys) - 1);
   }
   draw_compact_text(ctx, keys, 9, 151,
-                    !s_razr && compact_text_width(keys, 2) <= 182 ? 2 : 1, ink);
+                    (s_original || !s_razr) && compact_text_width(keys, 2) <= 182 ? 2 : 1, ink);
   draw_keypad(ctx, ink, paper);
 }
 
@@ -420,8 +482,9 @@ static void on_message(DictionaryIterator *iterator, void *context) {
   Tuple *model = dict_find(iterator, MESSAGE_KEY_PhoneModel);
   if (model && (model->type == TUPLE_INT || model->type == TUPLE_UINT)) {
     int value = model->value->int32;
-    if (value == 0 || value == 1) {
+    if (value >= 0 && value <= 2) {
       s_razr = value == 1;
+      s_original = value == 2;
       persist_write_int(STORE_PHONE_MODEL, value);
       color_changed = true;
     }
@@ -445,8 +508,11 @@ static void on_message(DictionaryIterator *iterator, void *context) {
 static void init(void) {
   s_use_24h = persist_exists(STORE_TIME_FORMAT) && persist_read_int(STORE_TIME_FORMAT) == 1;
   s_use_oh_zero = persist_exists(STORE_ZERO_WORDING) && persist_read_int(STORE_ZERO_WORDING) == 1;
-  s_razr = persist_exists(STORE_PHONE_MODEL) && persist_read_int(STORE_PHONE_MODEL) == 1;
-  s_show_battery = !persist_exists(STORE_SHOW_BATTERY) || persist_read_int(STORE_SHOW_BATTERY) == 1;
+  int saved_model = persist_exists(STORE_PHONE_MODEL) ? persist_read_int(STORE_PHONE_MODEL) : 2;
+  s_razr = saved_model == 1;
+  s_original = saved_model == 2;
+  s_show_battery = persist_exists(STORE_SHOW_BATTERY) ?
+    persist_read_int(STORE_SHOW_BATTERY) == 1 : !s_original;
   s_background_color = DEFAULT_BACKGROUND_COLOR;
   s_text_color = DEFAULT_TEXT_COLOR;
   if (persist_exists(STORE_BACKGROUND_COLOR)) {

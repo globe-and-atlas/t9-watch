@@ -27,3 +27,7 @@ The connection bars were removed because the prior display represented only a co
 ## 2026-10-26 — Minute-00 wording and RAZR spacing
 
 Clay now offers O'CLOCK (default) or OH ZERO at minute 00. The choice persists on the watch; minutes 01–09 still read OH plus their minute word. Two-line RAZR minutes use the three-pixel scale, and RAZR T9 sequences use the compact one-pixel scale so the minute words, sequence, lower frame, and keypad have separate space.
+
+## 2026-10-26 — Original default and handset keypad choices
+
+The first-release compact font, square keypad, and text positions return as Original, the default for new installs. Nokia 3310 and RAZR V3 remain separate styles. Persisted values 0=Nokia and 1=RAZR stay unchanged so prior selections do not migrate to another style; Original uses value 2. New Original installs start with the battery icon off to match the first release, while the icon remains an option. RAZR replaces its straight grid with four wave-shaped row separators based on the user's handset reference; its active key fills within the adjacent curves.

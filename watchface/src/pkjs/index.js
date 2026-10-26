@@ -17,12 +17,14 @@ var clay = new Clay([
     {label: "O'CLOCK (2 lines)", value: '0'},
     {label: 'OH ZERO (3 lines)', value: '1'}
   ]},
-  {type: 'heading', defaultValue: 'Phone model'},
-  {type: 'select', messageKey: 'PhoneModel', label: 'Style', defaultValue: '0', options: [
+  {type: 'heading', defaultValue: 'Display style'},
+  {type: 'select', messageKey: 'PhoneModel', label: 'Style', defaultValue: '2', options: [
+    {label: 'Original', value: '2'},
     {label: 'Nokia 3310', value: '0'},
     {label: 'Motorola RAZR V3', value: '1'}
   ]},
-  {type: 'toggle', messageKey: 'ShowBattery', label: 'Battery icon', defaultValue: true},
+  {type: 'toggle', messageKey: 'ShowBattery', label: 'Battery icon',
+    defaultValue: previous.PhoneModel === undefined ? false : true},
   {type: 'heading', defaultValue: 'Colors'},
   {type: 'toggle', messageKey: 'UseModelColors', label: 'Use model colors', defaultValue: !legacyCustom},
   {type: 'text', defaultValue: 'Turn off model colors to use the two color choices below.'},
@@ -44,11 +46,14 @@ function sendSaved() {
   try { saved = JSON.parse(raw) || {}; } catch (error) { return; }
   var format = Number(saved.TimeFormat);
   if (format !== 0 && format !== 1) format = 0;
+  var model = Number(saved.PhoneModel);
+  if (model !== 0 && model !== 1 && model !== 2) model = 2;
   Pebble.sendAppMessage({
     TimeFormat: format,
     ZeroWording: Number(saved.ZeroWording) === 1 ? 1 : 0,
-    PhoneModel: Number(saved.PhoneModel) === 1 ? 1 : 0,
-    ShowBattery: saved.ShowBattery === false || saved.ShowBattery === 0 ? 0 : 1,
+    PhoneModel: model,
+    ShowBattery: saved.ShowBattery === undefined ? (model === 2 ? 0 : 1) :
+      (saved.ShowBattery === false || saved.ShowBattery === 0 ? 0 : 1),
     UseModelColors: saved.UseModelColors === undefined ? (legacyCustom ? 0 : 1) :
       (saved.UseModelColors === false || saved.UseModelColors === 0 ? 0 : 1),
     BackgroundColor: color(saved.BackgroundColor, 0xAAFFAA),

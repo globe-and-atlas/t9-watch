@@ -1,5 +1,48 @@
 # Task: T9 watch face
 
+## RAZR swooping keypad — 2026-10-26
+
+### Validation Contract
+
+- The RAZR keypad shows four sweeping horizontal lines.
+- The RAZR keypad has no straight vertical dividers.
+- Each RAZR key label remains legible at 200×228.
+- The active RAZR key remains visibly distinct.
+- The Nokia keypad retains its oval keys.
+- The RAZR minute text remains clear of the keypad.
+- The emery PBW builds successfully.
+- Host T9 tests pass.
+- A native 200×228 screenshot shows the RAZR keypad.
+- A fresh verifier reviews the final watchface.
+
+### Original style extension
+
+- The settings page offers Original.
+- The settings page offers Nokia 3310.
+- The settings page offers Motorola RAZR V3.
+- A new install starts with Original selected.
+- Original uses the first-release compact font.
+- Original uses the first-release square keypad.
+- Original uses the first-release text positions.
+- Original omits the RAZR frame.
+- Existing saved Nokia selection remains Nokia.
+- Existing saved RAZR selection remains RAZR.
+- A saved Original selection persists after relaunch.
+- The battery indicator remains optional in Original.
+- Native screenshots show all three styles.
+
+### Checklist
+
+- [x] Draw the RAZR sweeping separators.
+- [x] Restore the first-release Original style.
+- [x] Add a three-style setting without remapping saved choices.
+- [x] Check settled RAZR palettes on emery.
+- [x] Check Original on emery.
+- [x] Check an active RAZR key on emery.
+- [x] Complete independent verification.
+- [x] Publish and verify 0.2.3.
+
+
 ## Minute wording and RAZR spacing — 2026-10-26
 
 ### Validation Contract

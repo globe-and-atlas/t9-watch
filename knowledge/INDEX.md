@@ -3,8 +3,8 @@
 | File | Type | Summary |
 |------|------|---------|
 | [context.md](context.md) | domain | 2026-10-25 project identity, stack, constraints |
-| [SESSION.md](SESSION.md) | log | 2026-10-26 0.2.2 wording and RAZR spacing release handoff |
-| [DECISIONS.md](DECISIONS.md) | log | 2026-10-26 theme, wording, color, and spacing decisions |
+| [SESSION.md](SESSION.md) | log | 2026-10-26 0.2.3 Original default and RAZR keypad release handoff |
+| [DECISIONS.md](DECISIONS.md) | log | 2026-10-26 Original, Nokia, RAZR, wording, color, and spacing decisions |
 | [ERRORS.md](ERRORS.md) | log | 2026-10-26 colon rasterization and emulator capture errors |
 | [REFLECTIONS.jsonl](REFLECTIONS.jsonl) | log | 2026-10-26 theme release and GIF capture lessons |
 | [domain/deps.md](domain/deps.md) | domain | 2026-10-26 Pebble SDK, Clay, Pillow glyph-offset, and font-source dependencies |
