@@ -30,4 +30,8 @@ Clay now offers O'CLOCK (default) or OH ZERO at minute 00. The choice persists o
 
 ## 2026-10-26 — Original default and handset keypad choices
 
-The first-release compact font, square keypad, and text positions return as Original, the default for new installs. Nokia 3310 and RAZR V3 remain separate styles. Persisted values 0=Nokia and 1=RAZR stay unchanged so prior selections do not migrate to another style; Original uses value 2. New Original installs start with the battery icon off to match the first release, while the icon remains an option. RAZR replaces its straight grid with four wave-shaped row separators based on the user's handset reference; its active key fills within the adjacent curves.
+The first-release compact font, square keypad, and text positions return as Original, the default for new installs. Nokia 3310 and RAZR V3 remain separate styles. Persisted values 0=Nokia and 1=RAZR stay unchanged so prior selections do not migrate to another style; Original uses value 2. New Original installs start with the battery icon off to match the first release, while the icon remains an option. The 0.2.3 RAZR treatment used four full-width waves; the user rejected that reading of the handset reference, so the 0.2.4 decision below supersedes its keypad geometry.
+
+## 2026-10-26 — RAZR sculpted rows
+
+Each of the four RAZR keypad rows now has three distinct strokes: the left key descends at its inner edge, the center key has a low edge that rises on the right, and the right key has its own upper edge. The active key fills only its local legend area. The renderer also draws `*` and `#`, absent from the earlier compact-font treatment. This follows the user's second handset diagram more closely than a continuous waveform.

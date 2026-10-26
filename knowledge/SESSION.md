@@ -1,5 +1,32 @@
 # Session Log
 
+## Current Session — 0.2.4 RAZR correction
+
+**Goal:** Replace the rejected RAZR wave stripes with sculpted key rows from the user's second diagram.
+**Agent:** OpenAI Codex
+**Handoff-from:** OpenAI Codex
+**Handoff-type:** continuation
+**Status:** Complete; 0.2.4 published.
+
+### 2026-10-26 — Redesign checkpoint
+
+- The user rejected the 0.2.3 full-width wave. An enlarged crop of the new diagram showed separate left descending, center rising, and right upper strokes in each key row.
+- Replaced the continuous wave function with four repeated sculpted rows. Added missing `*` and `#` RAZR glyphs.
+- Native 200×228 black and blue RAZR captures show the new key shapes; a rollover capture shows a distinct active key. Original and Nokia captures still show their prior keypads.
+- `make build`, host tests, strict health check, LCD font dry-run, and `git diff --check` passed. The shared emulator's 32 persist files were restored with matching hashes after capture.
+- Recorded the prior misread in `knowledge/FAILURES/2026-10-26_razr-wave/context.md` and superseded the stale keypad decision.
+- A fresh read-only verifier passed the source and native screenshot review, including all twelve legends and the active-key treatment.
+- Published 0.2.4. The public PBW matches `dist/t9-watch.pbw` byte for byte; the public GIF and three PNGs also match the local release files byte for byte. The public listing shows version 0.2.4.
+- Saved revised store copy in the developer dashboard and reopened the editor to verify persistence. The public page still showed cached old wording immediately afterward.
+
+### Current handoff — 2026-10-26
+
+- **Published:** 0.2.4 at https://apps.repebble.com/6641551debac4064ab47acba.
+- **Open verification:** Physical Pebble Time 2 appearance and public description cache refresh remain unmeasured.
+
+S.D.G.: Makes the RAZR option recognisable as a keypad of physical keys while keeping T9 input legible.
+Feynman gap: The build and public assets match; physical-watch appearance and the public description cache refresh remain unverified.
+
 ## Current Session — 0.2.3 candidate
 
 **Goal:** Give RAZR its sweeping keypad and restore the first-release Original look as the default style.

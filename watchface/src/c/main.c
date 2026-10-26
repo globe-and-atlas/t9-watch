@@ -67,6 +67,10 @@ static int text_width(const char *text, int scale) {
 
 static void draw_compact_text(GContext *ctx, const char *text, int x, int y,
                               int scale, GColor color) {
+  static const uint8_t keypad_symbols[2][7] = {
+    {4, 21, 14, 31, 14, 21, 4},
+    {10, 10, 31, 10, 31, 10, 10}
+  };
   graphics_context_set_fill_color(ctx, color);
   for (; *text; text++, x += 6 * scale) {
     if (*text == ':' || *text == '\'') {
@@ -82,10 +86,13 @@ static void draw_compact_text(GContext *ctx, const char *text, int x, int y,
       continue;
     }
     int index = razr_index(*text);
-    if (index < 0) continue;
+    const uint8_t *rows = index >= 0 ? RAZR_GLYPHS[index] :
+      s_razr && *text == '*' ? keypad_symbols[0] :
+      s_razr && *text == '#' ? keypad_symbols[1] : NULL;
+    if (!rows) continue;
     for (int row = 0; row < 7; row++) {
       for (int column = 0; column < 5; column++) {
-        if (RAZR_GLYPHS[index][row] & (1 << (4 - column))) {
+        if (rows[row] & (1 << (4 - column))) {
           graphics_fill_rect(ctx, GRect(x + column * scale, y + row * scale,
                                         scale, scale), 0, GCornerNone);
         }
@@ -145,15 +152,30 @@ static void draw_nokia_key(GContext *ctx, int x, int y, int tilt,
   }
 }
 
-static int razr_wave_y(int x, int row) {
-  static const int8_t offsets[11] = {1, 0, -2, -3, -1, 2, 3, 2, -1, -2, 0};
-  int distance = x - 10;
-  int segment = distance / 18;
-  if (segment >= 10) return 168 + row * 15 + offsets[10];
-  int fraction = distance % 18;
-  int bend = offsets[segment] +
-    (offsets[segment + 1] - offsets[segment]) * fraction / 18;
-  return 168 + row * 15 + bend;
+static void draw_razr_row(GContext *ctx, int y) {
+  static const int left_x[] = {12, 12, 16, 45, 50, 54, 58, 62, 66};
+  static const int left_y[] = {12, 4, 1, 1, 2, 4, 8, 11, 12};
+  static const int center_x[] = {71, 101, 107, 111, 115, 120};
+  static const int center_y[] = {12, 12, 11, 8, 3, 1};
+  static const int right_x[] = {125, 181, 186, 188, 188};
+  static const int right_y[] = {1, 1, 3, 6, 12};
+  for (int thickness = 0; thickness < 2; thickness++) {
+    for (int point = 1; point < 9; point++) {
+      graphics_draw_line(ctx,
+        GPoint(left_x[point - 1], y + left_y[point - 1] + thickness),
+        GPoint(left_x[point], y + left_y[point] + thickness));
+    }
+    for (int point = 1; point < 6; point++) {
+      graphics_draw_line(ctx,
+        GPoint(center_x[point - 1], y + center_y[point - 1] + thickness),
+        GPoint(center_x[point], y + center_y[point] + thickness));
+    }
+    for (int point = 1; point < 5; point++) {
+      graphics_draw_line(ctx,
+        GPoint(right_x[point - 1], y + right_y[point - 1] + thickness),
+        GPoint(right_x[point], y + right_y[point] + thickness));
+    }
+  }
 }
 
 static void draw_razr_keypad(GContext *ctx, const char *const labels[12],
@@ -164,29 +186,20 @@ static void draw_razr_keypad(GContext *ctx, const char *const labels[12],
     bool active = key < 9 && s_highlight_key == key + 1;
     if (active) {
       graphics_context_set_fill_color(ctx, ink);
-      int left = 12 + column * 60;
-      int right = left + 54;
-      for (int x = left; x <= right; x++) {
-        int top = razr_wave_y(x, row) + 3;
-        int bottom = row < 3 ? razr_wave_y(x, row + 1) - 2 : 224;
-        graphics_fill_rect(ctx, GRect(x, top, 1, bottom - top + 1),
-                           0, GCornerNone);
-      }
+      int left = column == 0 ? 17 : column == 1 ? 77 : 130;
+      int width = column == 0 ? 37 : column == 1 ? 35 : 53;
+      graphics_fill_rect(ctx, GRect(left, 168 + row * 15 + 4, width, 8),
+                         2, GCornersAll);
     }
   }
 
   graphics_context_set_stroke_color(ctx, ink);
   for (int row = 0; row < 4; row++) {
-    int previous = razr_wave_y(10, row);
-    for (int x = 11; x <= 190; x++) {
-      int current = razr_wave_y(x, row);
-      graphics_draw_line(ctx, GPoint(x - 1, previous), GPoint(x, current));
-      previous = current;
-    }
+    draw_razr_row(ctx, 168 + row * 15);
   }
-  graphics_draw_line(ctx, GPoint(10, 169), GPoint(13, 225));
-  graphics_draw_line(ctx, GPoint(190, 168), GPoint(187, 225));
-  graphics_draw_line(ctx, GPoint(13, 225), GPoint(187, 225));
+  graphics_draw_line(ctx, GPoint(9, 171), GPoint(9, 222));
+  graphics_draw_line(ctx, GPoint(191, 171), GPoint(191, 222));
+  graphics_draw_line(ctx, GPoint(12, 226), GPoint(188, 226));
 
   for (int key = 0; key < 12; key++) {
     int column = key % 3;
@@ -194,7 +207,8 @@ static void draw_razr_keypad(GContext *ctx, const char *const labels[12],
     int y = 168 + (key / 3) * 15;
     bool active = key < 9 && s_highlight_key == key + 1;
     int width = text_width(labels[key], 1);
-    draw_text(ctx, labels[key], x + (59 - width) / 2, y + 5, 1,
+    int label_x = x + (59 - width) / 2 - (column == 0 ? 4 : column == 1 ? 5 : 0);
+    draw_text(ctx, labels[key], label_x, y + (column == 1 ? 4 : 5), 1,
               active ? paper : ink);
   }
 }

@@ -11,7 +11,7 @@ T9 Time
 
 ## Description
 
-T9 Time turns each minute into a tiny predictive-text moment. The numeric clock updates immediately, then the hour and minute type themselves while the matching T9 keys light up. When two words share a key sequence, the face briefly shows another candidate before settling on the time. Choose the Original face, a Nokia 3310 treatment, or a Motorola RAZR V3 treatment with sweeping keypad lines. Show or hide the battery icon, select 12-hour or 24-hour time, choose O'CLOCK or OH ZERO at :00, and use model colors or your own background and text colors. Made for Pebble Time 2.
+T9 Time turns each minute into a tiny predictive-text moment. The numeric clock updates immediately, then the hour and minute type themselves while the matching T9 keys light up. When two words share a key sequence, the face briefly shows another candidate before settling on the time. Choose the Original face, a Nokia 3310 treatment, or a Motorola RAZR V3 treatment with sculpted keypad outlines. Show or hide the battery icon, select 12-hour or 24-hour time, choose O'CLOCK or OH ZERO at :00, and use model colors or your own background and text colors. Made for Pebble Time 2.
 
 ## Initial release notes
 
@@ -33,6 +33,10 @@ Adds an O'CLOCK or OH ZERO choice for minute 00. Gives two-line RAZR minutes mor
 
 Restores the first T9 Time look as the default Original style, alongside Nokia 3310 and Motorola RAZR V3. The RAZR keypad now uses four sweeping lines inspired by the handset, with an active-key highlight that follows the curved rows. Existing Nokia and RAZR choices remain saved.
 
+## 0.2.4 release notes
+
+Redraws the RAZR keypad as four rows of individually sculpted left, center, and right keys, following the handset diagram. Restores the `*` and `#` key legends. Original and Nokia styles remain available.
+
 ## Screenshot order
 
 1. `screenshots/t9-time-01-typing-original.gif` — looping typing in the Original palette.
@@ -44,11 +48,11 @@ Restores the first T9 Time look as the default Original style, alongside Nokia 3
 
 - Platform: emery (Pebble Time 2).
 - Type: watchface.
-- Version: 0.2.3.
+- Version: 0.2.4.
 - Date display: none.
 
 ## Published release
 
 - Date: 2026-10-26.
 - URL: https://apps.repebble.com/6641551debac4064ab47acba
-- State: 0.2.3 published and publicly downloadable. The public PBW matches `dist/t9-watch.pbw` byte for byte. The developer dashboard saved the new description; the public copy may lag behind its cache.
+- State: 0.2.4 published. The public PBW, GIF, and three PNGs match the local release assets byte for byte. The dashboard saved the revised description; the public page still showed the old text immediately afterward.

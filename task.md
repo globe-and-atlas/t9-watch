@@ -1,6 +1,36 @@
 # Task: T9 watch face
 
+## RAZR sculpted key correction — 2026-10-26
+
+### Validation Contract
+
+- The RAZR keypad has four separate sculpted rows.
+- Each RAZR row has a descending left-key shoulder.
+- Each RAZR row has a rising center-key shoulder.
+- Each RAZR row has a distinct right-key top stroke.
+- No separator runs continuously across the RAZR keypad.
+- All twelve RAZR legends remain readable at 200×228.
+- An active RAZR key remains distinct from adjacent keys.
+- The Original square keypad remains unchanged.
+- The Nokia oval keypad remains unchanged.
+- The RAZR minute words remain clear of the keypad.
+- The emery PBW builds successfully.
+- Host T9 tests pass.
+- A fresh verifier reviews the native rendering.
+
+### Checklist
+
+- [x] Replace the continuous wave geometry.
+- [x] Capture black RAZR at native resolution.
+- [x] Capture an active RAZR key.
+- [x] Check Original and Nokia for regressions.
+- [x] Complete independent verification.
+- [x] Publish and verify 0.2.4.
+
+
 ## RAZR swooping keypad — 2026-10-26
+
+The 0.2.3 full-width wave interpretation was rejected and replaced by the sculpted-key contract above.
 
 ### Validation Contract
 
