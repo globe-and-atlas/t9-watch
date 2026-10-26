@@ -144,3 +144,4 @@ Feynman gap: The public GIF and binary were verified; physical-watch settings, r
 - 2026-10-25 16:29 — commit: Remove prior minute from store GIF loop | DEPLOY.md,knowledge/ERRORS.md,knowledge/INDEX.md,knowledge/REFLECTIONS.jsonl,knowledge/SESSION.md
 - 2026-10-26 13:45 — commit: Add 3310 and RAZR themes to T9 Time 0.2.0 | DEPLOY.md,README.md,assets/font/LICENSE.md,assets/font/NokjaOriginalSmallBold.ttf,directives/build_watchface.md
 - 2026-10-26 14:03 — commit: Refine T9 Time 3310 header and keypad for 0.2.1 | DEPLOY.md,execution/generate_lcd_font.py,knowledge/DECISIONS.md,knowledge/ERRORS.md,knowledge/INDEX.md
+- 2026-10-26 14:14 — commit: Add minute-zero wording and clear RAZR layout for 0.2.2 | DEPLOY.md,README.md,knowledge/DECISIONS.md,knowledge/INDEX.md,knowledge/REFLECTIONS.jsonl
