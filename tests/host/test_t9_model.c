@@ -5,12 +5,12 @@
 
 #include "t9_model.h"
 
-static void check_time(int hour, int minute, bool twenty_four,
+static void check_time(int hour, int minute, bool twenty_four, bool oh_zero,
                        const char *numeric, const char *hour_first,
                        const char *hour_second, const char *minute_first,
                        const char *minute_second) {
   T9Time value;
-  t9_make_time(hour, minute, twenty_four, &value);
+  t9_make_time(hour, minute, twenty_four, oh_zero, &value);
   assert(strcmp(value.numeric, numeric) == 0);
   assert(strcmp(value.hour[0], hour_first) == 0);
   assert(value.hour_count == (hour_second ? 2 : 1));
@@ -21,20 +21,23 @@ static void check_time(int hour, int minute, bool twenty_four,
 }
 
 int main(void) {
-  check_time(0, 0, false, "12:00", "TWELVE", NULL, "O'CLOCK", NULL);
-  check_time(9, 5, false, "09:05", "NINE", NULL, "OH", "FIVE");
-  check_time(9, 24, false, "09:24", "NINE", NULL, "TWENTY", "FOUR");
-  check_time(12, 59, false, "12:59", "TWELVE", NULL, "FIFTY", "NINE");
-  check_time(13, 17, false, "01:17", "ONE", NULL, "SEVENTEEN", NULL);
-  check_time(0, 0, true, "00:00", "ZERO", NULL, "O'CLOCK", NULL);
-  check_time(13, 17, true, "13:17", "THIRTEEN", NULL, "SEVENTEEN", NULL);
-  check_time(23, 45, true, "23:45", "TWENTY", "THREE", "FORTY", "FIVE");
+  check_time(0, 0, false, false, "12:00", "TWELVE", NULL, "O'CLOCK", NULL);
+  check_time(0, 0, false, true, "12:00", "TWELVE", NULL, "OH", "ZERO");
+  check_time(0, 0, true, true, "00:00", "ZERO", NULL, "OH", "ZERO");
+  check_time(9, 5, false, false, "09:05", "NINE", NULL, "OH", "FIVE");
+  check_time(9, 5, false, true, "09:05", "NINE", NULL, "OH", "FIVE");
+  check_time(9, 24, false, false, "09:24", "NINE", NULL, "TWENTY", "FOUR");
+  check_time(12, 59, false, false, "12:59", "TWELVE", NULL, "FIFTY", "NINE");
+  check_time(13, 17, false, false, "01:17", "ONE", NULL, "SEVENTEEN", NULL);
+  check_time(0, 0, true, false, "00:00", "ZERO", NULL, "O'CLOCK", NULL);
+  check_time(13, 17, true, false, "13:17", "THIRTEEN", NULL, "SEVENTEEN", NULL);
+  check_time(23, 45, true, false, "23:45", "TWENTY", "THREE", "FORTY", "FIVE");
 
   for (int format = 0; format < 2; format++) {
     for (int hour = 0; hour < 24; hour++) {
       for (int minute = 0; minute < 60; minute++) {
       T9Time value;
-      t9_make_time(hour, minute, format == 1, &value);
+      t9_make_time(hour, minute, format == 1, false, &value);
       assert(value.hour_count >= 1 && value.hour_count <= 2);
       assert(value.minute_count >= 1 && value.minute_count <= 2);
       for (int index = 0; index < value.hour_count; index++) {

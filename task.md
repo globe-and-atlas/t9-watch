@@ -1,5 +1,31 @@
 # Task: T9 watch face
 
+## Minute wording and RAZR spacing — 2026-10-26
+
+### Validation Contract
+
+- The settings page offers O'CLOCK for minute 00.
+- The settings page offers OH ZERO for minute 00.
+- O'CLOCK remains the default for minute 00.
+- The OH ZERO choice persists after relaunch.
+- Minute values 01 through 09 still use OH plus the minute word.
+- The black RAZR minute words remain above the MINUTE label.
+- The black RAZR T9 sequence remains above the lower frame line.
+- The black RAZR T9 sequence remains above the keypad.
+- The emery PBW builds successfully.
+- Host T9 tests pass.
+- A native 200×228 black RAZR screenshot shows clear spacing.
+- A fresh verifier reviews the final watchface.
+
+### Checklist
+
+- [x] Add the minute-00 wording setting.
+- [x] Correct the RAZR minute layout.
+- [x] Build and inspect the native face.
+- [x] Complete independent verification.
+- [x] Publish and verify 0.2.2.
+
+
 ## 0.2.1 clock header correction — 2026-10-26
 
 ### Validation Contract

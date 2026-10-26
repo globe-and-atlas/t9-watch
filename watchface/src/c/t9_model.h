@@ -12,7 +12,7 @@ typedef struct {
   char numeric[6];
 } T9Time;
 
-void t9_make_time(int hour, int minute, bool use_24h, T9Time *out);
+void t9_make_time(int hour, int minute, bool use_24h, bool use_oh_zero, T9Time *out);
 int t9_key(char letter);
 const char *t9_alternate(const char *word);
 void t9_keys_for_word(const char *word, char *out, size_t capacity);

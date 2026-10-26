@@ -1,5 +1,34 @@
 # Session Log
 
+## Current Session — 0.2.2
+
+**Goal:** Offer O'CLOCK or OH ZERO at minute 00 and clear the crowded RAZR minute layout.
+**Agent:** OpenAI Codex
+**Handoff-from:** OpenAI Codex
+**Handoff-type:** continuation
+**Status:** Complete; 0.2.2 published.
+
+### 2026-10-26 — Implementation checkpoint
+
+- Added a persistent Clay wording choice for minute 00. The default stays O'CLOCK; OH ZERO uses two minute lines. Host checks cover both formats and the unchanged 01–09 behavior.
+- Reduced two-line RAZR minute words to scale 3 and its T9 sequence to scale 1. Native 200×228 captures at 01:56 show the words, sequence, frame, and keypad separated.
+- Captured OH ZERO at 09:00, reinstalled the same PBW, and captured it again with the setting retained.
+- Replaced the blue and monochrome RAZR gallery stills locally; archived the 0.2.1 media. The emulator's 32 persist files were hash-restored after capture.
+- `make build`, strict health check, and `git diff --check` passed. PBW metadata reports version 0.2.2, emery, and watchface type.
+- A fresh read-only verifier passed the model, setting persistence, native spacing, metadata, and gallery stills.
+- Published 0.2.2. The public page shows version 0.2.2 and four current gallery assets. The public PBW is byte-identical to the publish build and `dist/t9-watch.pbw`; the GIF is byte-identical. The store compressed 24 edge pixels differently in the blue PNG; the other PNGs are pixel-identical.
+- The developer dashboard saved the updated description, while the public description was still showing cached 0.2.1 copy immediately afterward.
+
+### Current handoff — 2026-10-26
+
+- **Candidate:** 0.2.2 PBW at `dist/t9-watch.pbw`.
+- **Media:** four upload files at `.tmp/store/0.2.2/`.
+- **Next:** Check the physical Pebble Time 2 settings flow and on-wrist spacing; recheck public description after cache refresh.
+- **Open verification:** Physical Pebble Time 2 settings and on-wrist spacing remain unmeasured.
+
+S.D.G.: Lets wearers choose the on-the-hour phrasing while keeping the T9 reading clear on the RAZR face.
+Feynman gap: Native captures and host checks pass; physical-watch display remains unverified.
+
 ## Current Session
 
 **Goal:** Correct the Nokia header and refine its keypad for T9 Time 0.2.1.

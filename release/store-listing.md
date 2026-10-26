@@ -11,7 +11,7 @@ T9 Time
 
 ## Description
 
-T9 Time turns each minute into a tiny predictive-text moment. The numeric clock updates immediately, then the hour and minute type themselves while the matching T9 keys light up. When two words share a key sequence, the face briefly shows another candidate before settling on the time. Choose a Nokia 3310 or Motorola RAZR V3-inspired style, show or hide the battery icon, select 12-hour or 24-hour time, and use model colors or your own background and text colors. Made for Pebble Time 2.
+T9 Time turns each minute into a tiny predictive-text moment. The numeric clock updates immediately, then the hour and minute type themselves while the matching T9 keys light up. When two words share a key sequence, the face briefly shows another candidate before settling on the time. Choose a Nokia 3310 or Motorola RAZR V3-inspired style, show or hide the battery icon, select 12-hour or 24-hour time, choose O'CLOCK or OH ZERO at :00, and use model colors or your own background and text colors. Made for Pebble Time 2.
 
 ## Initial release notes
 
@@ -25,6 +25,10 @@ Adds selectable 3310 and RAZR V3-inspired displays and keypads, model color pale
 
 Aligns the 3310 clock colon with the digits, removes the connection bars, and gives the 3310 keypad individually shaped oval keys. Restores the original spacing between the T9 digit line and keypad while keeping the optional watch-battery icon.
 
+## 0.2.2 release notes
+
+Adds an O'CLOCK or OH ZERO choice for minute 00. Gives two-line RAZR minutes more room and clears the T9 sequence from the lower frame and keypad.
+
 ## Screenshot order
 
 1. `screenshots/t9-time-01-typing-nokia.gif` — looping typing in the 3310 palette.
@@ -36,11 +40,11 @@ Aligns the 3310 clock colon with the digits, removes the connection bars, and gi
 
 - Platform: emery (Pebble Time 2).
 - Type: watchface.
-- Version: 0.2.1.
+- Version: 0.2.2.
 - Date display: none.
 
 ## Published release
 
 - Date: 2026-10-26.
 - URL: https://apps.repebble.com/6641551debac4064ab47acba
-- State: 0.2.1 published and publicly downloadable; the uploaded PBW matches `dist/t9-watch.pbw` byte for byte.
+- State: 0.2.2 published and publicly downloadable. The uploaded PBW matches `dist/t9-watch.pbw` byte for byte. The dashboard saved the updated description; the public description may lag behind its cache.

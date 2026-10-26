@@ -2,7 +2,7 @@
 
 A Pebble Time 2 watch face that types the current time as T9 text. At each minute change, the numeric clock updates immediately. The keypad then highlights the keys for the hour followed by the minute words. Known collisions briefly show a wrong candidate before the correct word settles.
 
-The face offers 12-hour or 24-hour time, Nokia 3310 and Motorola RAZR V3-inspired styles, and an optional watch-battery icon. Each style has a default palette; turn off **Use model colors** to use the independent background and text color pickers. It has no date display or date setting.
+The face offers 12-hour or 24-hour time, an O'CLOCK or OH ZERO choice at :00, Nokia 3310 and Motorola RAZR V3-inspired styles, and an optional watch-battery icon. Each style has a default palette; turn off **Use model colors** to use the independent background and text color pickers. It has no date display or date setting.
 
 ## Screenshots
 

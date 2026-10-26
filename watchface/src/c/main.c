@@ -12,6 +12,7 @@
 #define STORE_PHONE_MODEL 4
 #define STORE_SHOW_BATTERY 5
 #define STORE_USE_MODEL_COLORS 6
+#define STORE_ZERO_WORDING 7
 #define DEFAULT_BACKGROUND_COLOR 0xAAFFAA
 #define DEFAULT_TEXT_COLOR 0x000000
 #define RAZR_BACKGROUND_COLOR 0x000055
@@ -23,6 +24,7 @@ static Layer *s_face;
 static AppTimer *s_timer;
 static T9Time s_time;
 static bool s_use_24h;
+static bool s_use_oh_zero;
 static bool s_razr;
 static bool s_show_battery;
 static bool s_use_model_colors;
@@ -300,7 +302,7 @@ static void draw_face(Layer *layer, GContext *ctx) {
 
   const char *first = s_minute_display[0];
   const char *second = s_minute_display[1];
-  int minute_max_scale = s_razr ? 4 : 3;
+  int minute_max_scale = s_razr && s_time.minute_count == 1 ? 4 : 3;
   int first_scale = text_width(first, minute_max_scale) <= 182 ? minute_max_scale : minute_max_scale - 1;
   int second_scale = text_width(second, minute_max_scale) <= 182 ? minute_max_scale : minute_max_scale - 1;
   if (s_time.minute_count == 1) {
@@ -340,14 +342,14 @@ static void draw_face(Layer *layer, GContext *ctx) {
     strncat(keys, fragment, sizeof(keys) - strlen(keys) - 1);
   }
   draw_compact_text(ctx, keys, 9, 151,
-                    compact_text_width(keys, 2) <= 182 ? 2 : 1, ink);
+                    !s_razr && compact_text_width(keys, 2) <= 182 ? 2 : 1, ink);
   draw_keypad(ctx, ink, paper);
 }
 
 static void update_time(bool animate, bool hour_changed, const struct tm *tick_time) {
   time_t now = time(NULL);
   const struct tm *local = tick_time ? tick_time : localtime(&now);
-  t9_make_time(local->tm_hour, local->tm_min, s_use_24h, &s_time);
+  t9_make_time(local->tm_hour, local->tm_min, s_use_24h, s_use_oh_zero, &s_time);
   if (s_timer) {
     app_timer_cancel(s_timer);
     s_timer = NULL;
@@ -401,6 +403,15 @@ static void on_message(DictionaryIterator *iterator, void *context) {
       format_changed = true;
     }
   }
+  Tuple *wording = dict_find(iterator, MESSAGE_KEY_ZeroWording);
+  if (wording && (wording->type == TUPLE_INT || wording->type == TUPLE_UINT)) {
+    int value = wording->value->int32;
+    if (value == 0 || value == 1) {
+      s_use_oh_zero = value == 1;
+      persist_write_int(STORE_ZERO_WORDING, value);
+      format_changed = true;
+    }
+  }
   bool color_changed = false;
   color_changed |= read_color(dict_find(iterator, MESSAGE_KEY_BackgroundColor),
                               &s_background_color, STORE_BACKGROUND_COLOR);
@@ -433,6 +444,7 @@ static void on_message(DictionaryIterator *iterator, void *context) {
 
 static void init(void) {
   s_use_24h = persist_exists(STORE_TIME_FORMAT) && persist_read_int(STORE_TIME_FORMAT) == 1;
+  s_use_oh_zero = persist_exists(STORE_ZERO_WORDING) && persist_read_int(STORE_ZERO_WORDING) == 1;
   s_razr = persist_exists(STORE_PHONE_MODEL) && persist_read_int(STORE_PHONE_MODEL) == 1;
   s_show_battery = !persist_exists(STORE_SHOW_BATTERY) || persist_read_int(STORE_SHOW_BATTERY) == 1;
   s_background_color = DEFAULT_BACKGROUND_COLOR;

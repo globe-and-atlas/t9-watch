@@ -29,15 +29,16 @@ static int words_for_number(int value, const char **words) {
   return 1;
 }
 
-void t9_make_time(int hour, int minute, bool use_24h, T9Time *out) {
+void t9_make_time(int hour, int minute, bool use_24h, bool use_oh_zero, T9Time *out) {
   memset(out, 0, sizeof(*out));
   if (hour < 0 || hour > 23 || minute < 0 || minute > 59) return;
 
   int shown_hour = use_24h ? hour : ((hour + 11) % 12) + 1;
   out->hour_count = words_for_number(shown_hour, out->hour);
   if (minute == 0) {
-    out->minute[0] = "O'CLOCK";
-    out->minute_count = 1;
+    out->minute[0] = use_oh_zero ? "OH" : "O'CLOCK";
+    if (use_oh_zero) out->minute[1] = "ZERO";
+    out->minute_count = use_oh_zero ? 2 : 1;
   } else if (minute < 10) {
     out->minute[0] = "OH";
     out->minute[1] = ONES[minute];

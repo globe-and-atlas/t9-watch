@@ -23,3 +23,7 @@ Nokia 3310 is the default visual treatment, with a licensed bitmap-font recreati
 ## 2026-10-26 — Header and keypad refinement
 
 The connection bars were removed because the prior display represented only a connected/disconnected Pebble app state, not Wi-Fi signal strength. The battery icon remains optional and moves to the upper-left corner. The Nokia style uses individual tapered oval key outlines with mirrored outer-column angles; its utility labels and T9 digit line retain the original compact 5×7 alphabet so the pre-keypad spacing matches v1.
+
+## 2026-10-26 — Minute-00 wording and RAZR spacing
+
+Clay now offers O'CLOCK (default) or OH ZERO at minute 00. The choice persists on the watch; minutes 01–09 still read OH plus their minute word. Two-line RAZR minutes use the three-pixel scale, and RAZR T9 sequences use the compact one-pixel scale so the minute words, sequence, lower frame, and keypad have separate space.
