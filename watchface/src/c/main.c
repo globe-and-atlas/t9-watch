@@ -170,7 +170,7 @@ static void draw_razr_row(GContext *ctx, int y) {
   static const int outer_x[] = {12, 12, 16, 44, 50, 55, 59};
   static const int outer_y[] = {12, 4, 1, 1, 3, 8, 12};
   static const int center_x[] = {67, 73, 79, 84, 116, 121, 127, 133};
-  static const int center_y[] = {1, 8, 12, 12, 12, 12, 8, 1};
+  static const int center_y[] = {1, 8, 13, 13, 13, 13, 8, 1};
   for (int thickness = 0; thickness < 2; thickness++) {
     for (int point = 1; point < 7; point++) {
       graphics_draw_line(ctx,
@@ -198,7 +198,7 @@ static void draw_razr_keypad(GContext *ctx, const char *const labels[12],
       graphics_context_set_fill_color(ctx, ink);
       int center = column == 0 ? 32 : column == 1 ? 100 : 168;
       graphics_fill_rect(ctx, GRect(center - 18,
-                                   168 + row * 15 + 4, 37, 8),
+                                   168 + row * 15 + 5, 37, 8),
                          1, GCornersAll);
     }
   }
@@ -218,7 +218,7 @@ static void draw_razr_keypad(GContext *ctx, const char *const labels[12],
     int width = text_width(labels[key], 1);
     int center = column == 0 ? 32 : column == 1 ? 100 : 168;
     int label_x = center - width / 2;
-    draw_text(ctx, labels[key], label_x, y + 4, 1,
+    draw_text(ctx, labels[key], label_x, y + 5, 1,
               active ? paper : ink);
   }
 }

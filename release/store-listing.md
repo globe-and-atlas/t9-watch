@@ -72,14 +72,14 @@ Lowers the RAZR numeric clock toward the header divider for tighter alignment. O
 
 - Platform: emery (Pebble Time 2).
 - Type: watchface.
-- Version: 0.3.1.
+- Version: 0.3.2.
 - Date display: none.
 
 ## Published release
 
 - Date: 2026-10-26.
 - URL: https://apps.repebble.com/6641551debac4064ab47acba
-- State: 0.3.1 published. Public PBW and GIF match byte for byte; four PNGs match pixel for pixel. The public description shows the new bullet groups.
+- State: 0.3.2 published. Public PBW and GIF match byte for byte; four PNGs match pixel for pixel. The public description shows the new bullet groups.
 
 ## 0.3.0 release notes
 
@@ -90,3 +90,7 @@ Adds Quick, Classic, and Slow animation speeds; Off, Occasional, and Every colli
 ## 0.3.1 release notes
 
 Clears the RAZR key legends from their borders, including the longer outer-column labels and highlighted keys. Refreshes the Blue, Black, and Silver gallery images.
+
+## 0.3.2 release notes
+
+Lowers the RAZR keypad legends by one pixel and moves the center underline to preserve clearance. Refreshes Blue, Black, and Silver screenshots.

@@ -1,5 +1,18 @@
 # Task: T9 watch face
 
+## 0.3.2 keypad legend baseline — 2026-10-27
+
+- RAZR legends sit one pixel lower than 0.3.1.
+- A blank pixel separates center legends from the underline.
+- The long outer legends remain clear of shoulders.
+- A highlighted outer legend remains legible.
+- The emery build passes.
+
+- [x] Inspect native static and highlighted captures.
+- [x] Publish updated RAZR screenshots.
+- [x] Verify the public PBW.
+
+
 ## 0.3.1 RAZR legend clearance — 2026-10-27
 
 - Each of the twelve RAZR legends has a blank pixel separating it from a border.

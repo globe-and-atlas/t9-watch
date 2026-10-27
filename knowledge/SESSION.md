@@ -1,5 +1,16 @@
 # Session Log
 
+## Current Session — 0.3.2 keypad legend baseline
+
+**Goal:** Lower RAZR keypad legends one pixel with clear borders.
+**Agent:** OpenAI Codex (gpt-6.1-sol)
+**Handoff-from:** OpenAI Codex
+**Handoff-type:** continuation
+**Status:** Complete; 0.3.2 and gallery publicly verified.
+
+Blue, Black, Silver, and highlighted 4 GHI captures inspected. The center underline moves down with the text to retain a blank row. Host build and strict health checks pass. Shared emulator state restored.
+
+
 ## Current Session — 0.3.1 RAZR legend clearance
 
 **Goal:** Clear the RAZR legends from key borders and simplify store copy.
@@ -320,3 +331,10 @@ Public 0.3.1, bulleted description, and five gallery assets verified. Public PBW
 S.D.G.: Keeps the RAZR keypad readable and makes the store features easier to scan.
 Feynman gap: Native static/highlight captures and public assets pass; physical-watch appearance remains unverified.
 - 2026-10-27 14:23 — commit: Clear RAZR legends and simplify T9 Time listing in 0.3.1 | DEPLOY.md,knowledge/DECISIONS.md,knowledge/INDEX.md,knowledge/SESSION.md,pyproject.toml
+
+### 2026-10-27 — 0.3.2 release closeout
+
+Public PBW and GIF match byte for byte; four PNGs match pixel for pixel. Public version is 0.3.2 and the clean bullet description remains.
+
+S.D.G.: Gives the RAZR keypad legends a little more breathing room above the glyphs.
+Feynman gap: Native static/highlight captures and public assets pass; physical-watch appearance remains unverified.

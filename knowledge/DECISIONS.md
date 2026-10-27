@@ -51,3 +51,7 @@ Version 0.2.6 moves only the RAZR numeric clock from y=6 to y=9. Its 21-pixel gl
 ## 2026-10-27 — RAZR legend clearance
 
 0.3.1 moves the outer legend centers from 39/161 to 32/168 so the longest 35-pixel labels stay outside the inward shoulders. The center remains x=100. Legends move up from row+5 to row+4, creating a blank pixel row above the center underline. Highlights follow the new centers with 37×8 fills that stay inside the shoulder strokes. Native Blue, Black, Silver, center-active, and outer-active captures were inspected.
+
+## 2026-10-27 — RAZR legend baseline
+
+0.3.2 lowers RAZR labels and active fills by one pixel. Center underline low points also move down one pixel, leaving a clear row between the seven-pixel glyphs and the two-pixel stroke. Outer-column horizontal clearance from 0.3.1 remains.
