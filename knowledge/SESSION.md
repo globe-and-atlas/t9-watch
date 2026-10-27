@@ -296,3 +296,4 @@ Public 0.3.0, revised description, and five gallery assets verified. PBW and GIF
 
 S.D.G.: Gives T9 Time wearers control over animation pace and nighttime stillness, plus a readable Silver RAZR option.
 Feynman gap: Host policy/settings tests, native Silver/quiet capture, fresh review, and public assets pass; physical-watch delivery remains unverified.
+- 2026-10-27 14:15 — commit: Add T9 Time animation controls quiet hours and Silver in 0.3.0 | DEPLOY.md,README.md,execution/build.py,knowledge/DECISIONS.md,knowledge/INDEX.md
