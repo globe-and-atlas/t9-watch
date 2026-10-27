@@ -1,5 +1,15 @@
 # Task: T9 watch face
 
+## Individual-letter listing GIF — 2026-10-27
+
+- [x] Native frames contain N, NI, NIN, and NINE.
+- [x] Native frames contain T, TH, THI, THIR, THIRT, THIRTE, THIRTEE, and THIRTEEN.
+- [x] Numeric time remains 09:13 in 15 frames.
+- [x] The settled frame holds for 3500 ms.
+- [x] The public GIF matches the local file.
+- [x] The GIF is first in the public gallery.
+
+
 ## 0.3.3 steady typing and save preview — 2026-10-27
 
 - Four RAZR rows use connected mirrored shoulders with a low center.

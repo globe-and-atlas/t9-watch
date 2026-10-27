@@ -103,3 +103,7 @@ Keeps text size and position steady throughout typing and previews the current t
 ## 2026-10-27 media timing update
 
 The first gallery GIF has an 8.3-second loop: four 1.2-second typing stages and a 3.5-second settled hold. The PBW stays at 0.3.3.
+
+## 2026-10-27 individual-letter introduction
+
+The 15-frame intro now includes every letter of NINE and THIRTEEN at 350 ms per character, with cursor pauses and a 3.5-second final hold. Total loop: 8.7 seconds.

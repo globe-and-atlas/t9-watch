@@ -27,3 +27,7 @@ The first Nokja bitmap generator used `getmask`, which omits a glyph's vertical 
 ## 2026-10-27 — Emulator clock interrupts a typography capture
 
 `emu-set-time 23:16:59` briefly showed 23:17 before subsequent host-clock ticks replaced it during animation. This prevents comparisons across a long 24-hour phrase. Use explicit default-off T9_FIXTURE_HOUR/MINUTE build flags for native comparison; production execution/build.py strips these environment variables before invoking Pebble. Graduated to procedural/build_and_capture.md.
+
+## 2026-10-27 — Listing GIF skips letters
+
+Sparse CLI screenshots missed intermediate glyph states; increasing frame durations only slowed the jumps. Re-captured native monitor frames at 30 fps in a private QEMU, retained all prefix states, and retimed per-letter. Graduated to procedural/publish_appstore.md.

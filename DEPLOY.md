@@ -12,3 +12,5 @@ T9 Time 0.3.3 was published on 2026-10-27.
 Physical-watch settings Save and appearance remain unverified. No Git remote is configured.
 
 2026-10-27 media-only update: Original intro GIF slowed to an 8.3-second loop, with a 3.5-second final hold. Public file is byte-identical and first in the gallery; the four PNG asset IDs and PBW remain unchanged.
+
+2026-10-27 media refinement: intro replaced with all 12 individual-letter states in 15 frames, 350 ms per letter and 3.5-second settled hold (8.7 seconds total). Public file and first-gallery position verified; four PNG asset IDs unchanged.

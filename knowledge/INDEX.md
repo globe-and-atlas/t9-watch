@@ -3,9 +3,9 @@
 | File | Type | Summary |
 |------|------|---------|
 | [context.md](context.md) | domain | 2026-10-25 project identity, stack, constraints |
-| [SESSION.md](SESSION.md) | log | 2026-10-27 0.3.3 release and slower public introduction GIF handoff |
+| [SESSION.md](SESSION.md) | log | 2026-10-27 0.3.3 release and individual-letter public GIF handoff |
 | [DECISIONS.md](DECISIONS.md) | log | 2026-10-27 steady typing, Save preview, and RAZR reference decisions |
-| [ERRORS.md](ERRORS.md) | log | 2026-10-27 colon rasterization and emulator clock/capture errors |
+| [ERRORS.md](ERRORS.md) | log | 2026-10-27 typography, emulator clock, and skipped GIF frame errors |
 | [FAILURES/2026-10-26_razr-wave/context.md](FAILURES/2026-10-26_razr-wave/context.md) | failure | 2026-10-26 continuous RAZR wave misread and sculpted-key correction |
 | [REFLECTIONS.jsonl](REFLECTIONS.jsonl) | log | 2026-10-27 steady layout, native fixture, and RAZR hierarchy lessons |
 | [domain/deps.md](domain/deps.md) | domain | 2026-10-26 Pebble SDK, Clay, Pillow glyph-offset, and font-source dependencies |

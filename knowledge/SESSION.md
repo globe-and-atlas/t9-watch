@@ -370,3 +370,7 @@ Feynman gap: Settings event tests, native fixture/production captures, fresh rev
 
 Retimed only the Original intro to 1200 ms per typing stage and 3500 ms settled (8.3 seconds total). Public GIF matches byte for byte. Replaced its gallery entry and moved it back to first; public order verified with the new GIF first. Four PNG asset IDs and 0.3.3 PBW preserved.
 - 2026-10-27 17:42 — commit: Slow T9 Time listing animation and extend settled hold | DEPLOY.md,knowledge/INDEX.md,knowledge/SESSION.md,knowledge/procedural/publish_appstore.md,release/store-listing.md
+
+### 2026-10-27 — Individual-letter listing GIF
+
+Replaced sparse screenshot sequence with 30-fps native framebuffer capture in an isolated QEMU using a copied flash and dedicated ports because the shared emulator was in use. Retained 15 unique native frames covering blank cursors, 12 typed characters, and settled text. Timing: 350 ms per letter, 500 ms inter-word/initial pauses, 3500 ms final hold; 8.7 seconds total. The numeric 09:13 region stays identical. Private QEMU shut down; production build restored and published dist PBW preserved. Uploaded replacement GIF; public file matches byte for byte with 15 frames and 8.7-second timing. GIF is first in the public gallery; four PNG asset IDs unchanged.

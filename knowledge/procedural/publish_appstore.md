@@ -27,4 +27,8 @@ The Pebble clean build is not byte-stable: a later rebuild can change the native
 
 ### 2026-10-27 — Slower introduction timing
 
-The current five-frame Original GIF uses 1200 ms per typing stage and a 3500 ms settled hold (8300 ms total). Keep the numeric 09:13 crop identical across frames. Inspect public asset timing as well as saved gallery order.
+The superseded five-frame GIF used 1200 ms per typing stage and a 3500 ms settled hold (8300 ms total). The current 15-frame GIF includes each letter of NINE and THIRTEEN at 350 ms per character, two 500 ms blank/cursor pauses, and a 3500 ms settled hold (8700 ms total). Keep the numeric 09:13 crop identical across frames. Inspect public asset timing as well as saved gallery order.
+
+### 2026-10-27 — Capture every letter
+
+Repeated CLI screenshot calls take longer than individual animation steps and skip prefixes. Capture the QEMU monitor framebuffer at 30 fps, deduplicate consecutive identical native states, remove the prior settled pre-roll, then retime those states. Verify N, NI, NIN, NINE and T, TH, THI, THIR, THIRT, THIRTE, THIRTEE, THIRTEEN individually. When another task uses the shared emulator, use a private copy of a known-good flash image with dedicated serial/monitor ports and external-QEMU CLI connections. Shut down only that private instance through its monitor.
