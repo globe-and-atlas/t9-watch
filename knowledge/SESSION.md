@@ -364,3 +364,4 @@ Public 0.3.3, revised bullet description, and five gallery assets verified. Publ
 
 S.D.G.: Gives T9 Time wearers stable text, immediate feedback after Save, and a more faithful readable RAZR keypad.
 Feynman gap: Settings event tests, native fixture/production captures, fresh review, and public assets pass; physical-watch Save and appearance remain unverified.
+- 2026-10-27 14:48 — commit: Stabilize typing preview settings and refine RAZR keypad in 0.3.3 | DEPLOY.md,README.md,execution/build.py,knowledge/DECISIONS.md,knowledge/ERRORS.md
