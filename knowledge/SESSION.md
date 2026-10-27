@@ -319,3 +319,4 @@ Public 0.3.1, bulleted description, and five gallery assets verified. Public PBW
 
 S.D.G.: Keeps the RAZR keypad readable and makes the store features easier to scan.
 Feynman gap: Native static/highlight captures and public assets pass; physical-watch appearance remains unverified.
+- 2026-10-27 14:23 — commit: Clear RAZR legends and simplify T9 Time listing in 0.3.1 | DEPLOY.md,knowledge/DECISIONS.md,knowledge/INDEX.md,knowledge/SESSION.md,pyproject.toml
