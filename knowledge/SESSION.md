@@ -338,3 +338,4 @@ Public PBW and GIF match byte for byte; four PNGs match pixel for pixel. Public 
 
 S.D.G.: Gives the RAZR keypad legends a little more breathing room above the glyphs.
 Feynman gap: Native static/highlight captures and public assets pass; physical-watch appearance remains unverified.
+- 2026-10-27 14:32 — commit: Lower RAZR keypad legends one pixel in T9 Time 0.3.2 | DEPLOY.md,knowledge/DECISIONS.md,knowledge/INDEX.md,knowledge/SESSION.md,pyproject.toml
