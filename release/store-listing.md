@@ -11,7 +11,7 @@ T9 Time
 
 ## Description
 
-T9 Time turns each minute into a tiny predictive-text moment. The numeric clock updates immediately, then the hour and minute type themselves while the matching T9 keys light up. When two words share a key sequence, the face briefly shows another candidate before settling on the time. Choose the Original face, a Nokia 3310 treatment, or a Motorola RAZR V3 treatment with sculpted keypad outlines. Show or hide the battery icon, select 12-hour or 24-hour time, choose O'CLOCK or OH ZERO at :00, and use model colors or your own background and text colors. Made for Pebble Time 2.
+T9 Time turns each minute into a tiny predictive-text moment. The numeric clock updates immediately, then the hour and minute type themselves while the matching T9 keys light up. Choose Quick, Classic, or Slow typing, with wrong guesses Off, Occasional, or Every collision. Optional quiet hours show the finished time immediately. Choose Original, Nokia 3310, or Motorola RAZR V3 with Blue or Silver model palettes. Show or hide the battery icon, select 12-hour or 24-hour time, choose O'CLOCK or OH ZERO at :00, and use model colors or your own background and text colors. Made for Pebble Time 2.
 
 ## Initial release notes
 
@@ -56,11 +56,17 @@ Lowers the RAZR numeric clock toward the header divider for tighter alignment. O
 
 - Platform: emery (Pebble Time 2).
 - Type: watchface.
-- Version: 0.2.6.
+- Version: 0.3.0.
 - Date display: none.
 
 ## Published release
 
 - Date: 2026-10-26.
 - URL: https://apps.repebble.com/6641551debac4064ab47acba
-- State: 0.2.6 published. The public PBW and GIF match the local files byte for byte; all three public PNGs match pixel for pixel after store recompression.
+- State: 0.3.0 published. Public PBW and GIF match byte for byte; four PNGs match pixel for pixel.
+
+## 0.3.0 release notes
+
+Adds Quick, Classic, and Slow animation speeds; Off, Occasional, and Every collision wrong guesses; optional quiet hours with selectable start and end hours; and a Silver RAZR model palette. During quiet hours the finished time appears immediately.
+
+5. `screenshots/t9-time-05-razr-silver.png` — Silver RAZR palette.

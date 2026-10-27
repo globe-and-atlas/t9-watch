@@ -6,6 +6,9 @@ var legacyCustom = previous.UseModelColors === undefined &&
   ((previous.BackgroundColor !== undefined && Number(previous.BackgroundColor) !== 0xAAFFAA) ||
    (previous.TextColor !== undefined && Number(previous.TextColor) !== 0x000000));
 
+var hours = [];
+for (var h = 0; h < 24; h++) hours.push({label: ('0' + h).slice(-2) + ':00', value: String(h)});
+
 var clay = new Clay([
   {type: 'heading', defaultValue: 'T9 Time'},
   {type: 'text', defaultValue: 'The hour and minute type themselves at each minute change.'},
@@ -17,6 +20,18 @@ var clay = new Clay([
     {label: "O'CLOCK (2 lines)", value: '0'},
     {label: 'OH ZERO (3 lines)', value: '1'}
   ]},
+  {type: 'heading', defaultValue: 'Typing'},
+  {type: 'select', messageKey: 'AnimationSpeed', label: 'Animation speed', defaultValue: '1', options: [
+    {label: 'Quick', value: '0'}, {label: 'Classic', value: '1'}, {label: 'Slow', value: '2'}
+  ]},
+  {type: 'select', messageKey: 'WrongGuesses', label: 'Wrong guesses', defaultValue: '1', options: [
+    {label: 'Off', value: '0'}, {label: 'Occasional', value: '1'}, {label: 'Every collision', value: '2'}
+  ]},
+  {type: 'heading', defaultValue: 'Quiet hours'},
+  {type: 'toggle', messageKey: 'QuietEnabled', label: 'Enable quiet hours', defaultValue: false},
+  {type: 'text', defaultValue: 'During quiet hours the finished time appears immediately. Times use the watch clock. Equal start and end means all day.'},
+  {type: 'select', messageKey: 'QuietStart', label: 'Start', defaultValue: '22', options: hours},
+  {type: 'select', messageKey: 'QuietEnd', label: 'End', defaultValue: '7', options: hours},
   {type: 'heading', defaultValue: 'Display style'},
   {type: 'select', messageKey: 'PhoneModel', label: 'Style', defaultValue: '2', options: [
     {label: 'Original', value: '2'},
@@ -25,6 +40,10 @@ var clay = new Clay([
   ]},
   {type: 'toggle', messageKey: 'ShowBattery', label: 'Battery icon',
     defaultValue: previous.PhoneModel === undefined ? false : true},
+  {type: 'select', messageKey: 'RazrPalette', label: 'RAZR model palette', defaultValue: '0', options: [
+    {label: 'Blue', value: '0'}, {label: 'Silver', value: '1'}
+  ]},
+  {type: 'text', defaultValue: 'The RAZR palette applies to Motorola RAZR V3 when model colors are enabled.'},
   {type: 'heading', defaultValue: 'Colors'},
   {type: 'toggle', messageKey: 'UseModelColors', label: 'Use model colors', defaultValue: !legacyCustom},
   {type: 'text', defaultValue: 'Turn off model colors to use the two color choices below.'},
@@ -39,6 +58,11 @@ function color(value, fallback) {
     number >= 0 && number <= 0xFFFFFF ? number : fallback;
 }
 
+function setting(value, fallback, maximum) {
+  var n = Number(value);
+  return value !== undefined && isFinite(n) && Math.floor(n) === n && n >= 0 && n <= maximum ? n : fallback;
+}
+
 function sendSaved() {
   var raw = localStorage.getItem('clay-settings');
   if (!raw) return;
@@ -49,6 +73,12 @@ function sendSaved() {
   var model = Number(saved.PhoneModel);
   if (model !== 0 && model !== 1 && model !== 2) model = 2;
   Pebble.sendAppMessage({
+    AnimationSpeed: setting(saved.AnimationSpeed, 1, 2),
+    WrongGuesses: setting(saved.WrongGuesses, 1, 2),
+    QuietEnabled: saved.QuietEnabled === true || saved.QuietEnabled === 1 ? 1 : 0,
+    QuietStart: setting(saved.QuietStart, 22, 23),
+    QuietEnd: setting(saved.QuietEnd, 7, 23),
+    RazrPalette: setting(saved.RazrPalette, 0, 1),
     TimeFormat: format,
     ZeroWording: Number(saved.ZeroWording) === 1 ? 1 : 0,
     PhoneModel: model,

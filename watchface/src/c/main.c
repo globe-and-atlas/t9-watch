@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "t9_model.h"
+#include "t9_policy.h"
 #include "lcd_font.h"
 #include "razr_font.h"
 
@@ -18,6 +19,12 @@
 #define RAZR_BACKGROUND_COLOR 0x000055
 #define RAZR_TEXT_COLOR 0xAAFFFF
 #define STEP_MS 105
+#define STORE_ANIMATION_SPEED 8
+#define STORE_WRONG_GUESSES 9
+#define STORE_QUIET_ENABLED 10
+#define STORE_QUIET_START 11
+#define STORE_QUIET_END 12
+#define STORE_RAZR_PALETTE 13
 
 static Window *s_window;
 static Layer *s_face;
@@ -38,6 +45,13 @@ static int s_token;
 static int s_character;
 static int s_highlight_key;
 static bool s_showing_alternate;
+static int s_animation_speed = 1;
+static int s_wrong_guesses = 1;
+static int s_quiet_enabled;
+static int s_quiet_start = 22;
+static int s_quiet_end = 7;
+static int s_razr_palette;
+static int s_guess_slot;
 
 static const LcdGlyph *lcd_glyph(char c) {
   const char *position = strchr(LCD_CHARS, c);
@@ -301,7 +315,7 @@ static void animation_step(void *context) {
     display[s_character] = '\0';
     if (s_character == (int)length) {
       const char *alternate = t9_alternate(target);
-      if (alternate && (!is_hour || s_hour_changed)) {
+      if (alternate && t9_show_guess(s_wrong_guesses, is_hour, s_hour_changed, s_guess_slot)) {
         strncpy(display, alternate, 19);
         display[19] = '\0';
         s_showing_alternate = true;
@@ -323,7 +337,7 @@ static void animation_step(void *context) {
 }
 
 static void schedule_next(uint32_t delay) {
-  s_timer = app_timer_register(delay, animation_step, NULL);
+  s_timer = app_timer_register(t9_delay(s_animation_speed, delay), animation_step, NULL);
 }
 
 static void combine_hour(char *out, size_t capacity) {
@@ -334,9 +348,9 @@ static void combine_hour(char *out, size_t capacity) {
 static void draw_face(Layer *layer, GContext *ctx) {
   GRect bounds = layer_get_bounds(layer);
   uint32_t background = s_use_model_colors ?
-    (s_razr ? RAZR_BACKGROUND_COLOR : DEFAULT_BACKGROUND_COLOR) : s_background_color;
+    (s_razr ? (s_razr_palette ? 0xAAAAAA : RAZR_BACKGROUND_COLOR) : DEFAULT_BACKGROUND_COLOR) : s_background_color;
   uint32_t foreground = s_use_model_colors ?
-    (s_razr ? RAZR_TEXT_COLOR : DEFAULT_TEXT_COLOR) : s_text_color;
+    (s_razr ? (s_razr_palette ? 0x000000 : RAZR_TEXT_COLOR) : DEFAULT_TEXT_COLOR) : s_text_color;
   GColor paper = GColorFromHEX(background);
   GColor ink = GColorFromHEX(foreground);
   graphics_context_set_fill_color(ctx, paper);
@@ -432,6 +446,8 @@ static void draw_face(Layer *layer, GContext *ctx) {
 static void update_time(bool animate, bool hour_changed, const struct tm *tick_time) {
   time_t now = time(NULL);
   const struct tm *local = tick_time ? tick_time : localtime(&now);
+  s_guess_slot = local->tm_hour + local->tm_min;
+  animate = animate && !t9_quiet(s_quiet_enabled != 0, s_quiet_start, s_quiet_end, local->tm_hour);
   t9_make_time(local->tm_hour, local->tm_min, s_use_24h, s_use_oh_zero, &s_time);
   if (s_timer) {
     app_timer_cancel(s_timer);
@@ -475,9 +491,31 @@ static bool read_color(Tuple *item, uint32_t *color, int storage_key) {
   return true;
 }
 
+static bool read_setting(DictionaryIterator *iterator, uint32_t key, int *value,
+                         int maximum, int storage) {
+  Tuple *item = dict_find(iterator, key);
+  if (!item || (item->type != TUPLE_INT && item->type != TUPLE_UINT)) return false;
+  int next = item->value->int32;
+  if (next < 0 || next > maximum) return false;
+  *value = next;
+  persist_write_int(storage, next);
+  return true;
+}
+
+static int load_setting(int storage, int fallback, int maximum) {
+  int value = persist_exists(storage) ? persist_read_int(storage) : fallback;
+  return value >= 0 && value <= maximum ? value : fallback;
+}
+
 static void on_message(DictionaryIterator *iterator, void *context) {
   Tuple *format = dict_find(iterator, MESSAGE_KEY_TimeFormat);
   bool format_changed = false;
+  format_changed |= read_setting(iterator, MESSAGE_KEY_AnimationSpeed, &s_animation_speed, 2, STORE_ANIMATION_SPEED);
+  format_changed |= read_setting(iterator, MESSAGE_KEY_WrongGuesses, &s_wrong_guesses, 2, STORE_WRONG_GUESSES);
+  format_changed |= read_setting(iterator, MESSAGE_KEY_QuietEnabled, &s_quiet_enabled, 1, STORE_QUIET_ENABLED);
+  format_changed |= read_setting(iterator, MESSAGE_KEY_QuietStart, &s_quiet_start, 23, STORE_QUIET_START);
+  format_changed |= read_setting(iterator, MESSAGE_KEY_QuietEnd, &s_quiet_end, 23, STORE_QUIET_END);
+  format_changed |= read_setting(iterator, MESSAGE_KEY_RazrPalette, &s_razr_palette, 1, STORE_RAZR_PALETTE);
   if (format && (format->type == TUPLE_INT || format->type == TUPLE_UINT)) {
     int value = format->value->int32;
     if (value == 0 || value == 1) {
@@ -527,6 +565,12 @@ static void on_message(DictionaryIterator *iterator, void *context) {
 }
 
 static void init(void) {
+  s_animation_speed = load_setting(STORE_ANIMATION_SPEED, 1, 2);
+  s_wrong_guesses = load_setting(STORE_WRONG_GUESSES, 1, 2);
+  s_quiet_enabled = load_setting(STORE_QUIET_ENABLED, 0, 1);
+  s_quiet_start = load_setting(STORE_QUIET_START, 22, 23);
+  s_quiet_end = load_setting(STORE_QUIET_END, 7, 23);
+  s_razr_palette = load_setting(STORE_RAZR_PALETTE, 0, 1);
   s_use_24h = persist_exists(STORE_TIME_FORMAT) && persist_read_int(STORE_TIME_FORMAT) == 1;
   s_use_oh_zero = persist_exists(STORE_ZERO_WORDING) && persist_read_int(STORE_ZERO_WORDING) == 1;
   int saved_model = persist_exists(STORE_PHONE_MODEL) ? persist_read_int(STORE_PHONE_MODEL) : 2;
@@ -554,7 +598,7 @@ static void init(void) {
   layer_add_child(window_get_root_layer(s_window), s_face);
   window_stack_push(s_window, true);
   app_message_register_inbox_received(on_message);
-  app_message_open(128, 64);
+  app_message_open(512, 64);
   battery_state_service_subscribe(on_battery);
   tick_timer_service_subscribe(MINUTE_UNIT, on_tick);
   update_time(true, true, NULL);

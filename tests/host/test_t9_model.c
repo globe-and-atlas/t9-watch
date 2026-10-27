@@ -4,6 +4,7 @@
 #include <string.h>
 
 #include "t9_model.h"
+#include "t9_policy.h"
 
 static void check_time(int hour, int minute, bool twenty_four, bool oh_zero,
                        const char *numeric, const char *hour_first,
@@ -21,6 +22,23 @@ static void check_time(int hour, int minute, bool twenty_four, bool oh_zero,
 }
 
 int main(void) {
+  assert(t9_delay(0, 105) == 53);
+  assert(t9_delay(1, 105) == 105);
+  assert(t9_delay(2, 105) == 210);
+  for (int h = 0; h < 24; h++) {
+    assert(!t9_quiet(false, 22, 7, h));
+    assert(t9_quiet(true, 22, 7, h) == (h >= 22 || h < 7));
+    assert(t9_quiet(true, 9, 17, h) == (h >= 9 && h < 17));
+    assert(t9_quiet(true, 7, 7, h));
+  }
+  assert(!t9_show_guess(0, true, true, 3));
+  assert(!t9_show_guess(0, false, false, 3));
+  assert(t9_show_guess(2, true, false, 1));
+  assert(t9_show_guess(2, false, false, 1));
+  assert(t9_show_guess(1, true, true, 1));
+  assert(!t9_show_guess(1, true, false, 3));
+  assert(t9_show_guess(1, false, false, 3));
+  assert(!t9_show_guess(1, false, false, 4));
   check_time(0, 0, false, false, "12:00", "TWELVE", NULL, "O'CLOCK", NULL);
   check_time(0, 0, false, true, "12:00", "TWELVE", NULL, "OH", "ZERO");
   check_time(0, 0, true, true, "00:00", "ZERO", NULL, "OH", "ZERO");

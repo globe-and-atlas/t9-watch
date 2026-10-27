@@ -43,3 +43,7 @@ Version 0.2.5 mirrors the outer key stroke around the keypad midpoint, uses a se
 ## 2026-10-26 — RAZR numeric header alignment
 
 Version 0.2.6 moves only the RAZR numeric clock from y=6 to y=9. Its 21-pixel glyphs end at y=29, leaving rows 30–32 clear before the y=33 divider. The earlier gap made the clock look high in the rounded frame. Original and Nokia retain their existing numeric positions.
+
+## 2026-10-27 — Typing controls and quiet hours
+
+0.3.0 keeps Classic timing by default, with Quick at half delays and Slow at twice delays. Occasional minute alternates use (hour + minute) modulo three so the sampled minutes rotate hourly; hour alternates still require an hour change. Every collision includes repeated hour alternates. Quiet hours are disabled by default, use the watch local clock, include the start hour, exclude the end hour, support midnight crossing, and treat equal endpoints as all-day quiet. Silver uses #AAAAAA background and black ink only when RAZR model colors are active. Settings use new storage keys 8–13 and preserve prior style/color values.

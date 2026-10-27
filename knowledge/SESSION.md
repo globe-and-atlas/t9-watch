@@ -1,5 +1,16 @@
 # Session Log
 
+## Current Session — 0.3.0 controls
+
+**Goal:** Add animation speed, wrong guesses, quiet hours, and RAZR Silver.
+**Agent:** OpenAI Codex (gpt-6.1-sol)
+**Handoff-from:** OpenAI Codex
+**Handoff-type:** continuation
+**Status:** Complete; 0.3.0 published and public assets verified.
+
+Defaults: Classic, Occasional, quiet hours off with 22:00–07:00 endpoints, RAZR Blue. Policy logic will be host-tested independently of drawing.
+
+
 ## Current Session — RAZR numeric header alignment
 
 **Goal:** Lower the RAZR numeric clock toward its divider without changing Original or Nokia.
@@ -274,3 +285,14 @@ Feynman gap: The public GIF and binary were verified; physical-watch settings, r
 - 2026-10-26 22:24 — commit: Verify public T9 Time 0.2.5 release | DEPLOY.md,knowledge/SESSION.md,release/store-listing.md,task.md
 - 2026-10-26 22:29 — commit: Lower RAZR header clock in T9 Time 0.2.6 | DEPLOY.md,knowledge/DECISIONS.md,knowledge/INDEX.md,knowledge/SESSION.md,pyproject.toml
 - 2026-10-26 22:30 — commit: Verify public T9 Time 0.2.6 release | DEPLOY.md,knowledge/SESSION.md,release/store-listing.md,task.md
+
+### 2026-10-27 — 0.3.0 checkpoint
+
+Host policy tests cover speed, guess modes, and daytime/overnight/all-day quiet ranges. JavaScript tests cover settings defaults, serialization, combinations, and invalid values. Native Silver remained after reinstall; all-day quiet rollover showed settled TWO THIRTEEN. The shared emulator state was restored. Fresh verifier passed source, settings tests, and Silver rendering. Physical-watch settings delivery remains unverified.
+
+### 2026-10-27 — Release closeout
+
+Public 0.3.0, revised description, and five gallery assets verified. PBW and GIF byte matches; four PNG pixel matches. No physical-watch settings-save test was performed.
+
+S.D.G.: Gives T9 Time wearers control over animation pace and nighttime stillness, plus a readable Silver RAZR option.
+Feynman gap: Host policy/settings tests, native Silver/quiet capture, fresh review, and public assets pass; physical-watch delivery remains unverified.

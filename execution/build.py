@@ -36,6 +36,7 @@ def main() -> None:
         "-o", str(binary),
     ], ROOT)
     run([str(binary)], ROOT)
+    run(["node", str(ROOT / "tests/test_settings.js")], ROOT)
     if args.host_only:
         print("T9 model tests passed")
         return

@@ -1,7 +1,7 @@
 {
   "name": "t9-watch",
   "author": "Globe & Atlas",
-  "version": "0.2.6",
+  "version": "0.3.0",
   "private": true,
   "dependencies": {
     "@rebble/clay": "1.1.0"
@@ -11,10 +11,32 @@
     "uuid": "afd3d256-e88f-4bf5-b4b1-57952a0d15b7",
     "sdkVersion": "3",
     "enableMultiJS": true,
-    "capabilities": ["configurable"],
-    "targetPlatforms": ["emery"],
-    "watchapp": {"watchface": true},
-    "messageKeys": ["TimeFormat", "BackgroundColor", "TextColor", "PhoneModel", "ShowBattery", "UseModelColors", "ZeroWording"],
-    "resources": {"media": []}
+    "capabilities": [
+      "configurable"
+    ],
+    "targetPlatforms": [
+      "emery"
+    ],
+    "watchapp": {
+      "watchface": true
+    },
+    "messageKeys": [
+      "TimeFormat",
+      "BackgroundColor",
+      "TextColor",
+      "PhoneModel",
+      "ShowBattery",
+      "UseModelColors",
+      "ZeroWording",
+      "AnimationSpeed",
+      "WrongGuesses",
+      "QuietEnabled",
+      "QuietStart",
+      "QuietEnd",
+      "RazrPalette"
+    ],
+    "resources": {
+      "media": []
+    }
   }
 }

@@ -32,3 +32,7 @@ pebble screenshot --emulator emery --no-open --no-correction .tmp/emery.png
 ```
 
 The 3310 style uses a bitmap generated from the MIT-licensed [Nokja Original Small Bold](https://webdraft.hu/fonts/nokja-original/) font recreation. Original retains the first-release compact pixel alphabet and square keys. RAZR uses four rows of mirrored outer key outlines and a balanced center key inspired by its metal keyboard. The native emery palette and physical watch need separate readability checks.
+
+Version 0.3.0 adds Quick, Classic, and Slow typing; Off, Occasional, or Every collision guesses; optional quiet hours using the watch clock; and a Silver RAZR model palette. Quiet hours default to 22:00–07:00 when enabled; equal endpoints make the whole day quiet. Occasional minute guesses rotate by hour.
+
+![Silver RAZR](screenshots/t9-time-05-razr-silver.png)

@@ -1,5 +1,26 @@
 # Task: T9 watch face
 
+## 0.3.0 animation controls — 2026-10-27
+
+- Quick, Classic, and Slow change typing delays.
+- Wrong guesses Off suppresses collisions.
+- Occasional limits collision appearances.
+- Every collision displays each available alternate.
+- Enabled quiet hours render settled time immediately.
+- Overnight quiet ranges cross midnight correctly.
+- Equal quiet endpoints mean a full quiet day.
+- RAZR Silver uses light gray with dark ink.
+- The six new settings persist after restart.
+- Host policy tests pass.
+- The emery build passes.
+- A fresh verifier reviews settings and native output.
+
+- [x] Implement settings and policy.
+- [x] Verify host and native behavior.
+- [x] Complete independent review.
+- [x] Prepare the release.
+
+
 ## RAZR clock-to-divider spacing — 2026-10-26
 
 ### Validation Contract

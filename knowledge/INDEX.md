@@ -3,7 +3,7 @@
 | File | Type | Summary |
 |------|------|---------|
 | [context.md](context.md) | domain | 2026-10-25 project identity, stack, constraints |
-| [SESSION.md](SESSION.md) | log | 2026-10-26 0.2.6 RAZR numeric header alignment handoff |
+| [SESSION.md](SESSION.md) | log | 2026-10-27 0.3.0 animation controls and public release handoff |
 | [DECISIONS.md](DECISIONS.md) | log | 2026-10-26 Original, Nokia, RAZR symmetry, header, wording, color, and spacing decisions |
 | [ERRORS.md](ERRORS.md) | log | 2026-10-26 colon rasterization and emulator capture errors |
 | [FAILURES/2026-10-26_razr-wave/context.md](FAILURES/2026-10-26_razr-wave/context.md) | failure | 2026-10-26 continuous RAZR wave misread and sculpted-key correction |
