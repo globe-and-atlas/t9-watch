@@ -6,7 +6,7 @@
 **Agent:** OpenAI Codex
 **Handoff-from:** OpenAI Codex
 **Handoff-type:** continuation
-**Status:** Native and dashboard release complete; public propagation pending.
+**Status:** Complete; 0.2.5 published and public assets verified.
 
 ### 2026-10-26 — Start
 
@@ -22,15 +22,16 @@
 - `make build`, strict health check, and `git diff --check` passed. The shared emery persist state was restored from backup with 32 matching file hashes.
 - Published 0.2.5 in the developer dashboard with four gallery assets. The public listing still showed 0.2.4 and an UPDATING state immediately afterward.
 - Reopened the saved gallery and downloaded its four assets. The GIF matches byte for byte; the PNGs match the local stills pixel for pixel after store recompression.
+- The public detail page later showed version 0.2.5. Its PBW matches `dist/t9-watch.pbw` byte for byte; its GIF matches byte for byte; all three PNGs match pixel for pixel.
 
 ### Current handoff — 2026-10-26
 
-- **Released:** 0.2.5 marked Published in the developer dashboard.
-- **Open verification:** Wait for the public detail page to move from 0.2.4 to 0.2.5, then compare its PBW with `dist/t9-watch.pbw`.
+- **Published:** 0.2.5 at https://apps.repebble.com/6641551debac4064ab47acba.
+- **Verified:** Public PBW SHA-256 `2f84ee506cb6ea5f4fc62dd432aa8043f1bfd774062fcfe580458537f977cfc8`; public GIF byte match; three public PNG pixel matches.
 - **Open verification:** Physical Pebble Time 2 appearance remains unmeasured.
 
 S.D.G.: Makes RAZR key shapes and time text feel balanced at a glance on a 200×228 watch display.
-Feynman gap: Native captures and saved store assets pass; the public PBW and physical watch have not yet been observed.
+Feynman gap: Native captures and public release assets pass; physical-watch appearance remains unverified.
 
 ## Current Session — 0.2.4 RAZR correction
 

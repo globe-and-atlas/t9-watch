@@ -59,4 +59,4 @@ Balances the RAZR keypad with mirrored outer keys, a centered middle key, and ev
 
 - Date: 2026-10-26.
 - URL: https://apps.repebble.com/6641551debac4064ab47acba
-- State: 0.2.5 published in the developer dashboard; public listing propagation is pending. Version 0.2.4 was published with matching public PBW and gallery assets.
+- State: 0.2.5 published. The public PBW and GIF match the local release files byte for byte; all three public PNGs match pixel for pixel after store recompression.

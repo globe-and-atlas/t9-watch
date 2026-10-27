@@ -30,7 +30,7 @@
 - [x] Build and run host tests.
 - [x] Publish the 0.2.5 release in the developer dashboard.
 - [x] Verify the saved gallery assets.
-- [ ] Verify the public page serves the 0.2.5 PBW.
+- [x] Verify the public page serves the 0.2.5 PBW.
 
 ## RAZR sculpted key correction — 2026-10-26
 
