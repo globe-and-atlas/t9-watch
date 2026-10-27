@@ -369,3 +369,4 @@ Feynman gap: Settings event tests, native fixture/production captures, fresh rev
 ### 2026-10-27 — Slower store GIF
 
 Retimed only the Original intro to 1200 ms per typing stage and 3500 ms settled (8.3 seconds total). Public GIF matches byte for byte. Replaced its gallery entry and moved it back to first; public order verified with the new GIF first. Four PNG asset IDs and 0.3.3 PBW preserved.
+- 2026-10-27 17:42 — commit: Slow T9 Time listing animation and extend settled hold | DEPLOY.md,knowledge/INDEX.md,knowledge/SESSION.md,knowledge/procedural/publish_appstore.md,release/store-listing.md
