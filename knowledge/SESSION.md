@@ -365,3 +365,7 @@ Public 0.3.3, revised bullet description, and five gallery assets verified. Publ
 S.D.G.: Gives T9 Time wearers stable text, immediate feedback after Save, and a more faithful readable RAZR keypad.
 Feynman gap: Settings event tests, native fixture/production captures, fresh review, and public assets pass; physical-watch Save and appearance remain unverified.
 - 2026-10-27 14:48 — commit: Stabilize typing preview settings and refine RAZR keypad in 0.3.3 | DEPLOY.md,README.md,execution/build.py,knowledge/DECISIONS.md,knowledge/ERRORS.md
+
+### 2026-10-27 — Slower store GIF
+
+Retimed only the Original intro to 1200 ms per typing stage and 3500 ms settled (8.3 seconds total). Public GIF matches byte for byte. Replaced its gallery entry and moved it back to first; public order verified with the new GIF first. Four PNG asset IDs and 0.3.3 PBW preserved.

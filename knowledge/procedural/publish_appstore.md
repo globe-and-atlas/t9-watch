@@ -17,10 +17,14 @@ The first release was published on 2026-10-25 at https://apps.repebble.com/66415
 
 ## Screenshot-only listing edits
 
-Use the developer dashboard's **Edit Listing** action to change screenshots without creating a new PBW release. For T9 Time, the emery gallery is a 200×228 looping GIF followed by three 200×228 PNGs. The upload input accepts multiple files and appends a new selection to files already queued, so remove duplicates before saving. Existing screenshots have no reorder control in this editor: remove the old gallery, then queue the full set in display order and save once. Reopen the editor to verify the saved order. The public app store page may continue to show cached screenshots for several minutes.
+Use the developer dashboard's **Edit Listing** action to change screenshots without creating a new PBW release. For T9 Time, the emery gallery is a 200×228 looping GIF followed by three 200×228 PNGs. The upload input accepts multiple files and appends a new selection to files already queued, so remove duplicates before saving. The current editor has left/right reorder arrows. For a focused GIF replacement, remove the old GIF, upload its replacement, save, reopen the editor, move the new GIF from the last position to first, and save again. Preserve the four PNG asset IDs. Reopen the editor to verify the saved order. The public app store page may continue to show cached screenshots for several minutes.
 
 For a rollover GIF, inspect the loop seam before upload. Capture tools may include frames from the previous minute. Remove those frames so the first and last frames show the same numeric time, then verify the clock region is identical in every frame. T9 Time's corrected loop starts at 09:13 and ends at 09:13 with THIRTEEN settled.
 
 For 0.2.0 and later, stop the shared emulator before `pebble screenshot --gif-all-platforms` so it boots with the default model; the tool's disk wipe does not reset an already-running QEMU's in-memory settings. Preserve and later restore the shared emery persist directory. Use `python3 execution/prepare_store_gif.py <capture.gif> <store.gif>` to remove old-minute frames and hold the settled frame. Inspect all exported frames and verify the numeric clock crop is identical before uploading. The 0.2.0 gallery includes the new 3310 GIF, blue RAZR still, custom-color 3310 still, and monochrome RAZR still.
 
 The Pebble clean build is not byte-stable: a later rebuild can change the native bin and manifest while source is unchanged. Preserve the PBW used at publish time, compare the public download with that artifact, and keep the verified release copy in ignored `dist/t9-watch.pbw` after optional rebuild checks.
+
+### 2026-10-27 — Slower introduction timing
+
+The current five-frame Original GIF uses 1200 ms per typing stage and a 3500 ms settled hold (8300 ms total). Keep the numeric 09:13 crop identical across frames. Inspect public asset timing as well as saved gallery order.

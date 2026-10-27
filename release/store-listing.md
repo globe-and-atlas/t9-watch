@@ -99,3 +99,7 @@ Lowers the RAZR keypad legends by one pixel and moves the center underline to pr
 ## 0.3.3 release notes
 
 Keeps text size and position steady throughout typing and previews the current time after settings Save, respecting quiet hours. Recreates the RAZR keypad with connected sculpted rows, larger aligned digits, and smaller letter groups.
+
+## 2026-10-27 media timing update
+
+The first gallery GIF has an 8.3-second loop: four 1.2-second typing stages and a 3.5-second settled hold. The PBW stays at 0.3.3.

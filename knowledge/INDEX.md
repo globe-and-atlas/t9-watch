@@ -3,7 +3,7 @@
 | File | Type | Summary |
 |------|------|---------|
 | [context.md](context.md) | domain | 2026-10-25 project identity, stack, constraints |
-| [SESSION.md](SESSION.md) | log | 2026-10-27 0.3.3 steady typing, Save preview, and RAZR photo handoff |
+| [SESSION.md](SESSION.md) | log | 2026-10-27 0.3.3 release and slower public introduction GIF handoff |
 | [DECISIONS.md](DECISIONS.md) | log | 2026-10-27 steady typing, Save preview, and RAZR reference decisions |
 | [ERRORS.md](ERRORS.md) | log | 2026-10-27 colon rasterization and emulator clock/capture errors |
 | [FAILURES/2026-10-26_razr-wave/context.md](FAILURES/2026-10-26_razr-wave/context.md) | failure | 2026-10-26 continuous RAZR wave misread and sculpted-key correction |

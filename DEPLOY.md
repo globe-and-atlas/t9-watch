@@ -10,3 +10,5 @@ T9 Time 0.3.3 was published on 2026-10-27.
 - RAZR stills show connected rows, larger aligned digits, and smaller letter groups.
 
 Physical-watch settings Save and appearance remain unverified. No Git remote is configured.
+
+2026-10-27 media-only update: Original intro GIF slowed to an 8.3-second loop, with a 3.5-second final hold. Public file is byte-identical and first in the gallery; the four PNG asset IDs and PBW remain unchanged.
