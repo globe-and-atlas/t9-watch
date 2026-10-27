@@ -41,6 +41,10 @@ Redraws the RAZR keypad as four rows of individually sculpted left, center, and 
 
 Balances the RAZR keypad with mirrored outer keys, a centered middle key, and evenly placed legends and highlights. RAZR hour and minute lines now use balanced vertical spacing for short and long times.
 
+## 0.2.6 release notes
+
+Lowers the RAZR numeric clock toward the header divider for tighter alignment. Original and Nokia positions are unchanged.
+
 ## Screenshot order
 
 1. `screenshots/t9-time-01-typing-original.gif` — looping typing in the Original palette.
@@ -52,11 +56,11 @@ Balances the RAZR keypad with mirrored outer keys, a centered middle key, and ev
 
 - Platform: emery (Pebble Time 2).
 - Type: watchface.
-- Version: 0.2.5.
+- Version: 0.2.6.
 - Date display: none.
 
 ## Published release
 
 - Date: 2026-10-26.
 - URL: https://apps.repebble.com/6641551debac4064ab47acba
-- State: 0.2.5 published. The public PBW and GIF match the local release files byte for byte; all three public PNGs match pixel for pixel after store recompression.
+- State: 0.2.6 published in the developer dashboard; public listing propagation is pending. Version 0.2.5 is publicly verified.

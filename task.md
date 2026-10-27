@@ -1,5 +1,26 @@
 # Task: T9 watch face
 
+## RAZR clock-to-divider spacing — 2026-10-26
+
+### Validation Contract
+
+- The RAZR numeric clock begins at y=9.
+- The RAZR numeric clock ends above the y=33 divider.
+- The RAZR clock remains inside its outer frame.
+- The Original numeric clock position remains unchanged.
+- The Nokia numeric clock position remains unchanged.
+- The emery PBW builds successfully.
+- A native 200×228 RAZR capture shows the revised header.
+
+### Checklist
+
+- [x] Lower the RAZR numeric clock.
+- [x] Inspect black RAZR at native resolution.
+- [x] Inspect blue RAZR at native resolution.
+- [x] Run the build and host checks.
+- [x] Publish version 0.2.6.
+- [ ] Verify the public PBW.
+
 ## RAZR keypad symmetry — 2026-10-26
 
 ### Validation Contract

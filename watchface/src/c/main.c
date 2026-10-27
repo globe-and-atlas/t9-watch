@@ -358,7 +358,7 @@ static void draw_face(Layer *layer, GContext *ctx) {
     }
   }
   draw_text(ctx, s_time.numeric, 200 - 9 - text_width(s_time.numeric, 3),
-            s_original ? 7 : s_razr ? 6 : 3, 3, ink);
+            s_original ? 7 : s_razr ? 9 : 3, 3, ink);
   graphics_context_set_stroke_color(ctx, ink);
   graphics_draw_line(ctx, GPoint(9, 33), GPoint(190, 33));
   draw_compact_text(ctx, "HOUR", 9, 39, 1, ink);

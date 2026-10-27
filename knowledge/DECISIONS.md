@@ -39,3 +39,7 @@ Version 0.2.4 gave each of the four RAZR keypad rows three distinct strokes: the
 ## 2026-10-26 — RAZR keypad symmetry and text spacing
 
 Version 0.2.5 mirrors the outer key stroke around the keypad midpoint, uses a self-mirrored low center stroke, centers each legend at x=39, 100, or 161, and gives each active key the same fill dimensions. The RAZR hour word is vertically centered when it shrinks to two-pixel scale. The minute block divides the available space between the hour word and the MINUTE label into equal gaps, with at most one pixel of rounding difference. Original and Nokia keep their established text positions.
+
+## 2026-10-26 — RAZR numeric header alignment
+
+Version 0.2.6 moves only the RAZR numeric clock from y=6 to y=9. Its 21-pixel glyphs end at y=29, leaving rows 30–32 clear before the y=33 divider. The earlier gap made the clock look high in the rounded frame. Original and Nokia retain their existing numeric positions.

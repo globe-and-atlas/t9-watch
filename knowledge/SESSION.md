@@ -1,5 +1,25 @@
 # Session Log
 
+## Current Session — RAZR numeric header alignment
+
+**Goal:** Lower the RAZR numeric clock toward its divider without changing Original or Nokia.
+**Agent:** OpenAI Codex
+**Handoff-from:** OpenAI Codex
+**Handoff-type:** continuation
+**Status:** In progress.
+
+### 2026-10-26 — Start
+
+- The 0.2.5 RAZR screenshot shows a larger gap between the numeric glyphs and the y=33 divider than the header needs.
+- Target: move only the RAZR numeric line from y=6 to y=9, leaving three clear pixel rows above the divider.
+
+### 2026-10-26 — Native and release checkpoint
+
+- Moved the RAZR clock to y=9. Native black and blue 200×228 captures place its visible glyph pixels at y=9–29, leaving rows 30–32 clear before the y=33 divider.
+- Archived the 0.2.5 gallery and replaced only the two RAZR stills; the Original GIF and Nokia still remain the same.
+- `make build`, strict health check, and `git diff --check` passed. The shared emulator's 32 persist files were restored with matching hashes.
+- Published 0.2.6 in the developer dashboard. The public detail page still showed 0.2.5 immediately afterward.
+
 ## Current Session — RAZR symmetry correction
 
 **Goal:** Give the RAZR keypad mirrored outer keys and a balanced center key.
