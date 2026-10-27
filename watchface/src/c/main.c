@@ -4,6 +4,7 @@
 
 #include "t9_model.h"
 #include "t9_policy.h"
+#include "config.h"
 #include "lcd_font.h"
 #include "razr_font.h"
 
@@ -167,29 +168,70 @@ static void draw_nokia_key(GContext *ctx, int x, int y, int tilt,
 }
 
 static void draw_razr_row(GContext *ctx, int y) {
-  static const int outer_x[] = {12, 12, 16, 44, 50, 55, 59};
-  static const int outer_y[] = {12, 4, 1, 1, 3, 8, 12};
-  static const int center_x[] = {67, 73, 79, 84, 116, 121, 127, 133};
-  static const int center_y[] = {1, 8, 13, 13, 13, 13, 8, 1};
+  static const int x[] = {12, 12, 16, 59, 64, 68, 72, 128, 132, 136, 141, 184, 188, 188};
+  static const int dy[] = {12, 4, 1, 1, 3, 10, 13, 13, 10, 3, 1, 1, 4, 12};
   for (int thickness = 0; thickness < 2; thickness++) {
-    for (int point = 1; point < 7; point++) {
+    for (int point = 1; point < 14; point++) {
       graphics_draw_line(ctx,
-        GPoint(outer_x[point - 1], y + outer_y[point - 1] + thickness),
-        GPoint(outer_x[point], y + outer_y[point] + thickness));
-      graphics_draw_line(ctx,
-        GPoint(200 - outer_x[point - 1], y + outer_y[point - 1] + thickness),
-        GPoint(200 - outer_x[point], y + outer_y[point] + thickness));
-    }
-    for (int point = 1; point < 8; point++) {
-      graphics_draw_line(ctx,
-        GPoint(center_x[point - 1], y + center_y[point - 1] + thickness),
-        GPoint(center_x[point], y + center_y[point] + thickness));
+        GPoint(x[point - 1], y + dy[point - 1] + thickness),
+        GPoint(x[point], y + dy[point] + thickness));
     }
   }
 }
 
-static void draw_razr_keypad(GContext *ctx, const char *const labels[12],
-                              GColor ink, GColor paper) {
+static void draw_razr_letters(GContext *ctx, const char *letters, int x, int y, GColor color) {
+  static const uint8_t tiny[26][5] = {
+    {2,5,7,5,5}, {6,5,6,5,6}, {3,4,4,4,3}, {6,5,5,5,6},
+    {7,4,6,4,7}, {7,4,6,4,4}, {3,4,5,5,3}, {5,5,7,5,5},
+    {7,2,2,2,7}, {1,1,1,5,2}, {5,5,6,5,5}, {4,4,4,4,7},
+    {5,7,7,5,5}, {5,7,7,7,5}, {2,5,5,5,2}, {6,5,6,4,4},
+    {2,5,5,3,1}, {6,5,6,5,5}, {3,4,2,1,6}, {7,2,2,2,2},
+    {5,5,5,5,7}, {5,5,5,5,2}, {5,5,7,7,5}, {5,5,2,5,5},
+    {5,5,2,2,2}, {7,1,2,4,7}
+  };
+  graphics_context_set_fill_color(ctx, color);
+  for (; *letters; letters++, x += 4) {
+    int index = *letters - 'A';
+    if (index < 0 || index >= 26) continue;
+    for (int row = 0; row < 5; row++) {
+      for (int column = 0; column < 3; column++) {
+        if (tiny[index][row] & (1 << (2 - column)))
+          graphics_fill_rect(ctx, GRect(x + column, y + row, 1, 1), 0, GCornerNone);
+      }
+    }
+  }
+}
+
+static void draw_razr_legend(GContext *ctx, int key, int y, GColor color) {
+  static const char *const letters[12] = {
+    "", "ABC", "DEF", "GHI", "JKL", "MNO", "PQRS", "TUV", "WXYZ", "", "", ""
+  };
+  const char digits[] = "123456789*0#";
+  int column = key % 3;
+  int letters_width = (int)strlen(letters[key]) * 4;
+  if (letters_width) letters_width--;
+  int digit_x = column == 0 ? 22 : column == 1 ? 90 : 174;
+  if (letters_width) {
+    int letters_x = column == 2 ? digit_x - letters_width - 3 : digit_x + 8;
+    draw_razr_letters(ctx, letters[key], letters_x, y + 4, color);
+  }
+  int index = razr_index(digits[key]);
+  if (index < 0) {
+    char symbol[2] = {digits[key], '\0'};
+    draw_compact_text(ctx, symbol, digit_x, y + 5, 1, color);
+    return;
+  }
+  graphics_context_set_fill_color(ctx, color);
+  for (int row = 0; row < 8; row++) {
+    int source_row = row < 4 ? row : row - 1;
+    for (int column_index = 0; column_index < 5; column_index++) {
+      if (RAZR_GLYPHS[index][source_row] & (1 << (4 - column_index)))
+        graphics_fill_rect(ctx, GRect(digit_x + column_index, y + 4 + row, 1, 1), 0, GCornerNone);
+    }
+  }
+}
+
+static void draw_razr_keypad(GContext *ctx, GColor ink, GColor paper) {
   for (int key = 0; key < 12; key++) {
     int row = key / 3;
     int column = key % 3;
@@ -198,7 +240,7 @@ static void draw_razr_keypad(GContext *ctx, const char *const labels[12],
       graphics_context_set_fill_color(ctx, ink);
       int center = column == 0 ? 32 : column == 1 ? 100 : 168;
       graphics_fill_rect(ctx, GRect(center - 18,
-                                   168 + row * 15 + 5, 37, 8),
+                                   168 + row * 15 + 3, 37, 10),
                          1, GCornersAll);
     }
   }
@@ -207,19 +249,11 @@ static void draw_razr_keypad(GContext *ctx, const char *const labels[12],
   for (int row = 0; row < 4; row++) {
     draw_razr_row(ctx, 168 + row * 15);
   }
-  graphics_draw_line(ctx, GPoint(9, 171), GPoint(9, 222));
-  graphics_draw_line(ctx, GPoint(191, 171), GPoint(191, 222));
-  graphics_draw_line(ctx, GPoint(12, 226), GPoint(188, 226));
 
   for (int key = 0; key < 12; key++) {
-    int column = key % 3;
     int y = 168 + (key / 3) * 15;
     bool active = key < 9 && s_highlight_key == key + 1;
-    int width = text_width(labels[key], 1);
-    int center = column == 0 ? 32 : column == 1 ? 100 : 168;
-    int label_x = center - width / 2;
-    draw_text(ctx, labels[key], label_x, y + 5, 1,
-              active ? paper : ink);
+    draw_razr_legend(ctx, key, y, active ? paper : ink);
   }
 }
 
@@ -246,7 +280,7 @@ static void draw_keypad(GContext *ctx, GColor ink, GColor paper) {
     "7 PQRS", "8 TUV", "9 WXYZ", "*", "0", "#"
   };
   if (s_razr) {
-    draw_razr_keypad(ctx, LABELS, ink, paper);
+    draw_razr_keypad(ctx, ink, paper);
     return;
   }
   if (s_original) {
@@ -381,15 +415,18 @@ static void draw_face(Layer *layer, GContext *ctx) {
 
   char hour_line[40];
   combine_hour(hour_line, sizeof(hour_line));
-  int hour_scale = text_width(hour_line, 3) <= 182 ? 3 : 2;
+  char full_hour[40];
+  snprintf(full_hour, sizeof(full_hour), "%s%s%s", s_time.hour[0],
+           s_time.hour_count > 1 ? " " : "", s_time.hour_count > 1 ? s_time.hour[1] : "");
+  int hour_scale = text_width(full_hour, 3) <= 182 ? 3 : 2;
   int hour_y = s_razr ? 51 + (3 - hour_scale) * 3 : s_original ? 51 : 48;
   draw_text(ctx, hour_line, 9, hour_y, hour_scale, ink);
 
   const char *first = s_minute_display[0];
   const char *second = s_minute_display[1];
   int minute_max_scale = s_original || (s_razr && s_time.minute_count == 1) ? 4 : 3;
-  int first_scale = text_width(first, minute_max_scale) <= 182 ? minute_max_scale : minute_max_scale - 1;
-  int second_scale = text_width(second, minute_max_scale) <= 182 ? minute_max_scale : minute_max_scale - 1;
+  int first_scale = text_width(s_time.minute[0], minute_max_scale) <= 182 ? minute_max_scale : minute_max_scale - 1;
+  int second_scale = text_width(s_time.minute_count > 1 ? s_time.minute[1] : "", minute_max_scale) <= 182 ? minute_max_scale : minute_max_scale - 1;
   int first_y = s_time.minute_count == 1 ? 91 : s_razr || s_original ? 80 : 79;
   int second_y = s_razr || s_original ? 111 : 110;
   if (s_razr) {
@@ -448,6 +485,12 @@ static void draw_face(Layer *layer, GContext *ctx) {
 static void update_time(bool animate, bool hour_changed, const struct tm *tick_time) {
   time_t now = time(NULL);
   const struct tm *local = tick_time ? tick_time : localtime(&now);
+  struct tm fixture = *local;
+  if (T9_FIXTURE_HOUR >= 0 && T9_FIXTURE_MINUTE >= 0) {
+    fixture.tm_hour = T9_FIXTURE_HOUR;
+    fixture.tm_min = T9_FIXTURE_MINUTE;
+    local = &fixture;
+  }
   s_guess_slot = local->tm_hour + local->tm_min;
   animate = animate && !t9_quiet(s_quiet_enabled != 0, s_quiet_start, s_quiet_end, local->tm_hour);
   t9_make_time(local->tm_hour, local->tm_min, s_use_24h, s_use_oh_zero, &s_time);
@@ -562,7 +605,11 @@ static void on_message(DictionaryIterator *iterator, void *context) {
     persist_write_int(STORE_USE_MODEL_COLORS, s_use_model_colors ? 1 : 0);
     color_changed = true;
   }
-  if (format_changed) update_time(false, false, NULL);
+  Tuple *preview = dict_find(iterator, MESSAGE_KEY_Preview);
+  bool replay = preview && (preview->type == TUPLE_INT || preview->type == TUPLE_UINT) &&
+    preview->value->int32 == 1;
+  if (replay) update_time(true, true, NULL);
+  else if (format_changed) update_time(false, false, NULL);
   else if (color_changed) layer_mark_dirty(s_face);
 }
 

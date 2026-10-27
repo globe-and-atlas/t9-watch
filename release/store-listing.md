@@ -16,10 +16,11 @@ Watch the time type itself, one T9 key at a time. The numeric clock updates imme
 Choose your phone
 • Original: compact pixel lettering and square keys.
 • Nokia 3310: classic phone lettering and oval keys.
-• Motorola RAZR V3: sculpted keypad with Blue or Silver palettes.
+• Motorola RAZR V3: sculpted rows, larger aligned digits, and Blue or Silver palettes.
 
 Make it yours
-• Typing speed: Quick, Classic, or Slow.
+• Steady typing at Quick, Classic, or Slow speed.
+• Save settings to preview your changes.
 • Wrong guesses: Off, Occasional, or Every collision.
 • Quiet hours: choose when the finished time appears instantly.
 • Time format: 12-hour or 24-hour.
@@ -72,14 +73,14 @@ Lowers the RAZR numeric clock toward the header divider for tighter alignment. O
 
 - Platform: emery (Pebble Time 2).
 - Type: watchface.
-- Version: 0.3.2.
+- Version: 0.3.3.
 - Date display: none.
 
 ## Published release
 
 - Date: 2026-10-26.
 - URL: https://apps.repebble.com/6641551debac4064ab47acba
-- State: 0.3.2 published. Public PBW and GIF match byte for byte; four PNGs match pixel for pixel. The public description shows the new bullet groups.
+- State: 0.3.3 published. Public PBW and GIF match byte for byte; four PNGs match pixel for pixel. The public description shows the new bullet groups.
 
 ## 0.3.0 release notes
 
@@ -94,3 +95,7 @@ Clears the RAZR key legends from their borders, including the longer outer-colum
 ## 0.3.2 release notes
 
 Lowers the RAZR keypad legends by one pixel and moves the center underline to preserve clearance. Refreshes Blue, Black, and Silver screenshots.
+
+## 0.3.3 release notes
+
+Keeps text size and position steady throughout typing and previews the current time after settings Save, respecting quiet hours. Recreates the RAZR keypad with connected sculpted rows, larger aligned digits, and smaller letter groups.

@@ -20,3 +20,7 @@ After building the current PBW, use the generated message key numbers from `watc
 ## Typing screenshot
 
 For the 09:25 typing frame, set `09:24:59`, wait about 1.5 seconds, then capture one screenshot. The exact frame varies with CLI and emulator timing; inspect it for a partial word, underscore cursor, and highlighted key before exporting. The emulator can jump back to its host clock soon after a fixture, so capture promptly. Space captures rather than launching several screenshot commands at once. `pebble ping` can put the built-in Ping screen in front of the face, so reinstall T9 Time before capture if Ping appears.
+
+## 2026-10-27 — Stable native time fixtures
+
+For a long phrase animation, run `pebble clean` followed by `T9_FIXTURE_HOUR=23 T9_FIXTURE_MINUTE=17 pebble build` from watchface/. Install watchface/build/watchface.pbw directly, then send Preview=1 with 24-hour mode and desired speed. The default-off macros live in config.h and the wscript validates ranges. Do not copy the fixture PBW into dist/. `make build` strips T9_FIXTURE_* variables, cleans, and builds the production artifact. Publish with fixture variables explicitly unset because the publishing CLI rebuilds independently.

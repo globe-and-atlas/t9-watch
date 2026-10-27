@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 import shutil
 import subprocess
 from pathlib import Path
@@ -14,7 +15,8 @@ OUTPUT = ROOT / "dist" / "t9-watch.pbw"
 
 
 def run(command: list[str], cwd: Path) -> None:
-    result = subprocess.run(command, cwd=cwd, text=True, capture_output=True)
+    environment = {key: value for key, value in os.environ.items() if not key.startswith("T9_FIXTURE_")}
+    result = subprocess.run(command, cwd=cwd, text=True, capture_output=True, env=environment)
     TEMP.mkdir(parents=True, exist_ok=True)
     with (TEMP / "runlog.md").open("a", encoding="utf-8") as log:
         log.write(f"\n### {' '.join(command)}\n\n```text\n{result.stdout}{result.stderr}\n```\n")

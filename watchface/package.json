@@ -1,7 +1,7 @@
 {
   "name": "t9-watch",
   "author": "Globe & Atlas",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "private": true,
   "dependencies": {
     "@rebble/clay": "1.1.0"
@@ -33,7 +33,8 @@
       "QuietEnabled",
       "QuietStart",
       "QuietEnd",
-      "RazrPalette"
+      "RazrPalette",
+      "Preview"
     ],
     "resources": {
       "media": []

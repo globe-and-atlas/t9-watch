@@ -36,3 +36,5 @@ The 3310 style uses a bitmap generated from the MIT-licensed [Nokja Original Sma
 Version 0.3.0 adds Quick, Classic, and Slow typing; Off, Occasional, or Every collision guesses; optional quiet hours using the watch clock; and a Silver RAZR model palette. Quiet hours default to 22:00–07:00 when enabled; equal endpoints make the whole day quiet. Occasional minute guesses rotate by hour.
 
 ![Silver RAZR](screenshots/t9-time-05-razr-silver.png)
+
+Version 0.3.3 keeps word sizes and baselines fixed while typing. Saving settings replays the current time once, unless quiet hours are active. The RAZR keypad follows connected sculpted rows with larger aligned digits and smaller letter groups.

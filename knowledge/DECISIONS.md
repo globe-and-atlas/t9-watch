@@ -55,3 +55,9 @@ Version 0.2.6 moves only the RAZR numeric clock from y=6 to y=9. Its 21-pixel gl
 ## 2026-10-27 — RAZR legend baseline
 
 0.3.2 lowers RAZR labels and active fills by one pixel. Center underline low points also move down one pixel, leaving a clear row between the seven-pixel glyphs and the two-pixel stroke. Outer-column horizontal clearance from 0.3.1 remains.
+
+## 2026-10-27 — Steady typing, Save preview, and RAZR photo reference
+
+0.3.3 measures completed hour/minute words for scale selection. RAZR baselines derive from those fixed scales. Clay manual events send a non-persisted Preview=1 in the same message as settings only after a successful Save; Cancel/malformed responses and startup sync omit it. Watch applies settings first, cancels the old timer, and uses the quiet-hours gate for preview.
+
+The latest photo supersedes the separated RAZR strokes: four connected symmetric rows have high outer shoulders and low center bars. Larger 5×8 digits use fixed x=22/90/174 columns with 3×5 letter groups beside them; right-column letters precede digits. Center digit bottoms leave row+12 clear before the underline at +13.

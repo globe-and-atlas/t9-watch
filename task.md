@@ -1,5 +1,31 @@
 # Task: T9 watch face
 
+## 0.3.3 steady typing and save preview — 2026-10-27
+
+- Four RAZR rows use connected mirrored shoulders with a low center.
+- RAZR right-column letters precede the digit.
+- RAZR digits use larger glyphs than their letter groups.
+- RAZR digit positions align vertically within each column.
+- The twelve RAZR legends remain clear of borders.
+- Hour scale uses the completed hour phrase.
+- Minute scales use the completed minute words.
+- RAZR text baselines remain fixed through typing.
+- A successful settings save requests one preview.
+- Cancel does not request a preview.
+- Startup settings synchronization does not request a preview.
+- Quiet hours suppress preview animation.
+- A second Save replaces the running preview timer.
+- The emery build passes.
+- Settings event tests pass.
+- A fresh reviewer verifies final output.
+
+- [x] Implement steady layout.
+- [x] Implement save-only preview.
+- [x] Verify native animation and settings events.
+- [x] Complete independent review.
+- [x] Publish the release.
+
+
 ## 0.3.2 keypad legend baseline — 2026-10-27
 
 - RAZR legends sit one pixel lower than 0.3.1.

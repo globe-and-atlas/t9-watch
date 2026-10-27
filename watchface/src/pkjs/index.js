@@ -50,7 +50,7 @@ var clay = new Clay([
   {type: 'color', messageKey: 'BackgroundColor', label: 'Background', defaultValue: 'AAFFAA', sunlight: false, allowGray: true},
   {type: 'color', messageKey: 'TextColor', label: 'Digits, words and keypad', defaultValue: '000000', sunlight: false, allowGray: true},
   {type: 'submit', defaultValue: 'Save to watch'}
-]);
+], null, {autoHandleEvents: false});
 
 function color(value, fallback) {
   var number = Number(value);
@@ -92,3 +92,18 @@ function sendSaved() {
 }
 
 Pebble.addEventListener('ready', sendSaved);
+
+Pebble.addEventListener('showConfiguration', function() {
+  Pebble.openURL(clay.generateUrl());
+});
+
+Pebble.addEventListener('webviewclosed', function(event) {
+  if (!event || !event.response) return;
+  try {
+    var settings = clay.getSettings(event.response);
+    settings.Preview = 1;
+    Pebble.sendAppMessage(settings);
+  } catch (error) {
+    console.log('Could not read T9 Time settings: ' + error.message);
+  }
+});

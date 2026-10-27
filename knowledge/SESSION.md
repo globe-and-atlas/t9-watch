@@ -1,5 +1,16 @@
 # Session Log
 
+## Current Session — 0.3.3 steady typing and save preview
+
+**Goal:** Lock text layout during animation and preview once after settings Save.
+**Agent:** OpenAI Codex (gpt-6.1-sol)
+**Handoff-from:** OpenAI Codex
+**Handoff-type:** continuation
+**Status:** Complete; 0.3.3 publicly verified.
+
+Measure completed words instead of displayed prefixes. Clay Save adds a non-persisted preview marker in the same settings message; Cancel and startup sends omit it. Quiet hours remain the animation gate.
+
+
 ## Current Session — 0.3.2 keypad legend baseline
 
 **Goal:** Lower RAZR keypad legends one pixel with clear borders.
@@ -339,3 +350,17 @@ Public PBW and GIF match byte for byte; four PNGs match pixel for pixel. Public 
 S.D.G.: Gives the RAZR keypad legends a little more breathing room above the glyphs.
 Feynman gap: Native static/highlight captures and public assets pass; physical-watch appearance remains unverified.
 - 2026-10-27 14:32 — commit: Lower RAZR keypad legends one pixel in T9 Time 0.3.2 | DEPLOY.md,knowledge/DECISIONS.md,knowledge/INDEX.md,knowledge/SESSION.md,pyproject.toml
+
+### 2026-10-27 — 0.3.3 native checkpoint
+
+- Fixed layout confirmed through 23:17 prefixes and settled TWENTY THREE / SEVENTEEN using a default-off time fixture. Quiet preview remained settled.
+- Save event tests cover successful Save, Cancel, malformed response, and startup sync. Native Preview message replayed immediately using new settings.
+- User supplied a clearer RAZR photo and requested larger, vertically aligned digits. Native Blue, Black, Silver, and highlighted 6 MNO capture pass with connected rows and separate 5×8 / 3×5 hierarchy. Fresh verifier passed source, tests, and final visuals.
+- Refreshed the Original typing GIF at fixed 09:13 with steady final word scale; regenerated three RAZR stills. Shared emulator state restored by hash. Production PBW rebuilt without fixture flags.
+
+### 2026-10-27 — 0.3.3 release closeout
+
+Public 0.3.3, revised bullet description, and five gallery assets verified. Public PBW and refreshed GIF match byte for byte; four PNGs match pixel for pixel. Final publish rebuilt with time fixture flags explicitly unset.
+
+S.D.G.: Gives T9 Time wearers stable text, immediate feedback after Save, and a more faithful readable RAZR keypad.
+Feynman gap: Settings event tests, native fixture/production captures, fresh review, and public assets pass; physical-watch Save and appearance remain unverified.
