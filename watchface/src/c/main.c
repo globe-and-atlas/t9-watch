@@ -196,9 +196,10 @@ static void draw_razr_keypad(GContext *ctx, const char *const labels[12],
     bool active = key < 9 && s_highlight_key == key + 1;
     if (active) {
       graphics_context_set_fill_color(ctx, ink);
-      graphics_fill_rect(ctx, GRect(17 + column * 61,
-                                   168 + row * 15 + 4, 44, 8),
-                         2, GCornersAll);
+      int center = column == 0 ? 32 : column == 1 ? 100 : 168;
+      graphics_fill_rect(ctx, GRect(center - 18,
+                                   168 + row * 15 + 4, 37, 8),
+                         1, GCornersAll);
     }
   }
 
@@ -215,8 +216,9 @@ static void draw_razr_keypad(GContext *ctx, const char *const labels[12],
     int y = 168 + (key / 3) * 15;
     bool active = key < 9 && s_highlight_key == key + 1;
     int width = text_width(labels[key], 1);
-    int label_x = 39 + column * 61 - width / 2;
-    draw_text(ctx, labels[key], label_x, y + 5, 1,
+    int center = column == 0 ? 32 : column == 1 ? 100 : 168;
+    int label_x = center - width / 2;
+    draw_text(ctx, labels[key], label_x, y + 4, 1,
               active ? paper : ink);
   }
 }

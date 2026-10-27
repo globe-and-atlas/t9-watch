@@ -11,7 +11,23 @@ T9 Time
 
 ## Description
 
-T9 Time turns each minute into a tiny predictive-text moment. The numeric clock updates immediately, then the hour and minute type themselves while the matching T9 keys light up. Choose Quick, Classic, or Slow typing, with wrong guesses Off, Occasional, or Every collision. Optional quiet hours show the finished time immediately. Choose Original, Nokia 3310, or Motorola RAZR V3 with Blue or Silver model palettes. Show or hide the battery icon, select 12-hour or 24-hour time, choose O'CLOCK or OH ZERO at :00, and use model colors or your own background and text colors. Made for Pebble Time 2.
+Watch the time type itself, one T9 key at a time. The numeric clock updates immediately while the hour and minute appear in words, with playful predictive-text corrections.
+
+Choose your phone
+• Original: compact pixel lettering and square keys.
+• Nokia 3310: classic phone lettering and oval keys.
+• Motorola RAZR V3: sculpted keypad with Blue or Silver palettes.
+
+Make it yours
+• Typing speed: Quick, Classic, or Slow.
+• Wrong guesses: Off, Occasional, or Every collision.
+• Quiet hours: choose when the finished time appears instantly.
+• Time format: 12-hour or 24-hour.
+• At :00: O'CLOCK or OH ZERO.
+• Optional watch-battery icon.
+• Model palettes or custom background and text colors.
+
+Made for Pebble Time 2.
 
 ## Initial release notes
 
@@ -56,17 +72,21 @@ Lowers the RAZR numeric clock toward the header divider for tighter alignment. O
 
 - Platform: emery (Pebble Time 2).
 - Type: watchface.
-- Version: 0.3.0.
+- Version: 0.3.1.
 - Date display: none.
 
 ## Published release
 
 - Date: 2026-10-26.
 - URL: https://apps.repebble.com/6641551debac4064ab47acba
-- State: 0.3.0 published. Public PBW and GIF match byte for byte; four PNGs match pixel for pixel.
+- State: 0.3.1 published. Public PBW and GIF match byte for byte; four PNGs match pixel for pixel. The public description shows the new bullet groups.
 
 ## 0.3.0 release notes
 
 Adds Quick, Classic, and Slow animation speeds; Off, Occasional, and Every collision wrong guesses; optional quiet hours with selectable start and end hours; and a Silver RAZR model palette. During quiet hours the finished time appears immediately.
 
 5. `screenshots/t9-time-05-razr-silver.png` — Silver RAZR palette.
+
+## 0.3.1 release notes
+
+Clears the RAZR key legends from their borders, including the longer outer-column labels and highlighted keys. Refreshes the Blue, Black, and Silver gallery images.

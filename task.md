@@ -1,5 +1,20 @@
 # Task: T9 watch face
 
+## 0.3.1 RAZR legend clearance — 2026-10-27
+
+- Each of the twelve RAZR legends has a blank pixel separating it from a border.
+- The outer legend positions mirror around x=100.
+- Highlighted RAZR legends remain readable.
+- The store description uses a short introduction.
+- The store feature list uses bullets.
+- A native Silver capture passes visual inspection.
+- The emery build passes.
+
+- [x] Adjust RAZR label and highlight placement.
+- [x] Verify native rendering.
+- [x] Publish corrected media and description.
+
+
 ## 0.3.0 animation controls — 2026-10-27
 
 - Quick, Classic, and Slow change typing delays.

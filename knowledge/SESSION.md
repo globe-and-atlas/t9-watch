@@ -1,5 +1,16 @@
 # Session Log
 
+## Current Session — 0.3.1 RAZR legend clearance
+
+**Goal:** Clear the RAZR legends from key borders and simplify store copy.
+**Agent:** OpenAI Codex (gpt-6.1-sol)
+**Handoff-from:** OpenAI Codex
+**Handoff-type:** continuation
+**Status:** Complete; 0.3.1 and clean listing publicly verified.
+
+The long outer legends crossed the inward shoulders. Move outer centers to x=32/168, retain center x=100, and raise legends one pixel for underline clearance.
+
+
 ## Current Session — 0.3.0 controls
 
 **Goal:** Add animation speed, wrong guesses, quiet hours, and RAZR Silver.
@@ -297,3 +308,14 @@ Public 0.3.0, revised description, and five gallery assets verified. PBW and GIF
 S.D.G.: Gives T9 Time wearers control over animation pace and nighttime stillness, plus a readable Silver RAZR option.
 Feynman gap: Host policy/settings tests, native Silver/quiet capture, fresh review, and public assets pass; physical-watch delivery remains unverified.
 - 2026-10-27 14:15 — commit: Add T9 Time animation controls quiet hours and Silver in 0.3.0 | DEPLOY.md,README.md,execution/build.py,knowledge/DECISIONS.md,knowledge/INDEX.md
+
+### 2026-10-27 — 0.3.1 checkpoint
+
+Native captures show clear long labels in Silver, Blue, and Black. Final 37×8 highlight was checked with the right outer 3 DEF key; the earlier center 8 TUV capture also remains legible. Host build and strict health checks pass. Shared emulator state was restored. Uploaded five gallery assets, replacing three RAZR stills. Saved the short introduction and two bulleted feature groups in the listing editor.
+
+### 2026-10-27 — 0.3.1 closeout
+
+Public 0.3.1, bulleted description, and five gallery assets verified. Public PBW and GIF match byte for byte; four PNGs match pixel for pixel.
+
+S.D.G.: Keeps the RAZR keypad readable and makes the store features easier to scan.
+Feynman gap: Native static/highlight captures and public assets pass; physical-watch appearance remains unverified.

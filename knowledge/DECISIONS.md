@@ -47,3 +47,7 @@ Version 0.2.6 moves only the RAZR numeric clock from y=6 to y=9. Its 21-pixel gl
 ## 2026-10-27 — Typing controls and quiet hours
 
 0.3.0 keeps Classic timing by default, with Quick at half delays and Slow at twice delays. Occasional minute alternates use (hour + minute) modulo three so the sampled minutes rotate hourly; hour alternates still require an hour change. Every collision includes repeated hour alternates. Quiet hours are disabled by default, use the watch local clock, include the start hour, exclude the end hour, support midnight crossing, and treat equal endpoints as all-day quiet. Silver uses #AAAAAA background and black ink only when RAZR model colors are active. Settings use new storage keys 8–13 and preserve prior style/color values.
+
+## 2026-10-27 — RAZR legend clearance
+
+0.3.1 moves the outer legend centers from 39/161 to 32/168 so the longest 35-pixel labels stay outside the inward shoulders. The center remains x=100. Legends move up from row+5 to row+4, creating a blank pixel row above the center underline. Highlights follow the new centers with 37×8 fills that stay inside the shoulder strokes. Native Blue, Black, Silver, center-active, and outer-active captures were inspected.
