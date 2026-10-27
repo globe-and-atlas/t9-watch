@@ -262,3 +262,4 @@ Feynman gap: The public GIF and binary were verified; physical-watch settings, r
 - 2026-10-26 14:47 — commit: Refine RAZR keypad sculpture for T9 Time 0.2.4 | DEPLOY.md,README.md,knowledge/DECISIONS.md,knowledge/FAILURES/2026-10-26_razr-wave/context.md,knowledge/INDEX.md
 - 2026-10-26 22:21 — commit: Balance RAZR keypad and time spacing in T9 Time 0.2.5 | DEPLOY.md,README.md,knowledge/DECISIONS.md,knowledge/INDEX.md,knowledge/REFLECTIONS.jsonl
 - 2026-10-26 22:24 — commit: Verify public T9 Time 0.2.5 release | DEPLOY.md,knowledge/SESSION.md,release/store-listing.md,task.md
+- 2026-10-26 22:29 — commit: Lower RAZR header clock in T9 Time 0.2.6 | DEPLOY.md,knowledge/DECISIONS.md,knowledge/INDEX.md,knowledge/SESSION.md,pyproject.toml
