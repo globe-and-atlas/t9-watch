@@ -34,4 +34,8 @@ The first-release compact font, square keypad, and text positions return as Orig
 
 ## 2026-10-26 — RAZR sculpted rows
 
-Each of the four RAZR keypad rows now has three distinct strokes: the left key descends at its inner edge, the center key has a low edge that rises on the right, and the right key has its own upper edge. The active key fills only its local legend area. The renderer also draws `*` and `#`, absent from the earlier compact-font treatment. This follows the user's second handset diagram more closely than a continuous waveform.
+Version 0.2.4 gave each of the four RAZR keypad rows three distinct strokes: the left key descends at its inner edge, the center key has a low edge that rises on the right, and the right key has its own upper edge. The active key fills only its local legend area. The renderer also draws `*` and `#`, absent from the earlier compact-font treatment. The user then identified the uneven left/right shapes, so the 0.2.5 symmetry decision below supersedes the 0.2.4 geometry.
+
+## 2026-10-26 — RAZR keypad symmetry and text spacing
+
+Version 0.2.5 mirrors the outer key stroke around the keypad midpoint, uses a self-mirrored low center stroke, centers each legend at x=39, 100, or 161, and gives each active key the same fill dimensions. The RAZR hour word is vertically centered when it shrinks to two-pixel scale. The minute block divides the available space between the hour word and the MINUTE label into equal gaps, with at most one pixel of rounding difference. Original and Nokia keep their established text positions.

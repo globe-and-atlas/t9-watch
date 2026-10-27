@@ -1,5 +1,37 @@
 # Task: T9 watch face
 
+## RAZR keypad symmetry — 2026-10-26
+
+### Validation Contract
+
+- Each RAZR row has a left key outline.
+- Each RAZR row has a center key outline.
+- Each RAZR row has a right key outline.
+- The right outline mirrors the left outline around the keypad center.
+- The center outline mirrors itself around the keypad center.
+- The left and right active fills have equal dimensions.
+- The left and right labels are centered at equal distances from the keypad center.
+- All twelve RAZR legends are legible at 200×228.
+- The Original keypad remains unchanged.
+- The Nokia keypad remains unchanged.
+- The emery PBW builds successfully.
+- Host T9 tests pass.
+- The RAZR one-line minute has at most one pixel of difference between its upper and lower gaps.
+- The RAZR two-line minute has at most one pixel of difference among its three vertical gaps.
+- A long RAZR hour remains clear of the first minute line.
+- The typing cursor follows the adjusted minute line.
+
+### Checklist
+
+- [x] Mirror the RAZR key outlines.
+- [x] Center the labels and active fills.
+- [x] Balance the RAZR hour and minute text spacing.
+- [x] Inspect native RAZR and other-style captures.
+- [x] Build and run host tests.
+- [x] Publish the 0.2.5 release in the developer dashboard.
+- [x] Verify the saved gallery assets.
+- [ ] Verify the public page serves the 0.2.5 PBW.
+
 ## RAZR sculpted key correction — 2026-10-26
 
 ### Validation Contract

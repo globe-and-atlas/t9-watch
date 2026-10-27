@@ -153,27 +153,23 @@ static void draw_nokia_key(GContext *ctx, int x, int y, int tilt,
 }
 
 static void draw_razr_row(GContext *ctx, int y) {
-  static const int left_x[] = {12, 12, 16, 45, 50, 54, 58, 62, 66};
-  static const int left_y[] = {12, 4, 1, 1, 2, 4, 8, 11, 12};
-  static const int center_x[] = {71, 101, 107, 111, 115, 120};
-  static const int center_y[] = {12, 12, 11, 8, 3, 1};
-  static const int right_x[] = {125, 181, 186, 188, 188};
-  static const int right_y[] = {1, 1, 3, 6, 12};
+  static const int outer_x[] = {12, 12, 16, 44, 50, 55, 59};
+  static const int outer_y[] = {12, 4, 1, 1, 3, 8, 12};
+  static const int center_x[] = {67, 73, 79, 84, 116, 121, 127, 133};
+  static const int center_y[] = {1, 8, 12, 12, 12, 12, 8, 1};
   for (int thickness = 0; thickness < 2; thickness++) {
-    for (int point = 1; point < 9; point++) {
+    for (int point = 1; point < 7; point++) {
       graphics_draw_line(ctx,
-        GPoint(left_x[point - 1], y + left_y[point - 1] + thickness),
-        GPoint(left_x[point], y + left_y[point] + thickness));
+        GPoint(outer_x[point - 1], y + outer_y[point - 1] + thickness),
+        GPoint(outer_x[point], y + outer_y[point] + thickness));
+      graphics_draw_line(ctx,
+        GPoint(200 - outer_x[point - 1], y + outer_y[point - 1] + thickness),
+        GPoint(200 - outer_x[point], y + outer_y[point] + thickness));
     }
-    for (int point = 1; point < 6; point++) {
+    for (int point = 1; point < 8; point++) {
       graphics_draw_line(ctx,
         GPoint(center_x[point - 1], y + center_y[point - 1] + thickness),
         GPoint(center_x[point], y + center_y[point] + thickness));
-    }
-    for (int point = 1; point < 5; point++) {
-      graphics_draw_line(ctx,
-        GPoint(right_x[point - 1], y + right_y[point - 1] + thickness),
-        GPoint(right_x[point], y + right_y[point] + thickness));
     }
   }
 }
@@ -186,9 +182,8 @@ static void draw_razr_keypad(GContext *ctx, const char *const labels[12],
     bool active = key < 9 && s_highlight_key == key + 1;
     if (active) {
       graphics_context_set_fill_color(ctx, ink);
-      int left = column == 0 ? 17 : column == 1 ? 77 : 130;
-      int width = column == 0 ? 37 : column == 1 ? 35 : 53;
-      graphics_fill_rect(ctx, GRect(left, 168 + row * 15 + 4, width, 8),
+      graphics_fill_rect(ctx, GRect(17 + column * 61,
+                                   168 + row * 15 + 4, 44, 8),
                          2, GCornersAll);
     }
   }
@@ -203,12 +198,11 @@ static void draw_razr_keypad(GContext *ctx, const char *const labels[12],
 
   for (int key = 0; key < 12; key++) {
     int column = key % 3;
-    int x = 10 + column * 61;
     int y = 168 + (key / 3) * 15;
     bool active = key < 9 && s_highlight_key == key + 1;
     int width = text_width(labels[key], 1);
-    int label_x = x + (59 - width) / 2 - (column == 0 ? 4 : column == 1 ? 5 : 0);
-    draw_text(ctx, labels[key], label_x, y + (column == 1 ? 4 : 5), 1,
+    int label_x = 39 + column * 61 - width / 2;
+    draw_text(ctx, labels[key], label_x, y + 5, 1,
               active ? paper : ink);
   }
 }
@@ -372,7 +366,7 @@ static void draw_face(Layer *layer, GContext *ctx) {
   char hour_line[40];
   combine_hour(hour_line, sizeof(hour_line));
   int hour_scale = text_width(hour_line, 3) <= 182 ? 3 : 2;
-  int hour_y = s_razr || s_original ? 51 : 48;
+  int hour_y = s_razr ? 51 + (3 - hour_scale) * 3 : s_original ? 51 : 48;
   draw_text(ctx, hour_line, 9, hour_y, hour_scale, ink);
 
   const char *first = s_minute_display[0];
@@ -380,11 +374,26 @@ static void draw_face(Layer *layer, GContext *ctx) {
   int minute_max_scale = s_original || (s_razr && s_time.minute_count == 1) ? 4 : 3;
   int first_scale = text_width(first, minute_max_scale) <= 182 ? minute_max_scale : minute_max_scale - 1;
   int second_scale = text_width(second, minute_max_scale) <= 182 ? minute_max_scale : minute_max_scale - 1;
+  int first_y = s_time.minute_count == 1 ? 91 : s_razr || s_original ? 80 : 79;
+  int second_y = s_razr || s_original ? 111 : 110;
+  if (s_razr) {
+    int hour_bottom = hour_y + 7 * hour_scale;
+    int first_height = 7 * first_scale;
+    if (s_time.minute_count == 1) {
+      first_y = (hour_bottom + 142 - first_height) / 2;
+    } else {
+      int gap_space = 142 - hour_bottom - first_height - 7 * second_scale;
+      int gap = gap_space / 3;
+      int extra = gap_space % 3;
+      first_y = hour_bottom + gap + (extra > 0);
+      second_y = first_y + first_height + gap + (extra > 1);
+    }
+  }
   if (s_time.minute_count == 1) {
-    draw_text(ctx, first, 9, 91, first_scale, ink);
+    draw_text(ctx, first, 9, first_y, first_scale, ink);
   } else {
-    draw_text(ctx, first, 9, s_razr || s_original ? 80 : 79, first_scale, ink);
-    draw_text(ctx, second, 9, s_razr || s_original ? 111 : 110, second_scale, ink);
+    draw_text(ctx, first, 9, first_y, first_scale, ink);
+    draw_text(ctx, second, 9, second_y, second_scale, ink);
   }
   if (s_timer && s_token < s_time.hour_count + s_time.minute_count) {
     int cursor_x;
@@ -399,9 +408,7 @@ static void draw_face(Layer *layer, GContext *ctx) {
       const char *shown = minute_index == 0 ? first : second;
       int scale = minute_index == 0 ? first_scale : second_scale;
       cursor_x = 9 + text_width(shown, scale);
-      cursor_y = (s_time.minute_count == 1 ? 91 :
-                  (minute_index == 0 ? (s_razr || s_original ? 80 : 79) :
-                   (s_razr || s_original ? 111 : 110))) +
+      cursor_y = (minute_index == 0 ? first_y : second_y) +
                  (s_razr || s_original ? 7 : 9) * scale - 3;
       cursor_width = 5 * scale;
     }

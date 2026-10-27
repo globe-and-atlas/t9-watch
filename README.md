@@ -31,4 +31,4 @@ pebble install --emulator emery dist/t9-watch.pbw
 pebble screenshot --emulator emery --no-open --no-correction .tmp/emery.png
 ```
 
-The 3310 style uses a bitmap generated from the MIT-licensed [Nokja Original Small Bold](https://webdraft.hu/fonts/nokja-original/) font recreation. Original retains the first-release compact pixel alphabet and square keys. RAZR uses four rows of separate sculpted key outlines inspired by its metal keyboard. The native emery palette and physical watch need separate readability checks.
+The 3310 style uses a bitmap generated from the MIT-licensed [Nokja Original Small Bold](https://webdraft.hu/fonts/nokja-original/) font recreation. Original retains the first-release compact pixel alphabet and square keys. RAZR uses four rows of mirrored outer key outlines and a balanced center key inspired by its metal keyboard. The native emery palette and physical watch need separate readability checks.

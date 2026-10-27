@@ -37,6 +37,10 @@ Restores the first T9 Time look as the default Original style, alongside Nokia 3
 
 Redraws the RAZR keypad as four rows of individually sculpted left, center, and right keys, following the handset diagram. Restores the `*` and `#` key legends. Original and Nokia styles remain available.
 
+## 0.2.5 release notes
+
+Balances the RAZR keypad with mirrored outer keys, a centered middle key, and evenly placed legends and highlights. RAZR hour and minute lines now use balanced vertical spacing for short and long times.
+
 ## Screenshot order
 
 1. `screenshots/t9-time-01-typing-original.gif` — looping typing in the Original palette.
@@ -48,11 +52,11 @@ Redraws the RAZR keypad as four rows of individually sculpted left, center, and 
 
 - Platform: emery (Pebble Time 2).
 - Type: watchface.
-- Version: 0.2.4.
+- Version: 0.2.5.
 - Date display: none.
 
 ## Published release
 
 - Date: 2026-10-26.
 - URL: https://apps.repebble.com/6641551debac4064ab47acba
-- State: 0.2.4 published. The public PBW, GIF, and three PNGs match the local release assets byte for byte. The dashboard saved the revised description; the public page still showed the old text immediately afterward.
+- State: 0.2.5 published in the developer dashboard; public listing propagation is pending. Version 0.2.4 was published with matching public PBW and gallery assets.

@@ -3,11 +3,11 @@
 | File | Type | Summary |
 |------|------|---------|
 | [context.md](context.md) | domain | 2026-10-25 project identity, stack, constraints |
-| [SESSION.md](SESSION.md) | log | 2026-10-26 0.2.4 sculpted RAZR keypad release handoff |
-| [DECISIONS.md](DECISIONS.md) | log | 2026-10-26 Original, Nokia, RAZR, wording, color, and spacing decisions |
+| [SESSION.md](SESSION.md) | log | 2026-10-26 0.2.5 symmetric RAZR keypad and spacing handoff |
+| [DECISIONS.md](DECISIONS.md) | log | 2026-10-26 Original, Nokia, RAZR symmetry, wording, color, and spacing decisions |
 | [ERRORS.md](ERRORS.md) | log | 2026-10-26 colon rasterization and emulator capture errors |
 | [FAILURES/2026-10-26_razr-wave/context.md](FAILURES/2026-10-26_razr-wave/context.md) | failure | 2026-10-26 continuous RAZR wave misread and sculpted-key correction |
-| [REFLECTIONS.jsonl](REFLECTIONS.jsonl) | log | 2026-10-26 theme release, GIF capture, and RAZR reference-reading lessons |
+| [REFLECTIONS.jsonl](REFLECTIONS.jsonl) | log | 2026-10-26 theme release, GIF capture, RAZR symmetry, and spacing lessons |
 | [domain/deps.md](domain/deps.md) | domain | 2026-10-26 Pebble SDK, Clay, Pillow glyph-offset, and font-source dependencies |
 | [procedural/build_and_capture.md](procedural/build_and_capture.md) | procedural | 2026-10-25 emery build and screenshot workflow |
 | [procedural/publish_appstore.md](procedural/publish_appstore.md) | procedural | 2026-10-26 Pebble app store release, GIF loop, and theme screenshot workflow |

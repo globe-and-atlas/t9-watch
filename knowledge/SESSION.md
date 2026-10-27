@@ -1,5 +1,37 @@
 # Session Log
 
+## Current Session — RAZR symmetry correction
+
+**Goal:** Give the RAZR keypad mirrored outer keys and a balanced center key.
+**Agent:** OpenAI Codex
+**Handoff-from:** OpenAI Codex
+**Handoff-type:** continuation
+**Status:** Native and dashboard release complete; public propagation pending.
+
+### 2026-10-26 — Start
+
+- The 0.2.4 outer key strokes and active fills are unequal. Label offsets also differ by column.
+- Target: mirror the outer outlines around x=100 and center all three legend and highlight regions.
+- The user also identified uneven vertical spacing. A one-line minute and a long 24-hour word need their own native checks.
+
+### 2026-10-26 — Native and release checkpoint
+
+- Replaced the asymmetric RAZR outlines with outer strokes mirrored around x=100 and a self-mirrored center bowl. All three legends now center on x=39, 100, and 161; the active fills share a 44×8 shape.
+- Balanced the RAZR one-line minute and the three gaps around two-line minutes between the hour word and MINUTE label. Long hour words now sit lower in their reserved band. The cursor uses the same computed line positions.
+- Native 200×228 captures cover the revised black and blue RAZR keypad, one-line O'CLOCK, two-line FIFTY SIX, and long TWENTY TWO; Original and Nokia captures preserve their layouts.
+- `make build`, strict health check, and `git diff --check` passed. The shared emery persist state was restored from backup with 32 matching file hashes.
+- Published 0.2.5 in the developer dashboard with four gallery assets. The public listing still showed 0.2.4 and an UPDATING state immediately afterward.
+- Reopened the saved gallery and downloaded its four assets. The GIF matches byte for byte; the PNGs match the local stills pixel for pixel after store recompression.
+
+### Current handoff — 2026-10-26
+
+- **Released:** 0.2.5 marked Published in the developer dashboard.
+- **Open verification:** Wait for the public detail page to move from 0.2.4 to 0.2.5, then compare its PBW with `dist/t9-watch.pbw`.
+- **Open verification:** Physical Pebble Time 2 appearance remains unmeasured.
+
+S.D.G.: Makes RAZR key shapes and time text feel balanced at a glance on a 200×228 watch display.
+Feynman gap: Native captures and saved store assets pass; the public PBW and physical watch have not yet been observed.
+
 ## Current Session — 0.2.4 RAZR correction
 
 **Goal:** Replace the rejected RAZR wave stripes with sculpted key rows from the user's second diagram.
