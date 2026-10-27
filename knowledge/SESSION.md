@@ -6,7 +6,7 @@
 **Agent:** OpenAI Codex
 **Handoff-from:** OpenAI Codex
 **Handoff-type:** continuation
-**Status:** In progress.
+**Status:** Complete; 0.2.6 published and publicly verified.
 
 ### 2026-10-26 — Start
 
@@ -19,6 +19,16 @@
 - Archived the 0.2.5 gallery and replaced only the two RAZR stills; the Original GIF and Nokia still remain the same.
 - `make build`, strict health check, and `git diff --check` passed. The shared emulator's 32 persist files were restored with matching hashes.
 - Published 0.2.6 in the developer dashboard. The public detail page still showed 0.2.5 immediately afterward.
+- The public detail page later showed 0.2.6. Its PBW matches `dist/t9-watch.pbw` byte for byte; the GIF matches byte for byte; all three PNGs match pixel for pixel after recompression.
+
+### Current handoff — 2026-10-26
+
+- **Published:** 0.2.6 at https://apps.repebble.com/6641551debac4064ab47acba.
+- **Verified:** Public PBW SHA-256 `b55734be844b1f524b48732ee01a718f6b3f44acef590a725de32a48b9f2e34d`; public GIF byte match; three public PNG pixel matches.
+- **Open verification:** Physical Pebble Time 2 appearance remains unmeasured.
+
+S.D.G.: Brings the RAZR clock into a balanced relationship with its header divider at native watch resolution.
+Feynman gap: Native and public rendering pass; the revised header has not been observed on a physical watch.
 
 ## Current Session — RAZR symmetry correction
 

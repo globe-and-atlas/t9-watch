@@ -19,7 +19,7 @@
 - [x] Inspect blue RAZR at native resolution.
 - [x] Run the build and host checks.
 - [x] Publish version 0.2.6.
-- [ ] Verify the public PBW.
+- [x] Verify the public PBW.
 
 ## RAZR keypad symmetry — 2026-10-26
 

@@ -63,4 +63,4 @@ Lowers the RAZR numeric clock toward the header divider for tighter alignment. O
 
 - Date: 2026-10-26.
 - URL: https://apps.repebble.com/6641551debac4064ab47acba
-- State: 0.2.6 published in the developer dashboard; public listing propagation is pending. Version 0.2.5 is publicly verified.
+- State: 0.2.6 published. The public PBW and GIF match the local files byte for byte; all three public PNGs match pixel for pixel after store recompression.
