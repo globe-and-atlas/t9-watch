@@ -1,0 +1,24 @@
+T9 Time Labs is the experimental companion to T9 Time. It installs alongside the stable face with its own settings.
+
+The full retro telephone keypad stays on every pane: Time types the hour and minute; Weather types conditions such as LIGHT RAIN, with temperature and feels-like values. Weather returns to Time after eight seconds.
+
+WEATHER REQUIRES EXPERIMENTAL PLUGIN PREVIEW
+Use Pebble mobile app 1.16.x with Settings → Debug → Use experimental plugins / permissions enabled (or Settings → Plugins → Plugins / permissions preview on newer builds). Allow Location. Labs uses your first weather location and the selected Pebble weather provider; no weather API key is needed. Enable weather in T9 Time Labs settings: choose Shake, experimental Double-tap, or either. Classic time-only mode remains the default.
+
+WATCHFACE THAT USES PLUGINS
+Labs reads weather supplied by the Pebble mobile app's plugin system. It does not install a separate plugin or provide data to other faces.
+
+To test weather without a gesture, choose Weather test — show after Save, then Save to watch. Knock sensitivity offers High (light taps), Normal, and Low. Double-tap means physical knocks detected with accelerometer samples, not touchscreen input. Knock modes may miss taps or activate during motion; their battery impact is not yet measured. Live phone-plugin delivery and physical gesture tuning still need field validation. Unavailable and expired weather are identified on screen. Gestures are disabled while charging.
+
+Original, Nokia 3310, and Motorola RAZR V3 styles; custom colors; 12/24-hour time; typing speed; quiet hours.
+
+Prefer a stable watchface? Keep using regular T9 Time. Labs is a separate preview and does not update or replace it.
+
+Font: Nokja Original Small Bold (MIT); font recreation credit: webdraft.hu.
+
+Store screenshots use illustrative weather fixtures.
+
+PLUGIN PEEK
+Choose Double-tap or Shake or double-tap, then enable Triple-tap for Plugin Peek. Pick an installed plugin/source, reading, and item. A live preview helps confirm permissions and availability. Save to watch commits the selection and previews Peek. Cancel preserves the prior selection.
+
+Two physical knocks show Weather after a brief third-knock wait; three show Plugin Peek. Peek returns to Time after eight seconds. Supported reading shapes: text, numbers, booleans and timestamps. Images, time series and actions are not supported. No separate service integration or API key is supplied by Labs.

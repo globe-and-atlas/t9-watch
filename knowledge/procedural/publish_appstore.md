@@ -32,3 +32,11 @@ The superseded five-frame GIF used 1200 ms per typing stage and a 3500 ms settle
 ### 2026-10-27 — Capture every letter
 
 Repeated CLI screenshot calls take longer than individual animation steps and skip prefixes. Capture the QEMU monitor framebuffer at 30 fps, deduplicate consecutive identical native states, remove the prior settled pre-roll, then retime those states. Verify N, NI, NIN, NINE and T, TH, THI, THIR, THIRT, THIRTE, THIRTEE, THIRTEEN individually. When another task uses the shared emulator, use a private copy of a known-good flash image with dedicated serial/monitor ports and external-QEMU CLI connections. Shut down only that private instance through its monitor.
+
+## 2026-10-28 — Separate Labs identity
+
+Use `directives/build_labs.md` for Labs. Stable `watchface/` and `execution/build.py` remain on 0.3.3; Labs source lives under `labs/watchface/` with a separate UUID. `execution/publish_labs.py` verifies that identity before using the isolated 5.1.1/Python 3.13 publishing tool. Do not run the regular watchface publish command for Labs. A bundled provider makes the watchface eligible for plugin collection classification; it remains a watchface rather than a plugin-only PBW. Store eligibility is determined by the submission response.
+
+### 2026-10-28 — Consumer-only Labs supersedes provider bundle
+
+The provider-bearing Labs submission returned403 `Plugin submissions are not open yet`. At the user's direction, removed the bundled provider and published Labs as a normal watchface that consumes host weather plugins. Current build contains no provider block or post-build injection hook. Use the guarded Labs publish script; it now requires watchface=true and no plugin. Stable remains independent.

@@ -1,7 +1,7 @@
 {
   "name": "t9-watch",
   "author": "Globe & Atlas",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "private": true,
   "dependencies": {
     "@rebble/clay": "1.1.0"
@@ -15,7 +15,9 @@
       "configurable"
     ],
     "targetPlatforms": [
-      "emery"
+      "emery",
+      "chalk",
+      "gabbro"
     ],
     "watchapp": {
       "watchface": true

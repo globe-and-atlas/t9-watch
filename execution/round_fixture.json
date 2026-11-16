@@ -1,0 +1,7 @@
+{
+  "prefix": "T9",
+  "flags": {
+    "T9_FIXTURE_HOUR": "10",
+    "T9_FIXTURE_MINUTE": "8"
+  }
+}

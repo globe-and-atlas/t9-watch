@@ -53,6 +53,9 @@ static int s_quiet_start = 22;
 static int s_quiet_end = 7;
 static int s_razr_palette;
 static int s_guess_slot;
+#if T9_FIXTURE_HOUR >= 0 && T9_FIXTURE_MINUTE >= 0
+static int f_hour=T9_FIXTURE_HOUR,f_minute=T9_FIXTURE_MINUTE;
+#endif
 
 static const LcdGlyph *lcd_glyph(char c) {
   const char *position = strchr(LCD_CHARS, c);
@@ -381,7 +384,14 @@ static void combine_hour(char *out, size_t capacity) {
            s_hour_display[1][0] ? " " : "", s_hour_display[1]);
 }
 
+#if defined(PBL_ROUND)
+#include "round_t9.h"
+#endif
 static void draw_face(Layer *layer, GContext *ctx) {
+#if defined(PBL_ROUND)
+ (void)layer;round_t9(ctx);rproof_marker(ctx);return;
+#endif
+
   GRect bounds = layer_get_bounds(layer);
   uint32_t background = s_use_model_colors ?
     (s_razr ? (s_razr_palette ? 0xAAAAAA : RAZR_BACKGROUND_COLOR) : DEFAULT_BACKGROUND_COLOR) : s_background_color;
@@ -485,12 +495,9 @@ static void draw_face(Layer *layer, GContext *ctx) {
 static void update_time(bool animate, bool hour_changed, const struct tm *tick_time) {
   time_t now = time(NULL);
   const struct tm *local = tick_time ? tick_time : localtime(&now);
-  struct tm fixture = *local;
-  if (T9_FIXTURE_HOUR >= 0 && T9_FIXTURE_MINUTE >= 0) {
-    fixture.tm_hour = T9_FIXTURE_HOUR;
-    fixture.tm_min = T9_FIXTURE_MINUTE;
-    local = &fixture;
-  }
+#if T9_FIXTURE_HOUR >= 0 && T9_FIXTURE_MINUTE >= 0
+  struct tm fixture = *local;fixture.tm_hour=f_hour;fixture.tm_min=f_minute;local=&fixture;
+#endif
   s_guess_slot = local->tm_hour + local->tm_min;
   animate = animate && !t9_quiet(s_quiet_enabled != 0, s_quiet_start, s_quiet_end, local->tm_hour);
   t9_make_time(local->tm_hour, local->tm_min, s_use_24h, s_use_oh_zero, &s_time);
@@ -553,6 +560,17 @@ static int load_setting(int storage, int fallback, int maximum) {
 }
 
 static void on_message(DictionaryIterator *iterator, void *context) {
+#if defined(PBL_ROUND) && (T9_FIXTURE_HOUR >= 0 && T9_FIXTURE_MINUTE >= 0)
+ Tuple *round_proof=dict_find(iterator,11022);if(round_proof && round_proof->type==TUPLE_INT){r_proof=round_proof->value->int32==1;layer_mark_dirty(s_face);}
+#endif
+
+#if T9_FIXTURE_HOUR >= 0 && T9_FIXTURE_MINUTE >= 0
+ Tuple *hh=dict_find(iterator,11000),*mm=dict_find(iterator,11001);bool moved=false;
+ if(hh && hh->type==TUPLE_INT && hh->value->int32>=0 && hh->value->int32<=23){f_hour=hh->value->int32;moved=true;}
+ if(mm && mm->type==TUPLE_INT && mm->value->int32>=0 && mm->value->int32<=59){f_minute=mm->value->int32;moved=true;}
+ if(moved)update_time(false,false,NULL);
+#endif
+
   Tuple *format = dict_find(iterator, MESSAGE_KEY_TimeFormat);
   bool format_changed = false;
   format_changed |= read_setting(iterator, MESSAGE_KEY_AnimationSpeed, &s_animation_speed, 2, STORE_ANIMATION_SPEED);
@@ -642,7 +660,7 @@ static void init(void) {
     (s_background_color == DEFAULT_BACKGROUND_COLOR && s_text_color == DEFAULT_TEXT_COLOR);
   s_window = window_create();
   window_set_background_color(s_window, GColorBlack);
-  s_face = layer_create(GRect(0, 0, 200, 228));
+  s_face = layer_create(PBL_IF_ROUND_ELSE(GRect(0,0,PBL_DISPLAY_WIDTH,PBL_DISPLAY_HEIGHT),GRect(0,0,200,228)));
   layer_set_update_proc(s_face, draw_face);
   layer_add_child(window_get_root_layer(s_window), s_face);
   window_stack_push(s_window, true);

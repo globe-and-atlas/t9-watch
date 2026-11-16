@@ -1,0 +1,60 @@
+{
+  "name": "t9-time-labs",
+  "author": "Globe & Atlas",
+  "version": "0.2.0",
+  "private": true,
+  "dependencies": {
+    "@rebble/clay": "1.1.0"
+  },
+  "pebble": {
+    "displayName": "T9 Time Labs",
+    "uuid": "25e30e2c-4605-46fd-96be-3bfe5fb7a110",
+    "sdkVersion": "3",
+    "enableMultiJS": true,
+    "capabilities": [
+      "configurable"
+    ],
+    "targetPlatforms": [
+      "emery"
+    ],
+    "watchapp": {
+      "watchface": true
+    },
+    "messageKeys": [
+      "TimeFormat",
+      "BackgroundColor",
+      "TextColor",
+      "PhoneModel",
+      "ShowBattery",
+      "UseModelColors",
+      "ZeroWording",
+      "AnimationSpeed",
+      "WrongGuesses",
+      "QuietEnabled",
+      "QuietStart",
+      "QuietEnd",
+      "RazrPalette",
+      "Preview",
+      "PaneMode",
+      "WeatherFirst",
+      "WeatherSecond",
+      "WeatherDetail",
+      "WeatherValidUntil",
+      "WeatherStatus",
+      "KnockSensitivity",
+      "PeekEnabled",
+      "PeekFirst",
+      "PeekSecond",
+      "PeekDetail",
+      "PeekValidUntil",
+      "PeekStatus"
+    ],
+    "resources": {
+      "media": []
+    },
+    "usesPermissions": [
+      "Location"
+    ],
+    "manifestVersion": 2
+  }
+}

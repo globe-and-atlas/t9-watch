@@ -61,3 +61,6 @@ Version 0.2.6 moves only the RAZR numeric clock from y=6 to y=9. Its 21-pixel gl
 0.3.3 measures completed hour/minute words for scale selection. RAZR baselines derive from those fixed scales. Clay manual events send a non-persisted Preview=1 in the same message as settings only after a successful Save; Cancel/malformed responses and startup sync omit it. Watch applies settings first, cancels the old timer, and uses the quiet-hours gate for preview.
 
 The latest photo supersedes the separated RAZR strokes: four connected symmetric rows have high outer shoulders and low center bars. Larger 5×8 digits use fixed x=22/90/174 columns with 3×5 letter groups beside them; right-column letters precede digits. Center digit bottoms leave row+12 clear before the underline at +13.
+
+## 2026-11-06 — Native round layouts
+Keep Emery's original draw path behind round-only branches. Add Chalk and Gabbro to the same UUID rather than creating separate products. Dedicated circular compositions were chosen over cropping the rectangular face, preserving readable hierarchy and existing settings. Shared helpers use180 logical units and rasterize at each screen's actual resolution. Round selection is automatic, with no added settings key. Local0.3.4 is not published by this task.

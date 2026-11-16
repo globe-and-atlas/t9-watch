@@ -1,0 +1,931 @@
+#include <pebble.h>
+#include <stdio.h>
+#include <string.h>
+
+#include "t9_model.h"
+#include "t9_policy.h"
+#include "t9_gesture.h"
+#include "config.h"
+#include "lcd_font.h"
+#include "razr_font.h"
+
+#define STORE_TIME_FORMAT 1
+#define STORE_BACKGROUND_COLOR 2
+#define STORE_TEXT_COLOR 3
+#define STORE_PHONE_MODEL 4
+#define STORE_SHOW_BATTERY 5
+#define STORE_USE_MODEL_COLORS 6
+#define STORE_ZERO_WORDING 7
+#define DEFAULT_BACKGROUND_COLOR 0xAAFFAA
+#define DEFAULT_TEXT_COLOR 0x000000
+#define RAZR_BACKGROUND_COLOR 0x000055
+#define RAZR_TEXT_COLOR 0xAAFFFF
+#define STEP_MS 105
+#define STORE_ANIMATION_SPEED 8
+#define STORE_WRONG_GUESSES 9
+#define STORE_QUIET_ENABLED 10
+#define STORE_QUIET_START 11
+#define STORE_QUIET_END 12
+#define STORE_RAZR_PALETTE 13
+#define STORE_PANE_MODE 14
+#define STORE_KNOCK_SENSITIVITY 15
+#define STORE_PEEK_ENABLED 16
+
+static Window *s_window;
+static Layer *s_face;
+static AppTimer *s_timer;
+static T9Time s_time;
+static bool s_use_24h;
+static bool s_use_oh_zero;
+static bool s_razr;
+static bool s_original;
+static bool s_show_battery;
+static bool s_use_model_colors;
+static uint32_t s_background_color;
+static uint32_t s_text_color;
+static bool s_hour_changed;
+static char s_hour_display[2][20];
+static char s_minute_display[2][20];
+static int s_token;
+static int s_character;
+static int s_highlight_key;
+static bool s_showing_alternate;
+static int s_animation_speed = 1;
+static int s_wrong_guesses = 1;
+static int s_quiet_enabled;
+static int s_quiet_start = 22;
+static int s_quiet_end = 7;
+static int s_razr_palette;
+static int s_guess_slot;
+static int s_pane_mode;
+static int s_knock_sensitivity = 2;
+static bool s_weather; /* An auxiliary pane is visible: Weather or Peek. */
+static int s_peek_enabled;
+static bool s_is_peek;
+static bool s_peek_valid;
+static uint32_t s_peek_until;
+static char s_peek_words[2][20] = {"CHOOSE", "READING"};
+static char s_peek_detail[32] = "PHONE SETTINGS";
+static bool s_weather_valid;
+static uint32_t s_weather_until;
+static char s_weather_words[2][20] = {"NO", "WEATHER"};
+static char s_weather_detail[32] = "CHECK PHONE";
+static char s_weather_display[2][20];
+static int s_weather_word;
+static int s_weather_character;
+static AppTimer *s_return_timer;
+static AppTimer *s_gesture_timer;
+static uint32_t s_last_tap;
+static unsigned s_tap_count;
+static T9Knock s_knock;
+static uint32_t s_sample_ms;
+static AppTimer *s_gesture_lock_timer;
+
+static void update_time(bool animate, bool hour_changed, const struct tm *tick_time);
+static void configure_gestures(void);
+
+static const LcdGlyph *lcd_glyph(char c) {
+  const char *position = strchr(LCD_CHARS, c);
+  return position ? &LCD_GLYPHS[position - LCD_CHARS] : NULL;
+}
+
+static int razr_index(char c) {
+  if (c >= 'A' && c <= 'Z') return c - 'A';
+  if (c >= '0' && c <= '9') return 26 + c - '0';
+  return -1;
+}
+
+static const uint8_t *extra_glyph(char c) {
+  static const char symbols[] = ".,%+-/$()";
+  static const uint8_t rows[][7] = {
+    {0,0,0,0,0,6,6}, {0,0,0,0,6,6,4},
+    {25,26,2,4,8,11,19}, {0,4,4,31,4,4,0},
+    {0,0,0,31,0,0,0}, {1,1,2,4,8,16,16},
+    {4,15,20,14,5,30,4}, {2,4,8,8,8,4,2}, {8,4,2,2,2,4,8}
+  };
+  const char *position = strchr(symbols, c);
+  return position && c ? rows[position - symbols] : NULL;
+}
+
+static int compact_text_width(const char *text, int scale) {
+  int count = (int)strlen(text);
+  return count ? (count * 6 - 1) * scale : 0;
+}
+
+static int text_width(const char *text, int scale) {
+  if (s_razr || s_original) return compact_text_width(text, scale);
+  int width = 0;
+  for (; *text; text++) {
+    const LcdGlyph *glyph = lcd_glyph(*text);
+    width += glyph ? glyph->advance : extra_glyph(*text) ? 6 : 4;
+  }
+  return width * scale;
+}
+
+static void draw_compact_text(GContext *ctx, const char *text, int x, int y,
+                              int scale, GColor color) {
+  static const uint8_t keypad_symbols[2][7] = {
+    {4, 21, 14, 31, 14, 21, 4},
+    {10, 10, 31, 10, 31, 10, 10}
+  };
+  graphics_context_set_fill_color(ctx, color);
+  for (; *text; text++, x += 6 * scale) {
+    if (*text == ':' || *text == '\'') {
+      if (*text == '\'' && s_original) {
+        graphics_fill_rect(ctx, GRect(x + 2 * scale, y,
+                                      scale, 2 * scale), 0, GCornerNone);
+        continue;
+      }
+      graphics_fill_rect(ctx, GRect(x + 2 * scale, y + 2 * scale,
+                                    scale, scale), 0, GCornerNone);
+      if (*text == ':') graphics_fill_rect(ctx, GRect(x + 2 * scale,
+                                    y + 5 * scale, scale, scale), 0, GCornerNone);
+      continue;
+    }
+    int index = razr_index(*text);
+    const uint8_t *rows = index >= 0 ? RAZR_GLYPHS[index] : extra_glyph(*text) ? extra_glyph(*text) :
+      *text == '*' ? keypad_symbols[0] :
+      *text == '#' ? keypad_symbols[1] : NULL;
+    if (!rows) continue;
+    for (int row = 0; row < 7; row++) {
+      for (int column = 0; column < 5; column++) {
+        if (rows[row] & (1 << (4 - column))) {
+          graphics_fill_rect(ctx, GRect(x + column * scale, y + row * scale,
+                                        scale, scale), 0, GCornerNone);
+        }
+      }
+    }
+  }
+}
+
+static void draw_text(GContext *ctx, const char *text, int x, int y, int scale,
+                      GColor color) {
+  if (s_razr || s_original) {
+    draw_compact_text(ctx, text, x, y, scale, color);
+    return;
+  }
+  graphics_context_set_fill_color(ctx, color);
+  for (; *text; text++) {
+    const LcdGlyph *glyph = lcd_glyph(*text);
+    if (!glyph) {
+      if (extra_glyph(*text)) {
+        char symbol[2] = {*text, '\0'};
+        draw_compact_text(ctx, symbol, x, y + 2 * scale, scale, color);
+        x += 6 * scale;
+      } else x += 4 * scale;
+      continue;
+    }
+    for (int row = 0; row < LCD_GLYPH_HEIGHT; row++) {
+      for (int column = 0; column < glyph->width; column++) {
+        if (glyph->rows[row] & (1 << (glyph->width - 1 - column))) {
+          graphics_fill_rect(ctx, GRect(x + column * scale, y + row * scale,
+                                        scale, scale), 0, GCornerNone);
+        }
+      }
+    }
+    x += glyph->advance * scale;
+  }
+}
+
+static void draw_nokia_key(GContext *ctx, int x, int y, int tilt,
+                           bool active, GColor ink, GColor paper) {
+  const int width = 56;
+  const int height = 13;
+  int starts[height];
+  int ends[height];
+  for (int row = 0; row < height; row++) {
+    int edge = row < height / 2 ? row : height - 1 - row;
+    int taper = edge == 0 ? 5 : edge == 1 ? 3 : edge == 2 ? 2 : edge == 3 ? 1 : 0;
+    int skew = tilt * (row - height / 2) / (height / 2);
+    starts[row] = x + taper + skew;
+    ends[row] = x + width - 1 - taper + skew;
+    graphics_context_set_fill_color(ctx, active ? ink : paper);
+    graphics_fill_rect(ctx, GRect(starts[row], y + row,
+                                  ends[row] - starts[row] + 1, 1), 0, GCornerNone);
+  }
+  graphics_context_set_stroke_color(ctx, ink);
+  graphics_draw_line(ctx, GPoint(starts[0], y), GPoint(ends[0], y));
+  graphics_draw_line(ctx, GPoint(starts[height - 1], y + height - 1),
+                     GPoint(ends[height - 1], y + height - 1));
+  for (int row = 1; row < height - 1; row++) {
+    graphics_draw_pixel(ctx, GPoint(starts[row], y + row));
+    graphics_draw_pixel(ctx, GPoint(ends[row], y + row));
+  }
+}
+
+static void draw_razr_row(GContext *ctx, int y) {
+  static const int x[] = {12, 12, 16, 59, 64, 68, 72, 128, 132, 136, 141, 184, 188, 188};
+  static const int dy[] = {12, 4, 1, 1, 3, 10, 13, 13, 10, 3, 1, 1, 4, 12};
+  for (int thickness = 0; thickness < 2; thickness++) {
+    for (int point = 1; point < 14; point++) {
+      graphics_draw_line(ctx,
+        GPoint(x[point - 1], y + dy[point - 1] + thickness),
+        GPoint(x[point], y + dy[point] + thickness));
+    }
+  }
+}
+
+static void draw_razr_letters(GContext *ctx, const char *letters, int x, int y, GColor color) {
+  static const uint8_t tiny[26][5] = {
+    {2,5,7,5,5}, {6,5,6,5,6}, {3,4,4,4,3}, {6,5,5,5,6},
+    {7,4,6,4,7}, {7,4,6,4,4}, {3,4,5,5,3}, {5,5,7,5,5},
+    {7,2,2,2,7}, {1,1,1,5,2}, {5,5,6,5,5}, {4,4,4,4,7},
+    {5,7,7,5,5}, {5,7,7,7,5}, {2,5,5,5,2}, {6,5,6,4,4},
+    {2,5,5,3,1}, {6,5,6,5,5}, {3,4,2,1,6}, {7,2,2,2,2},
+    {5,5,5,5,7}, {5,5,5,5,2}, {5,5,7,7,5}, {5,5,2,5,5},
+    {5,5,2,2,2}, {7,1,2,4,7}
+  };
+  graphics_context_set_fill_color(ctx, color);
+  for (; *letters; letters++, x += 4) {
+    int index = *letters - 'A';
+    if (index < 0 || index >= 26) continue;
+    for (int row = 0; row < 5; row++) {
+      for (int column = 0; column < 3; column++) {
+        if (tiny[index][row] & (1 << (2 - column)))
+          graphics_fill_rect(ctx, GRect(x + column, y + row, 1, 1), 0, GCornerNone);
+      }
+    }
+  }
+}
+
+static void draw_razr_legend(GContext *ctx, int key, int y, GColor color) {
+  static const char *const letters[12] = {
+    "", "ABC", "DEF", "GHI", "JKL", "MNO", "PQRS", "TUV", "WXYZ", "", "", ""
+  };
+  const char digits[] = "123456789*0#";
+  int column = key % 3;
+  int letters_width = (int)strlen(letters[key]) * 4;
+  if (letters_width) letters_width--;
+  int digit_x = column == 0 ? 22 : column == 1 ? 90 : 174;
+  if (letters_width) {
+    int letters_x = column == 2 ? digit_x - letters_width - 3 : digit_x + 8;
+    draw_razr_letters(ctx, letters[key], letters_x, y + 4, color);
+  }
+  int index = razr_index(digits[key]);
+  if (index < 0) {
+    char symbol[2] = {digits[key], '\0'};
+    draw_compact_text(ctx, symbol, digit_x, y + 5, 1, color);
+    return;
+  }
+  graphics_context_set_fill_color(ctx, color);
+  for (int row = 0; row < 8; row++) {
+    int source_row = row < 4 ? row : row - 1;
+    for (int column_index = 0; column_index < 5; column_index++) {
+      if (RAZR_GLYPHS[index][source_row] & (1 << (4 - column_index)))
+        graphics_fill_rect(ctx, GRect(digit_x + column_index, y + 4 + row, 1, 1), 0, GCornerNone);
+    }
+  }
+}
+
+static void draw_razr_keypad(GContext *ctx, GColor ink, GColor paper) {
+  for (int key = 0; key < 12; key++) {
+    int row = key / 3;
+    int column = key % 3;
+    bool active = key < 9 && s_highlight_key == key + 1;
+    if (active) {
+      graphics_context_set_fill_color(ctx, ink);
+      int center = column == 0 ? 32 : column == 1 ? 100 : 168;
+      graphics_fill_rect(ctx, GRect(center - 18,
+                                   168 + row * 15 + 3, 37, 10),
+                         1, GCornersAll);
+    }
+  }
+
+  graphics_context_set_stroke_color(ctx, ink);
+  for (int row = 0; row < 4; row++) {
+    draw_razr_row(ctx, 168 + row * 15);
+  }
+
+  for (int key = 0; key < 12; key++) {
+    int y = 168 + (key / 3) * 15;
+    bool active = key < 9 && s_highlight_key == key + 1;
+    draw_razr_legend(ctx, key, y, active ? paper : ink);
+  }
+}
+
+static void draw_original_keypad(GContext *ctx, const char *const labels[12],
+                                  GColor ink, GColor paper) {
+  for (int key = 0; key < 12; key++) {
+    int x = 9 + (key % 3) * 62;
+    int y = 168 + (key / 3) * 15;
+    bool active = key < 9 && s_highlight_key == key + 1;
+    GRect box = GRect(x, y, 58, 13);
+    graphics_context_set_fill_color(ctx, active ? ink : paper);
+    graphics_fill_rect(ctx, box, 0, GCornerNone);
+    graphics_context_set_stroke_color(ctx, ink);
+    graphics_draw_rect(ctx, box);
+    int width = compact_text_width(labels[key], 1);
+    draw_compact_text(ctx, labels[key], x + (58 - width) / 2, y + 3,
+                      1, active ? paper : ink);
+  }
+}
+
+static void draw_keypad(GContext *ctx, GColor ink, GColor paper) {
+  static const char *const LABELS[12] = {
+    "1", "2 ABC", "3 DEF", "4 GHI", "5 JKL", "6 MNO",
+    "7 PQRS", "8 TUV", "9 WXYZ", "*", "0", "#"
+  };
+  if (s_razr) {
+    draw_razr_keypad(ctx, ink, paper);
+    return;
+  }
+  if (s_original) {
+    draw_original_keypad(ctx, LABELS, ink, paper);
+    return;
+  }
+  for (int key = 0; key < 12; key++) {
+    int column = key % 3;
+    int x = 10 + column * 62;
+    int y = 168 + (key / 3) * 15;
+    int tilt = column == 0 ? 2 : column == 2 ? -2 : 0;
+    bool active = key < 9 && s_highlight_key == key + 1;
+    draw_nokia_key(ctx, x, y, tilt, active, ink, paper);
+    int width = compact_text_width(LABELS[key], 1);
+    draw_compact_text(ctx, LABELS[key], x + (56 - width) / 2, y + 3, 1,
+                      active ? paper : ink);
+  }
+}
+
+static void current_word(const char **target, char **display, bool *is_hour) {
+  if (s_token < s_time.hour_count) {
+    *is_hour = true;
+    *target = s_time.hour[s_token];
+    *display = s_hour_display[s_token];
+  } else {
+    int index = s_token - s_time.hour_count;
+    *is_hour = false;
+    *target = s_time.minute[index];
+    *display = s_minute_display[index];
+  }
+}
+
+static char (*pane_words(void))[20] { return s_is_peek ? s_peek_words : s_weather_words; }
+static void schedule_next(uint32_t delay);
+
+static void animation_step(void *context) {
+  s_timer = NULL;
+  if (s_weather) {
+    while (s_weather_word < 2 && !pane_words()[s_weather_word][s_weather_character]) {
+      s_weather_word++;
+      s_weather_character = 0;
+    }
+    if (s_weather_word >= 2) {
+      s_highlight_key = 0;
+      layer_mark_dirty(s_face);
+      return;
+    }
+    const char *word = pane_words()[s_weather_word];
+    s_highlight_key = t9_key(word[s_weather_character]);
+    s_weather_character++;
+    memcpy(s_weather_display[s_weather_word], word, (size_t)s_weather_character);
+    s_weather_display[s_weather_word][s_weather_character] = '\0';
+    layer_mark_dirty(s_face);
+    schedule_next(STEP_MS);
+    return;
+  }
+  if (s_token >= s_time.hour_count + s_time.minute_count) {
+    s_highlight_key = 0;
+    layer_mark_dirty(s_face);
+    return;
+  }
+
+  const char *target;
+  char *display;
+  bool is_hour;
+  current_word(&target, &display, &is_hour);
+
+  if (s_showing_alternate) {
+    strncpy(display, target, 19);
+    display[19] = '\0';
+    s_showing_alternate = false;
+    s_highlight_key = 0;
+    s_token++;
+    s_character = 0;
+    layer_mark_dirty(s_face);
+    schedule_next(135);
+    return;
+  }
+
+  size_t length = strlen(target);
+  while (s_character < (int)length && !t9_key(target[s_character])) {
+    s_character++;
+  }
+  if (s_character < (int)length) {
+    s_highlight_key = t9_key(target[s_character]);
+    s_character++;
+    memcpy(display, target, (size_t)s_character);
+    display[s_character] = '\0';
+    if (s_character == (int)length) {
+      const char *alternate = t9_alternate(target);
+      if (alternate && t9_show_guess(s_wrong_guesses, is_hour, s_hour_changed, s_guess_slot)) {
+        strncpy(display, alternate, 19);
+        display[19] = '\0';
+        s_showing_alternate = true;
+        layer_mark_dirty(s_face);
+        schedule_next(275);
+        return;
+      }
+    }
+    layer_mark_dirty(s_face);
+    schedule_next(STEP_MS);
+    return;
+  }
+
+  s_highlight_key = 0;
+  s_token++;
+  s_character = 0;
+  layer_mark_dirty(s_face);
+  schedule_next(135);
+}
+
+static void schedule_next(uint32_t delay) {
+  s_timer = app_timer_register(t9_delay(s_animation_speed, delay), animation_step, NULL);
+}
+
+static void combine_hour(char *out, size_t capacity) {
+  snprintf(out, capacity, "%s%s%s", s_hour_display[0],
+           s_hour_display[1][0] ? " " : "", s_hour_display[1]);
+}
+
+static void draw_face(Layer *layer, GContext *ctx) {
+  GRect bounds = layer_get_bounds(layer);
+  uint32_t background = s_use_model_colors ?
+    (s_razr ? (s_razr_palette ? 0xAAAAAA : RAZR_BACKGROUND_COLOR) : DEFAULT_BACKGROUND_COLOR) : s_background_color;
+  uint32_t foreground = s_use_model_colors ?
+    (s_razr ? (s_razr_palette ? 0x000000 : RAZR_TEXT_COLOR) : DEFAULT_TEXT_COLOR) : s_text_color;
+  GColor paper = GColorFromHEX(background);
+  GColor ink = GColorFromHEX(foreground);
+  graphics_context_set_fill_color(ctx, paper);
+  graphics_fill_rect(ctx, bounds, 0, GCornerNone);
+
+  if (s_razr) {
+    graphics_context_set_stroke_color(ctx, ink);
+    graphics_draw_round_rect(ctx, GRect(5, 4, 190, 159), 4);
+  }
+
+  /* Show actual watch charge without implying a signal-strength measurement. */
+  graphics_context_set_fill_color(ctx, ink);
+  if (s_show_battery) {
+    graphics_draw_rect(ctx, GRect(9, 8, 16, 18));
+    graphics_fill_rect(ctx, GRect(25, 13, 2, 8), 0, GCornerNone);
+    int battery_height = battery_state_service_peek().charge_percent * 12 / 100;
+    if (battery_height) {
+      graphics_fill_rect(ctx, GRect(12, 23 - battery_height, 10, battery_height), 0, GCornerNone);
+    }
+  }
+  draw_text(ctx, s_time.numeric, 200 - 9 - text_width(s_time.numeric, 3),
+            s_original ? 7 : s_razr ? 9 : 3, 3, ink);
+  graphics_context_set_stroke_color(ctx, ink);
+  graphics_draw_line(ctx, GPoint(9, 33), GPoint(190, 33));
+  if (s_weather) {
+    char (*words)[20] = pane_words();
+    draw_compact_text(ctx, s_is_peek ? "PLUGIN PEEK" : "WEATHER", 9, 39, 1, ink);
+    for (int i = 0; i < 2; i++) {
+      int scale = 3;
+      while (scale > 1 && text_width(words[i], scale) > 182) scale--;
+      draw_text(ctx, s_weather_display[i], 9, 51 + i * 34, scale, ink);
+    }
+    bool stale = (s_is_peek ? s_peek_valid : s_weather_valid) && (uint32_t)time(NULL) >= (s_is_peek ? s_peek_until : s_weather_until);
+    draw_compact_text(ctx, stale ? "STALE - CHECK PHONE" : s_is_peek ? s_peek_detail : s_weather_detail, 9, 123, 1, ink);
+    draw_compact_text(ctx, s_is_peek ? "T9" : "CONDITION", 9, 142, 1, ink);
+    char weather_keys[40], one[20], two[20];
+    t9_keys_for_word(words[0], one, sizeof(one));
+    t9_keys_for_word(words[1], two, sizeof(two));
+    snprintf(weather_keys, sizeof(weather_keys), "%s%s%s", one, two[0] ? " " : "", two);
+    draw_compact_text(ctx, weather_keys, 9, 151,
+      !s_razr && compact_text_width(weather_keys, 2) <= 182 ? 2 : 1, ink);
+    draw_keypad(ctx, ink, paper);
+    return;
+  }
+  draw_compact_text(ctx, "HOUR", 9, 39, 1, ink);
+
+  char hour_line[40];
+  combine_hour(hour_line, sizeof(hour_line));
+  char full_hour[40];
+  snprintf(full_hour, sizeof(full_hour), "%s%s%s", s_time.hour[0],
+           s_time.hour_count > 1 ? " " : "", s_time.hour_count > 1 ? s_time.hour[1] : "");
+  int hour_scale = text_width(full_hour, 3) <= 182 ? 3 : 2;
+  int hour_y = s_razr ? 51 + (3 - hour_scale) * 3 : s_original ? 51 : 48;
+  draw_text(ctx, hour_line, 9, hour_y, hour_scale, ink);
+
+  const char *first = s_minute_display[0];
+  const char *second = s_minute_display[1];
+  int minute_max_scale = s_original || (s_razr && s_time.minute_count == 1) ? 4 : 3;
+  int first_scale = text_width(s_time.minute[0], minute_max_scale) <= 182 ? minute_max_scale : minute_max_scale - 1;
+  int second_scale = text_width(s_time.minute_count > 1 ? s_time.minute[1] : "", minute_max_scale) <= 182 ? minute_max_scale : minute_max_scale - 1;
+  int first_y = s_time.minute_count == 1 ? 91 : s_razr || s_original ? 80 : 79;
+  int second_y = s_razr || s_original ? 111 : 110;
+  if (s_razr) {
+    int hour_bottom = hour_y + 7 * hour_scale;
+    int first_height = 7 * first_scale;
+    if (s_time.minute_count == 1) {
+      first_y = (hour_bottom + 142 - first_height) / 2;
+    } else {
+      int gap_space = 142 - hour_bottom - first_height - 7 * second_scale;
+      int gap = gap_space / 3;
+      int extra = gap_space % 3;
+      first_y = hour_bottom + gap + (extra > 0);
+      second_y = first_y + first_height + gap + (extra > 1);
+    }
+  }
+  if (s_time.minute_count == 1) {
+    draw_text(ctx, first, 9, first_y, first_scale, ink);
+  } else {
+    draw_text(ctx, first, 9, first_y, first_scale, ink);
+    draw_text(ctx, second, 9, second_y, second_scale, ink);
+  }
+  if (s_timer && s_token < s_time.hour_count + s_time.minute_count) {
+    int cursor_x;
+    int cursor_y;
+    int cursor_width;
+    if (s_token < s_time.hour_count) {
+      cursor_x = 9 + text_width(hour_line, hour_scale);
+      cursor_y = hour_y + (s_razr || s_original ? 7 : 9) * hour_scale - 3;
+      cursor_width = 5 * hour_scale;
+    } else {
+      int minute_index = s_token - s_time.hour_count;
+      const char *shown = minute_index == 0 ? first : second;
+      int scale = minute_index == 0 ? first_scale : second_scale;
+      cursor_x = 9 + text_width(shown, scale);
+      cursor_y = (minute_index == 0 ? first_y : second_y) +
+                 (s_razr || s_original ? 7 : 9) * scale - 3;
+      cursor_width = 5 * scale;
+    }
+    graphics_context_set_fill_color(ctx, ink);
+    graphics_fill_rect(ctx, GRect(cursor_x, cursor_y, cursor_width, 3), 0, GCornerNone);
+  }
+  draw_compact_text(ctx, "MINUTE", 9, 142, 1, ink);
+
+  char keys[36] = "";
+  char fragment[20];
+  for (int index = 0; index < s_time.minute_count; index++) {
+    t9_keys_for_word(s_time.minute[index], fragment, sizeof(fragment));
+    if (index) strncat(keys, " ", sizeof(keys) - strlen(keys) - 1);
+    strncat(keys, fragment, sizeof(keys) - strlen(keys) - 1);
+  }
+  draw_compact_text(ctx, keys, 9, 151,
+                    (s_original || !s_razr) && compact_text_width(keys, 2) <= 182 ? 2 : 1, ink);
+  draw_keypad(ctx, ink, paper);
+}
+
+static void update_time(bool animate, bool hour_changed, const struct tm *tick_time) {
+  time_t now = time(NULL);
+  const struct tm *local = tick_time ? tick_time : localtime(&now);
+  struct tm fixture = *local;
+  if (T9_FIXTURE_HOUR >= 0 && T9_FIXTURE_MINUTE >= 0) {
+    fixture.tm_hour = T9_FIXTURE_HOUR;
+    fixture.tm_min = T9_FIXTURE_MINUTE;
+    local = &fixture;
+  }
+  s_guess_slot = local->tm_hour + local->tm_min;
+  animate = animate && !t9_quiet(s_quiet_enabled != 0, s_quiet_start, s_quiet_end, local->tm_hour);
+  t9_make_time(local->tm_hour, local->tm_min, s_use_24h, s_use_oh_zero, &s_time);
+  if (s_timer) {
+    app_timer_cancel(s_timer);
+    s_timer = NULL;
+  }
+  s_highlight_key = 0;
+  s_token = 0;
+  s_character = 0;
+  s_showing_alternate = false;
+  s_hour_changed = hour_changed;
+  memset(s_hour_display, 0, sizeof(s_hour_display));
+  memset(s_minute_display, 0, sizeof(s_minute_display));
+  if (animate) {
+    schedule_next(180);
+  } else {
+    for (int index = 0; index < s_time.hour_count; index++) {
+      strncpy(s_hour_display[index], s_time.hour[index], 19);
+    }
+    for (int index = 0; index < s_time.minute_count; index++) {
+      strncpy(s_minute_display[index], s_time.minute[index], 19);
+    }
+  }
+  layer_mark_dirty(s_face);
+}
+
+static void on_tick(struct tm *tick, TimeUnits units) {
+  if (s_weather) {
+    T9Time current;
+    t9_make_time(tick->tm_hour, tick->tm_min, s_use_24h, s_use_oh_zero, &current);
+    snprintf(s_time.numeric, sizeof(s_time.numeric), "%s", current.numeric);
+    layer_mark_dirty(s_face);
+  } else update_time(true, tick->tm_min == 0, tick);
+}
+
+static void on_battery(BatteryChargeState charge) {
+  (void)charge;
+  layer_mark_dirty(s_face);
+}
+
+static void unlock_gestures(void *context) {
+  s_gesture_lock_timer = NULL;
+}
+
+static void return_to_time(void *context) {
+  s_return_timer = NULL;
+  s_weather = false;
+  s_is_peek = false;
+  if (s_gesture_lock_timer) app_timer_cancel(s_gesture_lock_timer);
+  s_gesture_lock_timer = app_timer_register(1500, unlock_gestures, NULL);
+  update_time(false, false, NULL);
+}
+
+static void show_pane(bool peek) {
+  s_gesture_timer = NULL;
+  s_last_tap = 0;
+  s_tap_count = 0;
+  if (!s_pane_mode || s_weather) return;
+  if (s_timer) { app_timer_cancel(s_timer); s_timer = NULL; }
+  s_weather = true;
+  s_is_peek = peek;
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "T9 pane: %s", peek ? "peek" : "weather");
+  s_weather_word = 0;
+  s_weather_character = 0;
+  s_highlight_key = 0;
+  memset(s_weather_display, 0, sizeof(s_weather_display));
+  time_t now = time(NULL);
+  struct tm *local = localtime(&now);
+  if (t9_quiet(s_quiet_enabled != 0, s_quiet_start, s_quiet_end, local->tm_hour)) {
+    memcpy(s_weather_display, pane_words(), sizeof(s_weather_display));
+  } else schedule_next(100);
+  s_return_timer = app_timer_register(8000, return_to_time, NULL);
+  layer_mark_dirty(s_face);
+}
+
+static void show_weather(void *context) { (void)context; show_pane(false); }
+
+static void finish_gesture(void *context) {
+  (void)context;
+  s_gesture_timer = NULL;
+  unsigned count = s_tap_count;
+  s_tap_count = 0;
+  s_last_tap = 0;
+  if (battery_state_service_peek().is_charging) return;
+  if (count == 2 || (count == 1 && s_pane_mode == 3)) show_pane(false);
+}
+
+static void process_gesture(uint32_t now) {
+  if (!s_pane_mode || s_pane_mode == 4 || s_weather || s_gesture_lock_timer ||
+      battery_state_service_peek().is_charging) return;
+  if (s_pane_mode == 1) { show_pane(false); return; }
+  unsigned count = t9_count_knock(&s_tap_count, &s_last_tap, now);
+  if (!count) return;
+  if (s_gesture_timer) { app_timer_cancel(s_gesture_timer); s_gesture_timer = NULL; }
+  if (count == 3 && s_peek_enabled) { show_pane(true); return; }
+  if (count == 2 && !s_peek_enabled) { show_pane(false); return; }
+  s_gesture_timer = app_timer_register(700, finish_gesture, NULL);
+}
+
+#if T9_FIXTURE_GESTURE > 0
+/* Native scheduler integration fixture; absent from production builds. */
+static unsigned s_fixture_count;
+static void fixture_knock(void *context) {
+  (void)context;
+  process_gesture(1000 + s_fixture_count * 300);
+  s_fixture_count++;
+  if (s_fixture_count < T9_FIXTURE_GESTURE) app_timer_register(300, fixture_knock, NULL);
+}
+#endif
+
+static void on_tap(AccelAxisType axis, int32_t direction) {
+  (void)axis;
+  (void)direction;
+  process_gesture(0);
+}
+
+static void on_accel(AccelData *samples, uint32_t count) {
+  /* Sample-count clock stays monotonic across wall-clock synchronization. */
+  for (uint32_t i = 0; i < count; i++) {
+    s_sample_ms += 20;
+    AccelData *sample = &samples[i];
+    if (sample->did_vibrate) {
+      s_last_tap = 0;
+      s_tap_count = 0;
+      if (s_gesture_timer) { app_timer_cancel(s_gesture_timer); s_gesture_timer = NULL; }
+    }
+    if (t9_knock_sample(&s_knock, sample->x, sample->y, sample->z, sample->did_vibrate, s_knock_sensitivity))
+      process_gesture(s_sample_ms);
+  }
+}
+
+static void configure_gestures(void) {
+  accel_tap_service_unsubscribe();
+  accel_data_service_unsubscribe();
+  memset(&s_knock, 0, sizeof(s_knock));
+  s_sample_ms = 0;
+  if (s_gesture_timer) { app_timer_cancel(s_gesture_timer); s_gesture_timer = NULL; }
+  s_last_tap = 0;
+  s_tap_count = 0;
+  if (s_pane_mode == 1) accel_tap_service_subscribe(on_tap);
+  else if (s_pane_mode == 2 || s_pane_mode == 3) {
+    accel_data_service_subscribe(5, on_accel);
+    accel_service_set_sampling_rate(ACCEL_SAMPLING_50HZ);
+  }
+  if (!s_pane_mode && s_weather) {
+    if (s_return_timer) { app_timer_cancel(s_return_timer); s_return_timer = NULL; }
+    return_to_time(NULL);
+  }
+}
+
+static void read_weather_text(DictionaryIterator *iterator, uint32_t key, char *out, size_t capacity) {
+  Tuple *item = dict_find(iterator, key);
+  if (!item || item->type != TUPLE_CSTRING) return;
+  snprintf(out, capacity, "%s", item->value->cstring);
+}
+
+static bool read_color(Tuple *item, uint32_t *color, int storage_key) {
+  if (!item || (item->type != TUPLE_INT && item->type != TUPLE_UINT)) return false;
+  int32_t value = item->value->int32;
+  if (value < 0 || value > 0xFFFFFF) return false;
+  *color = (uint32_t)value;
+  persist_write_int(storage_key, value);
+  return true;
+}
+
+static bool read_setting(DictionaryIterator *iterator, uint32_t key, int *value,
+                         int maximum, int storage) {
+  Tuple *item = dict_find(iterator, key);
+  if (!item || (item->type != TUPLE_INT && item->type != TUPLE_UINT)) return false;
+  int next = item->value->int32;
+  if (next < 0 || next > maximum) return false;
+  *value = next;
+  persist_write_int(storage, next);
+  return true;
+}
+
+static int load_setting(int storage, int fallback, int maximum) {
+  int value = persist_exists(storage) ? persist_read_int(storage) : fallback;
+  return value >= 0 && value <= maximum ? value : fallback;
+}
+
+static void on_message(DictionaryIterator *iterator, void *context) {
+  if (read_setting(iterator, MESSAGE_KEY_PeekEnabled, &s_peek_enabled, 1, STORE_PEEK_ENABLED)) {
+    if (!s_peek_enabled && s_is_peek && s_weather) {
+      if (s_return_timer) { app_timer_cancel(s_return_timer); s_return_timer = NULL; }
+      return_to_time(NULL);
+    }
+  }
+  read_weather_text(iterator, MESSAGE_KEY_PeekFirst, s_peek_words[0], sizeof(s_peek_words[0]));
+  read_weather_text(iterator, MESSAGE_KEY_PeekSecond, s_peek_words[1], sizeof(s_peek_words[1]));
+  read_weather_text(iterator, MESSAGE_KEY_PeekDetail, s_peek_detail, sizeof(s_peek_detail));
+  Tuple *peek_until = dict_find(iterator, MESSAGE_KEY_PeekValidUntil);
+  if (peek_until && (peek_until->type == TUPLE_INT || peek_until->type == TUPLE_UINT)) s_peek_until = peek_until->value->uint32;
+  Tuple *peek_status = dict_find(iterator, MESSAGE_KEY_PeekStatus);
+  if (peek_status && (peek_status->type == TUPLE_INT || peek_status->type == TUPLE_UINT)) s_peek_valid = peek_status->value->int32 == 1;
+  if (s_weather && s_is_peek && peek_status) {
+    if (s_timer) { app_timer_cancel(s_timer); s_timer = NULL; }
+    memcpy(s_weather_display, s_peek_words, sizeof(s_weather_display));
+    s_highlight_key = 0;
+    layer_mark_dirty(s_face);
+  }
+  read_setting(iterator, MESSAGE_KEY_KnockSensitivity, &s_knock_sensitivity, 2, STORE_KNOCK_SENSITIVITY);
+  if (read_setting(iterator, MESSAGE_KEY_PaneMode, &s_pane_mode, 4, STORE_PANE_MODE)) configure_gestures();
+  read_weather_text(iterator, MESSAGE_KEY_WeatherFirst, s_weather_words[0], sizeof(s_weather_words[0]));
+  read_weather_text(iterator, MESSAGE_KEY_WeatherSecond, s_weather_words[1], sizeof(s_weather_words[1]));
+  read_weather_text(iterator, MESSAGE_KEY_WeatherDetail, s_weather_detail, sizeof(s_weather_detail));
+  Tuple *valid = dict_find(iterator, MESSAGE_KEY_WeatherValidUntil);
+  if (valid && (valid->type == TUPLE_INT || valid->type == TUPLE_UINT)) s_weather_until = valid->value->uint32;
+  Tuple *status = dict_find(iterator, MESSAGE_KEY_WeatherStatus);
+  if (status && (status->type == TUPLE_INT || status->type == TUPLE_UINT)) s_weather_valid = status->value->int32 == 1;
+  if (s_weather && !s_is_peek && status) {
+    /* An arriving reading replaces the prior text without overlapping animation. */
+    if (s_timer) { app_timer_cancel(s_timer); s_timer = NULL; }
+    memcpy(s_weather_display, pane_words(), sizeof(s_weather_display));
+    s_highlight_key = 0;
+    layer_mark_dirty(s_face);
+  }
+  Tuple *format = dict_find(iterator, MESSAGE_KEY_TimeFormat);
+  bool format_changed = false;
+  format_changed |= read_setting(iterator, MESSAGE_KEY_AnimationSpeed, &s_animation_speed, 2, STORE_ANIMATION_SPEED);
+  format_changed |= read_setting(iterator, MESSAGE_KEY_WrongGuesses, &s_wrong_guesses, 2, STORE_WRONG_GUESSES);
+  format_changed |= read_setting(iterator, MESSAGE_KEY_QuietEnabled, &s_quiet_enabled, 1, STORE_QUIET_ENABLED);
+  format_changed |= read_setting(iterator, MESSAGE_KEY_QuietStart, &s_quiet_start, 23, STORE_QUIET_START);
+  format_changed |= read_setting(iterator, MESSAGE_KEY_QuietEnd, &s_quiet_end, 23, STORE_QUIET_END);
+  format_changed |= read_setting(iterator, MESSAGE_KEY_RazrPalette, &s_razr_palette, 1, STORE_RAZR_PALETTE);
+  if (format && (format->type == TUPLE_INT || format->type == TUPLE_UINT)) {
+    int value = format->value->int32;
+    if (value == 0 || value == 1) {
+      s_use_24h = value == 1;
+      persist_write_int(STORE_TIME_FORMAT, value);
+      format_changed = true;
+    }
+  }
+  Tuple *wording = dict_find(iterator, MESSAGE_KEY_ZeroWording);
+  if (wording && (wording->type == TUPLE_INT || wording->type == TUPLE_UINT)) {
+    int value = wording->value->int32;
+    if (value == 0 || value == 1) {
+      s_use_oh_zero = value == 1;
+      persist_write_int(STORE_ZERO_WORDING, value);
+      format_changed = true;
+    }
+  }
+  bool color_changed = false;
+  color_changed |= read_color(dict_find(iterator, MESSAGE_KEY_BackgroundColor),
+                              &s_background_color, STORE_BACKGROUND_COLOR);
+  color_changed |= read_color(dict_find(iterator, MESSAGE_KEY_TextColor),
+                              &s_text_color, STORE_TEXT_COLOR);
+  Tuple *model = dict_find(iterator, MESSAGE_KEY_PhoneModel);
+  if (model && (model->type == TUPLE_INT || model->type == TUPLE_UINT)) {
+    int value = model->value->int32;
+    if (value >= 0 && value <= 2) {
+      s_razr = value == 1;
+      s_original = value == 2;
+      persist_write_int(STORE_PHONE_MODEL, value);
+      color_changed = true;
+    }
+  }
+  Tuple *battery = dict_find(iterator, MESSAGE_KEY_ShowBattery);
+  if (battery && (battery->type == TUPLE_INT || battery->type == TUPLE_UINT)) {
+    s_show_battery = battery->value->int32 != 0;
+    persist_write_int(STORE_SHOW_BATTERY, s_show_battery ? 1 : 0);
+    color_changed = true;
+  }
+  Tuple *model_colors = dict_find(iterator, MESSAGE_KEY_UseModelColors);
+  if (model_colors && (model_colors->type == TUPLE_INT || model_colors->type == TUPLE_UINT)) {
+    s_use_model_colors = model_colors->value->int32 != 0;
+    persist_write_int(STORE_USE_MODEL_COLORS, s_use_model_colors ? 1 : 0);
+    color_changed = true;
+  }
+  Tuple *preview = dict_find(iterator, MESSAGE_KEY_Preview);
+  bool replay = preview && (preview->type == TUPLE_INT || preview->type == TUPLE_UINT) &&
+    preview->value->int32 == 1;
+  if (s_weather && (replay || format_changed)) {
+    if (s_return_timer) { app_timer_cancel(s_return_timer); s_return_timer = NULL; }
+    s_weather = false;
+  }
+  if (replay) {
+    update_time(true, true, NULL);
+    if (s_pane_mode == 4) show_weather(NULL);
+    else if (s_peek_enabled && (s_pane_mode == 2 || s_pane_mode == 3)) show_pane(true);
+  }
+  else if (format_changed) update_time(false, false, NULL);
+  else if (color_changed) layer_mark_dirty(s_face);
+}
+
+static void init(void) {
+  s_peek_enabled = load_setting(STORE_PEEK_ENABLED, 0, 1);
+  s_pane_mode = load_setting(STORE_PANE_MODE, 0, 4);
+  s_knock_sensitivity = load_setting(STORE_KNOCK_SENSITIVITY, 2, 2);
+  s_animation_speed = load_setting(STORE_ANIMATION_SPEED, 1, 2);
+  s_wrong_guesses = load_setting(STORE_WRONG_GUESSES, 1, 2);
+  s_quiet_enabled = load_setting(STORE_QUIET_ENABLED, 0, 1);
+  s_quiet_start = load_setting(STORE_QUIET_START, 22, 23);
+  s_quiet_end = load_setting(STORE_QUIET_END, 7, 23);
+  s_razr_palette = load_setting(STORE_RAZR_PALETTE, 0, 1);
+  s_use_24h = persist_exists(STORE_TIME_FORMAT) && persist_read_int(STORE_TIME_FORMAT) == 1;
+  s_use_oh_zero = persist_exists(STORE_ZERO_WORDING) && persist_read_int(STORE_ZERO_WORDING) == 1;
+  int saved_model = persist_exists(STORE_PHONE_MODEL) ? persist_read_int(STORE_PHONE_MODEL) : 2;
+  s_razr = saved_model == 1;
+  s_original = saved_model == 2;
+  s_show_battery = persist_exists(STORE_SHOW_BATTERY) ?
+    persist_read_int(STORE_SHOW_BATTERY) == 1 : !s_original;
+  s_background_color = DEFAULT_BACKGROUND_COLOR;
+  s_text_color = DEFAULT_TEXT_COLOR;
+  if (persist_exists(STORE_BACKGROUND_COLOR)) {
+    int32_t value = persist_read_int(STORE_BACKGROUND_COLOR);
+    if (value >= 0 && value <= 0xFFFFFF) s_background_color = (uint32_t)value;
+  }
+  if (persist_exists(STORE_TEXT_COLOR)) {
+    int32_t value = persist_read_int(STORE_TEXT_COLOR);
+    if (value >= 0 && value <= 0xFFFFFF) s_text_color = (uint32_t)value;
+  }
+  s_use_model_colors = persist_exists(STORE_USE_MODEL_COLORS) ?
+    persist_read_int(STORE_USE_MODEL_COLORS) == 1 :
+    (s_background_color == DEFAULT_BACKGROUND_COLOR && s_text_color == DEFAULT_TEXT_COLOR);
+  s_window = window_create();
+  window_set_background_color(s_window, GColorBlack);
+  s_face = layer_create(GRect(0, 0, 200, 228));
+  layer_set_update_proc(s_face, draw_face);
+  layer_add_child(window_get_root_layer(s_window), s_face);
+  window_stack_push(s_window, true);
+  app_message_register_inbox_received(on_message);
+  app_message_open(768, 64);
+  configure_gestures();
+  battery_state_service_subscribe(on_battery);
+  tick_timer_service_subscribe(MINUTE_UNIT, on_tick);
+  update_time(true, true, NULL);
+#if T9_FIXTURE_GESTURE > 0
+  app_timer_register(2000, fixture_knock, NULL);
+#endif
+}
+
+static void deinit(void) {
+  accel_tap_service_unsubscribe();
+  accel_data_service_unsubscribe();
+  if (s_return_timer) app_timer_cancel(s_return_timer);
+  if (s_gesture_lock_timer) app_timer_cancel(s_gesture_lock_timer);
+  if (s_gesture_timer) app_timer_cancel(s_gesture_timer);
+  tick_timer_service_unsubscribe();
+  battery_state_service_unsubscribe();
+  if (s_timer) app_timer_cancel(s_timer);
+  app_message_deregister_callbacks();
+  layer_destroy(s_face);
+  window_destroy(s_window);
+}
+
+int main(void) {
+  init();
+  app_event_loop();
+  deinit();
+}

@@ -508,3 +508,172 @@ Build a Pebble Time 2 watch face based on the first green LCD render. At each mi
 - [x] Inspect the corrected loop.
 - [x] Replace the store GIF.
 - [x] Verify the public listing.
+
+## Time and weather panes — 2026-10-28
+
+### Contract
+- Target directive: `directives/build_watchface.md`.
+- Execution: `execution/build.py`.
+- Artifact: `dist/t9-watch.pbw`, local candidate only.
+- Preserve the existing `.tmp/.gitkeep` deletion.
+- Do not publish this preview build.
+
+### Validation Contract
+- Classic is the default pane mode.
+- Classic does not subscribe to weather.
+- Time retains its existing keypad geometry.
+- Weather draws the same twelve-key keypad as Time for Original, Nokia, and RAZR.
+- Weather types a condition using matching T9 key highlights.
+- A shake can reveal Weather when shake mode is selected.
+- Two accelerometer pulses can reveal Weather when double-tap mode is selected.
+- A single accelerometer event does not reveal Weather in double-tap mode.
+- Weather returns to current Time after eight seconds.
+- Weather permission failure produces an unavailable state.
+- Expired weather produces a stale state.
+- Pane mode persists after relaunch.
+- Host model tests pass.
+- Plugin bridge tests pass.
+- The emery PBW builds.
+- Native screenshots show Time and Weather.
+- A fresh verifier reviews the final output.
+
+### Checklist
+- [x] Implement weather bridge.
+- [x] Implement panes and gesture policy.
+- [x] Verify native rendering.
+- [x] Complete independent review.
+- [x] Record handoff.
+
+## T9 Time Labs isolation and plugin submission — 2026-10-28
+
+### Contract
+- Source variant: `labs/watchface/`.
+- Build script: `execution/build_labs.py`.
+- Artifact: `dist/t9-time-labs.pbw`.
+- Restore stable implementation from HEAD (0.3.3).
+- Publish only the new Labs UUID.
+
+### Validation Contract
+- Stable watchface implementation matches HEAD.
+- Stable build script matches HEAD.
+- Stable test files match HEAD.
+- Stable PBW version is 0.3.3.
+- Labs UUID differs from stable UUID.
+- Labs display name is T9 Time Labs.
+- Labs PBW includes a functioning weather-to-T9 plugin.
+- Labs uses its bundled provider.
+- Labs host tests pass.
+- Labs provider tests pass.
+- Labs PBW builds.
+- A fresh verifier checks the split.
+- Submission targets the Labs UUID.
+- Public Labs metadata exposes its plugin.
+- Stable public release remains 0.3.3.
+
+### Checklist
+- [x] Isolate Labs.
+- [x] Restore stable source.
+- [x] Verify both builds.
+- [x] Review release package independently.
+- [x] Attempt Labs submission (server rejected 403).
+- [x] Verify store rejection.
+
+Submission outcome: 403 `Plugin submissions are not open yet`. No public Labs listing exists. Public Labs metadata criterion is blocked by store eligibility. Stable release ID remains `77a5024646df4acfa35a9a24` (0.3.3).
+
+## Publish Labs as a plugin-consuming watchface — 2026-10-28
+
+### Validation Contract
+- Labs retains UUID `25e30e2c-4605-46fd-96be-3bfe5fb7a110`.
+- Labs package declares watchface type.
+- Labs PBW has no plugin provider block.
+- Labs reads host `weather/location`.
+- Labs tests pass.
+- Stable implementation matches HEAD.
+- Independent review passes before publication.
+- The public Labs listing identifies as a watchface.
+- Public stable release remains 0.3.3.
+
+### Checklist
+- [x] Remove bundled provider.
+- [x] Verify consumer build.
+- [x] Publish Labs watchface.
+- [x] Verify public artifacts.
+
+Consumer release verified: Labs0.1.0, watchface, plugin=null, three screenshots, public PBW byte-match. Stable0.3.3 release unchanged. URL: https://apps.repebble.com/2bef419f50404a048f823c0d
+
+## Labs weather validity and knock repair — 2026-10-28
+
+### Validation Contract
+- A built-in weather payload with null validity displays its temperature.
+- A built-in weather payload with omitted validity displays its temperature.
+- A past explicit validity deadline produces a stale state.
+- A text-shaped temperature remains usable.
+- Weather still comes exclusively from the plugin API.
+- The 240mg lateral impulse fixture registers as a knock.
+- The 120ms ringing fixture emits one knock.
+- Vibration cannot complete a tap pair.
+- Knock sensitivity is configurable.
+- Weather test after Save opens the pane without a gesture.
+- Classic mode remains available.
+- The full keypad remains unchanged.
+- Labs tests pass.
+- Labs PBW builds.
+- A fresh verifier reviews the repair.
+- Stable watchface source matches HEAD.
+- Stable public release remains0.3.3.
+
+### Checklist
+- [x] Repair plugin payload handling.
+- [x] Repair knock detector.
+- [x] Verify release candidate.
+- [x] Deliver Labs update.
+
+Labs0.1.1 published and public PBW byte-matched. Physical knock tuning and live iPhone data require the user to update and test; no physical success claimed.
+
+## Plugin Peek — 2026-10-28
+
+### Validation Contract
+- Installed plugins populate the reading picker.
+- The picker filters to text, numeric, boolean, or timestamp readings.
+- The picker permits choosing a source instance.
+- Saving settings persists the selected reading.
+- Cancelling settings preserves the previous selection.
+- A selected reading is loaded after PKJS restart.
+- Permission denial has an explicit state.
+- Removing a selected plugin has an explicit state.
+- Triple-knock opens Plugin Peek when enabled.
+- Double-knock opens Weather after the triple-knock wait.
+- A triple-knock does not open Weather first.
+- The 120ms ringing fixture remains one knock.
+- Peek returns to Time after eight seconds.
+- Original retains its twelve-key renderer on Peek.
+- Nokia retains its twelve-key renderer on Peek.
+- RAZR retains its twelve-key renderer on Peek.
+- Classic subscribes to neither reading source.
+- Browser picker checks pass.
+- Labs host tests pass.
+- Labs PBW builds.
+- A fresh verifier reviews the feature.
+- Stable implementation matches HEAD0.3.3.
+
+### Checklist
+- [x] Implement reading picker and subscription.
+- [x] Implement Peek pane and triple classifier.
+- [x] Verify browser and native flows.
+- [x] Complete independent review.
+- [x] Deliver Labs update.
+
+Labs0.2.0 published; public PBW byte-match verified. Live iPhone bridge and physical gestures remain device checks.
+
+## Round compatibility — 2026-11-06
+- [x] Emery remains a build target.
+- [x] Chalk is a build target.
+- [x] Gabbro is a build target.
+- [x] The UUID is preserved.
+- [x] Existing settings key mappings are preserved.
+- [x] Native Chalk layout passes visual review.
+- [x] Native Gabbro layout passes visual review.
+- [x] Clean production PBW contains three native binaries.
+- [x] Existing host/settings checks pass.
+- [x] Fresh independent review passes.
+No store publication is authorized by this compatibility request.

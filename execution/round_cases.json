@@ -1,0 +1,277 @@
+[
+  {
+    "case": "default",
+    "settings": {
+      "TimeFormat": 1,
+      "PhoneModel": 2,
+      "ShowBattery": 0,
+      "UseModelColors": 1,
+      "ZeroWording": 0,
+      "AnimationSpeed": 0,
+      "WrongGuesses": 0,
+      "QuietEnabled": 0,
+      "RazrPalette": 0,
+      "Preview": 0,
+      "11000": 10,
+      "11001": 8
+    },
+    "peak": 255
+  },
+  {
+    "case": "midnight",
+    "settings": {
+      "TimeFormat": 1,
+      "PhoneModel": 2,
+      "ShowBattery": 0,
+      "UseModelColors": 1,
+      "ZeroWording": 0,
+      "AnimationSpeed": 0,
+      "WrongGuesses": 0,
+      "QuietEnabled": 0,
+      "RazrPalette": 0,
+      "Preview": 0,
+      "11000": 0,
+      "11001": 0
+    },
+    "peak": 255
+  },
+  {
+    "case": "late",
+    "settings": {
+      "TimeFormat": 1,
+      "PhoneModel": 2,
+      "ShowBattery": 0,
+      "UseModelColors": 1,
+      "ZeroWording": 0,
+      "AnimationSpeed": 0,
+      "WrongGuesses": 0,
+      "QuietEnabled": 0,
+      "RazrPalette": 0,
+      "Preview": 0,
+      "11000": 23,
+      "11001": 59
+    },
+    "peak": 255
+  },
+  {
+    "case": "twelve-hour",
+    "settings": {
+      "TimeFormat": 0,
+      "PhoneModel": 2,
+      "ShowBattery": 0,
+      "UseModelColors": 1,
+      "ZeroWording": 0,
+      "AnimationSpeed": 0,
+      "WrongGuesses": 0,
+      "QuietEnabled": 0,
+      "RazrPalette": 0,
+      "Preview": 0,
+      "11000": 23,
+      "11001": 59
+    },
+    "peak": 255
+  },
+  {
+    "case": "date-iso",
+    "settings": {
+      "TimeFormat": 1,
+      "PhoneModel": 2,
+      "ShowBattery": 0,
+      "UseModelColors": 1,
+      "ZeroWording": 0,
+      "AnimationSpeed": 0,
+      "WrongGuesses": 0,
+      "QuietEnabled": 0,
+      "RazrPalette": 0,
+      "Preview": 0,
+      "11000": 10,
+      "11001": 8,
+      "DateFormat": 2
+    },
+    "peak": 255
+  },
+  {
+    "case": "date-eu",
+    "settings": {
+      "TimeFormat": 1,
+      "PhoneModel": 2,
+      "ShowBattery": 0,
+      "UseModelColors": 1,
+      "ZeroWording": 0,
+      "AnimationSpeed": 0,
+      "WrongGuesses": 0,
+      "QuietEnabled": 0,
+      "RazrPalette": 0,
+      "Preview": 0,
+      "11000": 10,
+      "11001": 8,
+      "DateFormat": 4
+    },
+    "peak": 255
+  },
+  {
+    "case": "seconds-off",
+    "settings": {
+      "TimeFormat": 1,
+      "PhoneModel": 2,
+      "ShowBattery": 0,
+      "UseModelColors": 1,
+      "ZeroWording": 0,
+      "AnimationSpeed": 0,
+      "WrongGuesses": 0,
+      "QuietEnabled": 0,
+      "RazrPalette": 0,
+      "Preview": 0,
+      "11000": 10,
+      "11001": 8,
+      "ShowSeconds": 0
+    },
+    "peak": 255
+  },
+  {
+    "case": "model-0",
+    "settings": {
+      "TimeFormat": 1,
+      "PhoneModel": 0,
+      "ShowBattery": 0,
+      "UseModelColors": 1,
+      "ZeroWording": 0,
+      "AnimationSpeed": 0,
+      "WrongGuesses": 0,
+      "QuietEnabled": 0,
+      "RazrPalette": 0,
+      "Preview": 0,
+      "11000": 23,
+      "11001": 59
+    },
+    "peak": 255
+  },
+  {
+    "case": "model-1",
+    "settings": {
+      "TimeFormat": 1,
+      "PhoneModel": 1,
+      "ShowBattery": 0,
+      "UseModelColors": 1,
+      "ZeroWording": 0,
+      "AnimationSpeed": 0,
+      "WrongGuesses": 0,
+      "QuietEnabled": 0,
+      "RazrPalette": 0,
+      "Preview": 0,
+      "11000": 23,
+      "11001": 59
+    },
+    "peak": 255
+  },
+  {
+    "case": "model-2",
+    "settings": {
+      "TimeFormat": 1,
+      "PhoneModel": 2,
+      "ShowBattery": 0,
+      "UseModelColors": 1,
+      "ZeroWording": 0,
+      "AnimationSpeed": 0,
+      "WrongGuesses": 0,
+      "QuietEnabled": 0,
+      "RazrPalette": 0,
+      "Preview": 0,
+      "11000": 23,
+      "11001": 59
+    },
+    "peak": 255
+  },
+  {
+    "case": "typing",
+    "settings": {
+      "TimeFormat": 1,
+      "PhoneModel": 1,
+      "ShowBattery": 0,
+      "UseModelColors": 1,
+      "ZeroWording": 0,
+      "AnimationSpeed": 0,
+      "WrongGuesses": 2,
+      "QuietEnabled": 0,
+      "RazrPalette": 0,
+      "Preview": 1,
+      "11000": 23,
+      "11001": 59
+    },
+    "peak": 255
+  },
+  {
+    "case": "show-battery",
+    "settings": {
+      "TimeFormat": 1,
+      "PhoneModel": 2,
+      "ShowBattery": 1,
+      "UseModelColors": 1,
+      "ZeroWording": 0,
+      "AnimationSpeed": 0,
+      "WrongGuesses": 0,
+      "QuietEnabled": 0,
+      "RazrPalette": 0,
+      "Preview": 0,
+      "11000": 10,
+      "11001": 8
+    },
+    "peak": 255
+  },
+  {
+    "case": "oh-zero",
+    "settings": {
+      "TimeFormat": 1,
+      "PhoneModel": 2,
+      "ShowBattery": 0,
+      "UseModelColors": 1,
+      "ZeroWording": 1,
+      "AnimationSpeed": 0,
+      "WrongGuesses": 0,
+      "QuietEnabled": 0,
+      "RazrPalette": 0,
+      "Preview": 0,
+      "11000": 20,
+      "11001": 0
+    },
+    "peak": 255
+  },
+  {
+    "case": "razr-silver",
+    "settings": {
+      "TimeFormat": 1,
+      "PhoneModel": 1,
+      "ShowBattery": 0,
+      "UseModelColors": 1,
+      "ZeroWording": 0,
+      "AnimationSpeed": 0,
+      "WrongGuesses": 0,
+      "QuietEnabled": 0,
+      "RazrPalette": 1,
+      "Preview": 0,
+      "11000": 10,
+      "11001": 8
+    },
+    "peak": 170
+  },
+  {
+    "case": "custom",
+    "settings": {
+      "TimeFormat": 1,
+      "PhoneModel": 2,
+      "ShowBattery": 0,
+      "UseModelColors": 0,
+      "ZeroWording": 0,
+      "AnimationSpeed": 0,
+      "WrongGuesses": 0,
+      "QuietEnabled": 0,
+      "RazrPalette": 0,
+      "Preview": 0,
+      "11000": 10,
+      "11001": 8,
+      "BackgroundColor": 85,
+      "TextColor": 16777215
+    },
+    "peak": 255
+  }
+]

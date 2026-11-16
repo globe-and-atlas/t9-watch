@@ -31,3 +31,23 @@ The first Nokja bitmap generator used `getmask`, which omits a glyph's vertical 
 ## 2026-10-27 — Listing GIF skips letters
 
 Sparse CLI screenshots missed intermediate glyph states; increasing frame durations only slowed the jumps. Re-captured native monitor frames at 30 fps in a private QEMU, retained all prefix states, and retimed per-letter. Graduated to procedural/publish_appstore.md.
+
+## 2026-10-28 — Gesture timing under emulator clock synchronization
+
+- Error: rapid `emu-tap` calls did not establish double-knock support. Custom accelerometer trace timestamps went backward; anchoring to `time_ms` also reproduced backward intervals during emulator RTC synchronization.
+- Cause: tap/shake events are not a guaranteed stream of individual knocks, while emulator wall-clock/sample timestamps are unsuitable as a monotonic gesture clock.
+- Fix: optional raw 50 Hz sampling uses a +20 ms per-sample logical clock for pulse separation; AppTimers handle single-pulse timeout, return, and cooldown. Classic and shake-only avoid raw sampling.
+- Graduated-to: `knowledge/domain/weather_panes.md`. Physical gesture recognition remains unverified.
+
+## 2026-10-28 — Labs tool runtime and plugin packaging
+
+- Error: uv chose Python 3.12 for pebble-tool 5.1.1; SDK waf failed with SRE module mismatch. Pinning the isolated runner to Python 3.13 fixed the build. Global tool was not upgraded.
+- Packaging: SDK 4.33 preserved plugin manifest but omitted the provider file. Labs-only wscript post-build hook copies the declared script into the PBW, including CLI publish rebuilds.
+- Graduated-to: `directives/build_labs.md` and `knowledge/domain/deps.md`.
+- External blocker: publishing Labs returned 403 `Plugin submissions are not open yet`. This is server eligibility, not a source/build failure.
+
+## 2026-10-28 — Built-in weather provider rejected as NO DATA
+
+User's iPhone could open Labs Weather but it showed NO WEATHER / NO DATA. Owner source `coredevices/mobileapp/pebble/src/commonMain/kotlin/coredevices/pebble/weather/WeatherPlugin.kt` creates `SourceEnvelope(validUntilMs=null)` for its live flow; serialization may omit null. Labs coerced null to zero or missing to NaN, rejecting valid readings. Regression fixtures previously demanded expiry and missed this real provider shape. Fix: accept absent/null deadlines with a30-minute local receipt window; preserve explicit provider deadlines; accept temperature text shapes. Add built-in-shaped regression fixtures. Graduated-to: `knowledge/domain/weather_panes.md`.
+
+The initial knock detector required absolute1.8g impacts, missing lighter lateral taps. Labs0.1.1 uses gravity-relative impulse energy, configurable sensitivity, quiet rearm, and160ms refractory. Physical sensitivity remains a device check.
